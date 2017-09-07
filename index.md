@@ -15,6 +15,15 @@ title: 데이터 제품
 ## 학습목차 
 
 - [R 데이터 제품(Data Product)](data-product.html)
+    - [데이터 저널리즘 - Andrew Flowers](data-journalism-flowers.html)
+    - [Shiny 웹앱](shiny-overview.html)
+        - [Shiny 웹앱 개발](shiny-app.html)    
+        - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
+        - [Shiny 프론트엔트 개발](shiny-frontend.html)
+    - [보고서 작성 자동화(30분)](ds-report-automation.html)
+    - [R로 전자우편 자동 전송](ds-gmail.html)        
+    - [공공 데이터 제품](data-product-civic-hacking.html)
+    - [야구 MLB](ds-baseball-mlb.html)    
 
 
 
