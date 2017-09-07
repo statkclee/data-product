@@ -76,7 +76,7 @@ R을 설치하게 되면 자동차 연비예측을 위한 회귀분석 및 시�
 `read_csv` 함수를 사용하게 되면 자동으로 로컬 파일이든, 인터넷에 위치한 파일이든 `.csv` 파일이면 알아서 
 불러와서 코딩이 훨씬 간결해진다.
 
-```{r, warning=FALSE, message=FALSE}
+```{r, import-data, warning=FALSE, message=FALSE}
 # 2. 데이터 불러오기---------------------
 data(mtcars)
 
