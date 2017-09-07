@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">데이터 과학</h1></a>
+          <h2 class="subtitle">보고서 작성 자동화(30분)</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>20년전 보고서 작성 작업흐름과 R기반 보고서 작성 자동화 과정을 비교한다.</li>
+<li>보고서 작성에 필요한 툴체인(toolchain)을 구축한다.</li>
+</ul>
+</div>
+</section>
+<h2 id="보고서-작성-과정-비교">1. 보고서 작성 과정 비교</h2>
+<p>데이터를 바탕으로 보고서를 작성하는 과정은 데이터를 데이터를 분석할 수 있는 자료형으로 변환하여 SPSS/SAS/미니탭 같은 통계팩키지가 읽어들일 수 있는 형태로 변환을 우선해야만 된다. 데이터를 불러 읽어들일 때 엑셀을 사용해서 데이터 전처리 과정을 흔히 거친다. 그리고 나서, 통계팩키지의 데이터 불러오기 혹은 가져오기(Import) 기능을 활용하여 SPSS/SAS/미니탭 파일 형태로 변환하여 저장하고 나서 데이터 마사지, 기술통계, 탐색적 자료분석 후에 회귀분석, 군집분석, 주성분분석, 요인분석 등 다양한 통계분석을 수행하고 나서 다양한 통계출력결과물과 그래프를 보고서에 붙여넣는 방식을 취한다. 최종보고서에 사용되는 소프트웨어는 아래한글이 사용되고, 발표자료를 만들 경우 파워포인트가 추가로 동원되기도 한다.</p>
+<p><img src="fig/ds-old-report-workflow.png" alt="기존 보고서 작성 작업흐름" width="57%" /></p>
+<h3 id="보고서-작성-자동화">1.1. 보고서 작성 자동화</h3>
+<p>보고서를 작성할 때, 메모장, 엑셀, 통계 팩키지, 워드프로세서 혹은 슬라이드쇼 같은 여러 소프트웨어를 독립적으로 각기 이용하는 것과 R을 활용하여 보고서를 작성하는 과정은 R을 기반으로 깔고, 보고서 작성에 필요한 여러 팩키지를 조합하여 사용하고 마지막으로 니트질(knitting)하여 워드, HTML, PDF 등 최종 보고서를 뽑아내는 과정을 갖는다.</p>
+<p><img src="fig/ds-new-report-workflow.png" alt="보고서 작성 자동화 작업흐름" width="57%" /></p>
+<p>한 걸음 더 들어가면 세부적으로 다음과 같은 보고서 작성 파이프라인을 갖추게 된다.</p>
+<ol style="list-style-type: decimal">
+<li><code>readr</code>: 데이터 불러오기</li>
+<li><code>tidyr</code>: 깔끔한 데이터 만들기</li>
+<li><code>dplyr</code>: 데이터 변환과 정제</li>
+<li><code>leaps</code>: 회귀분석, 변수 선택을 통한 최적모형</li>
+<li><code>ggplot2</code>: 시각화와 그래프 생성</li>
+<li><code>stargazer</code> : 출판품질 수준 고품질 표 작성</li>
+<li><code>rmarkdown</code>, <code>knitr</code>: 다양한 보고서 출력</li>
+</ol>
+<p><img src="fig/ds-report-automation.png" alt="보고서 작성 자동화 개요" width="77%" /></p>
+<h2 id="보고서-자동화-사례-mtcars-연비예측-회귀분석-보고서">2. 보고서 자동화 사례 – <code>mtcars</code> 연비예측 회귀분석 보고서</h2>
+<h3 id="툴체인-설치">2.1. 툴체인 설치</h3>
+<p>문서화 자동화를 위한 툴체인을 구축한다. 데이터 불러와서, 전처리하고, 회귀모형 구축하고, 시각화하고 나서, 출력문서로 내보내는데 필요한 팩키지를 설치한다.</p>
+<pre class="output"><code>Error in library(GGally): there is no package called &#39;GGally&#39;
+</code></pre>
+<pre class="output"><code>Error in library(stargazer): there is no package called &#39;stargazer&#39;
+</code></pre>
+<h3 id="데이터-불러오기">2.2. 데이터 불러오기</h3>
+<p><code>readr</code> 팩키지에 포함된 기능을 활용하여 자료형을 식별하고 데이터를 불러온다. R을 설치하게 되면 자동차 연비예측을 위한 회귀분석 및 시각화 예제로 많이 사용되는 <code>mtcars</code> 데이터가 포함되어 있다. <code>read_csv</code> 함수를 사용하게 되면 자동으로 로컬 파일이든, 인터넷에 위치한 파일이든 <code>.csv</code> 파일이면 알아서 불러와서 코딩이 훨씬 간결해진다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 2. 데이터 불러오기---------------------</span>
+<span class="kw">data</span>(mtcars)
+
+<span class="kw">spec_csv</span>(<span class="st">&quot;https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv&quot;</span>)</code></pre></div>
+<pre class="output"><code>cols(
+  model = col_character(),
+  mpg = col_double(),
+  cyl = col_integer(),
+  disp = col_double(),
+  hp = col_integer(),
+  drat = col_double(),
+  wt = col_double(),
+  qsec = col_double(),
+  vs = col_integer(),
+  am = col_integer(),
+  gear = col_integer(),
+  carb = col_integer()
+)
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv&quot;</span>, 
+               <span class="dt">col_names =</span> <span class="ot">TRUE</span>, 
+               <span class="kw">cols</span>(
+                 <span class="dt">model =</span> <span class="kw">col_character</span>(),
+                 <span class="dt">mpg =</span> <span class="kw">col_double</span>(),
+                 <span class="dt">cyl =</span> <span class="kw">col_integer</span>(),
+                 <span class="dt">disp =</span> <span class="kw">col_double</span>(),
+                 <span class="dt">hp =</span> <span class="kw">col_integer</span>(),
+                 <span class="dt">drat =</span> <span class="kw">col_double</span>(),
+                 <span class="dt">wt =</span> <span class="kw">col_double</span>(),
+                 <span class="dt">qsec =</span> <span class="kw">col_double</span>(),
+                 <span class="dt">vs =</span> <span class="kw">col_integer</span>(),
+                 <span class="dt">am =</span> <span class="kw">col_integer</span>(),
+                 <span class="dt">gear =</span> <span class="kw">col_integer</span>(),
+                 <span class="dt">carb =</span> <span class="kw">col_integer</span>()))
+<span class="kw">glimpse</span>(df)</code></pre></div>
+<pre class="output"><code>Observations: 32
+Variables: 12
+$ model &lt;chr&gt; &quot;Mazda RX4&quot;, &quot;Mazda RX4 Wag&quot;, &quot;Datsun 710&quot;, &quot;Hornet 4 Dr...
+$ mpg   &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19...
+$ cyl   &lt;int&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4,...
+$ disp  &lt;dbl&gt; 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, ...
+$ hp    &lt;int&gt; 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180,...
+$ drat  &lt;dbl&gt; 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3....
+$ wt    &lt;dbl&gt; 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, ...
+$ qsec  &lt;dbl&gt; 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, ...
+$ vs    &lt;int&gt; 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,...
+$ am    &lt;int&gt; 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,...
+$ gear  &lt;int&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4,...
+$ carb  &lt;int&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2,...
+</code></pre>
+<h3 id="탐색적-자료분석">2.3. 탐색적 자료분석</h3>
+<p>본격적인 모형개발을 추진하기 전에 탐색적 데이터 분석을 통해 변수들간의 관계를 일별하여 친숙해지는 과정이 꼭 필요하다.</p>
+<p><code>library(GGally)</code> 팩키지에 내장된 <code>ggpairs</code> 함수를 통해 <code>mtcars</code> 데이터셋에 포함된 변수 관계를 짝지어 시각화한다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">line_fn &lt;-<span class="st"> </span>function(data, mapping, ...){
+  p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> data, <span class="dt">mapping =</span> mapping) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_point</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span>loess, <span class="dt">fill=</span><span class="st">&quot;red&quot;</span>, <span class="dt">color=</span><span class="st">&quot;red&quot;</span>, ...) +
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span>lm, <span class="dt">fill=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>, ...)
+  p
+}
+
+df_g  &lt;-<span class="st">  </span><span class="kw">ggpairs</span>(df, <span class="dt">columns =</span> <span class="dv">2</span>:<span class="dv">12</span>, <span class="dt">lower =</span> <span class="kw">list</span>(<span class="dt">continuous =</span> line_fn), <span class="dt">warning=</span><span class="ot">FALSE</span>, <span class="dt">message=</span><span class="ot">FALSE</span>)</code></pre></div>
+<pre class="output"><code>Error in ggpairs(df, columns = 2:12, lower = list(continuous = line_fn), : 함수 &quot;ggpairs&quot;를 찾을 수 없습니다
+</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_g</code></pre></div>
+<pre class="output"><code>Error in eval(expr, envir, enclos): 객체 &#39;df_g&#39;를 찾을 수 없습니다
+</code></pre>
+<p>기술통계량도 <a href="https://cran.r-project.org/web/packages/stargazer/"><code>stargazer</code></a> 팩키지를 활용하면 기술통계량도 출판품질로 변환이 가능하다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stargazer</span>(mtcars, <span class="dt">type=</span><span class="st">&quot;html&quot;</span>, <span class="dt">notes.align =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
+<pre class="output"><code>Error in stargazer(mtcars, type = &quot;html&quot;, notes.align = &quot;l&quot;): 함수 &quot;stargazer&quot;를 찾을 수 없습니다
+</code></pre>
+<h3 id="최적모형-회귀모형-선정-best-subset-reg">2.3. 최적모형 회귀모형 선정 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<p>탐색적 데이터분석을 통해 예측하려는 종속변수(<code>mtcars</code>)와 설명변수에 대한 탐색이 완료되면 회귀분석을 본격적으로 실시한다. 회귀분석을 통해 최종 예측모형을 만들어낼 때, 적절한 변수 선택이 중요한데 이유는 다음과 같다. 모형의 설명력을 높이려면 변수를 많이 사용하면 <span class="math inline">\(R^2\)</span> 값이 올라가서 극단적으로는 <strong>1</strong> 에 수렴하게 된다. 하지만, 이런 경우 회귀모형의 일반성이 훼손되어 예측하려는 새로운 표본이 들어왔을 경우 간결한, 극단적으로 간단한 모형보다 예측력이 떨어지는 경우가 쉽게 관찰된다. 따라서, 모형의 복잡성이 높아지면 이에 대한 패널티를 부여하든지, <span class="math inline">\(R^2\)</span> 은 다소 희생하더라도 변수를 최소화하는 <strong>변수 제거법</strong> 등 다양한 방법이 개발되어 활용되고 있다.</p>
+<p>전진변수 선택법(forward selection)을 통해 회귀모형을 구축하는 경우, 먼저 상수항으로 적합시킨 회귀모형을 만들어 내고 <code>df_null</code>, 이를 바탕으로 변수를 하나씩 집어 넣어 순차적으로 최적 모형을 찾아나간다. 후방변수 제거법(backward elimination)은 꽉찬 모형, <code>df_full</code>에서 변수를 순차적으로 하나씩 제거하면 최적 모형을 찾아내는 것이고, 양방향 <code>direction=both</code>인 경우 상황에 따라 변수를 추가 제거하는 과정을 반복하면서 최적 모형을 찾아낸다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 4. 회귀분석---------------------</span>
+<span class="co"># 단계별 회귀분석: 전진선택법, 양방향 선택/제거법</span>
+df_null &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~<span class="dv">1</span>, <span class="dt">data=</span>df[,-<span class="dv">1</span>])
+df_full &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~., <span class="dt">data=</span>df[,-<span class="dv">1</span>])
+
+df_forward &lt;-<span class="st"> </span><span class="kw">step</span>(df_null, <span class="dt">scope=</span><span class="kw">list</span>(<span class="dt">lower=</span>df_null, <span class="dt">upper=</span>df_full), <span class="dt">direction=</span><span class="st">&quot;forward&quot;</span>, <span class="dt">trace=</span><span class="ot">FALSE</span>)
+df_backward &lt;-<span class="st"> </span><span class="kw">step</span>(df_null, <span class="dt">scope=</span><span class="kw">list</span>(<span class="dt">lower=</span>df_null, <span class="dt">upper=</span>df_full), <span class="dt">direction=</span><span class="st">&quot;both&quot;</span>)</code></pre></div>
+<pre class="output"><code>Start:  AIC=115.94
+mpg ~ 1
+
+       Df Sum of Sq     RSS     AIC
++ wt    1    847.73  278.32  73.217
++ cyl   1    817.71  308.33  76.494
++ disp  1    808.89  317.16  77.397
++ hp    1    678.37  447.67  88.427
++ drat  1    522.48  603.57  97.988
++ vs    1    496.53  629.52  99.335
++ am    1    405.15  720.90 103.672
++ carb  1    341.78  784.27 106.369
++ gear  1    259.75  866.30 109.552
++ qsec  1    197.39  928.66 111.776
+&lt;none&gt;              1126.05 115.943
+
+Step:  AIC=73.22
+mpg ~ wt
+
+       Df Sum of Sq     RSS     AIC
++ cyl   1     87.15  191.17  63.198
++ hp    1     83.27  195.05  63.840
++ qsec  1     82.86  195.46  63.908
++ vs    1     54.23  224.09  68.283
++ carb  1     44.60  233.72  69.628
++ disp  1     31.64  246.68  71.356
+&lt;none&gt;               278.32  73.217
++ drat  1      9.08  269.24  74.156
++ gear  1      1.14  277.19  75.086
++ am    1      0.00  278.32  75.217
+- wt    1    847.73 1126.05 115.943
+
+Step:  AIC=63.2
+mpg ~ wt + cyl
+
+       Df Sum of Sq    RSS    AIC
++ hp    1    14.551 176.62 62.665
++ carb  1    13.772 177.40 62.805
+&lt;none&gt;              191.17 63.198
++ qsec  1    10.567 180.60 63.378
++ gear  1     3.028 188.14 64.687
++ disp  1     2.680 188.49 64.746
++ vs    1     0.706 190.47 65.080
++ am    1     0.125 191.05 65.177
++ drat  1     0.001 191.17 65.198
+- cyl   1    87.150 278.32 73.217
+- wt    1   117.162 308.33 76.494
+
+Step:  AIC=62.66
+mpg ~ wt + cyl + hp
+
+       Df Sum of Sq    RSS    AIC
+&lt;none&gt;              176.62 62.665
+- hp    1    14.551 191.17 63.198
++ am    1     6.623 170.00 63.442
++ disp  1     6.176 170.44 63.526
+- cyl   1    18.427 195.05 63.840
++ carb  1     2.519 174.10 64.205
++ drat  1     2.245 174.38 64.255
++ qsec  1     1.401 175.22 64.410
++ gear  1     0.856 175.76 64.509
++ vs    1     0.060 176.56 64.654
+- wt    1   115.354 291.98 76.750
+</code></pre>
+<p>최상부분집합선택법(Best Subset) 회귀모형 구축방법은 <code>leaps</code> 팩키지 <code>regsubsets</code> 함수를 사용하면 최대 10개까지 변수를 조합하여 최상부분집합을 선택한다. 전진변수 선택 혹은 후방변수 제거법과 달리 회귀모형의 복잡성에 대해 패널티를 가하는 방법으로 AIC/BIC 등이 사용되는데 AIC가 다소 변수를 과대선택하는 경향이 알려져있어 BIC 기준으로 최소가 되는 모형을 최적모형으로 선정한다.</p>
+<p>이를 위해서 <code>regsubsets</code> 함수로 최상부분집합 적합을 시킨 결과에서 BIC 값을 뽑아내고 그중 <code>min_bic</code>에 최소값을 저장시킨다. 그리고 변수가 몇개일 때 최소가 되는지</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 최상부분집합선택법</span>
+<span class="co"># noquote(paste0(names(mtcars), &quot;+&quot;))</span>
+subset_mod &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(mpg ~<span class="st"> </span>., <span class="dt">data =</span> mtcars, <span class="dt">nvmax=</span><span class="ot">NULL</span>, 
+                         <span class="dt">force.in =</span> <span class="ot">NULL</span>, <span class="dt">force.out =</span> <span class="ot">NULL</span>, 
+                         <span class="dt">method=</span><span class="st">&quot;exhaustive&quot;</span>)
+
+subset_mod_out &lt;-<span class="st"> </span><span class="kw">summary</span>(subset_mod)
+
+min_bic &lt;-<span class="st"> </span><span class="kw">which.min</span>(subset_mod_out$bic)
+
+<span class="kw">plot</span>(subset_mod_out$bic, <span class="dt">ylab =</span> <span class="st">&quot;BIC&quot;</span>, <span class="dt">type=</span><span class="st">&quot;b&quot;</span>)
+<span class="kw">points</span>(min_bic, subset_mod_out$bic[min_bic], <span class="dt">cex=</span><span class="dv">2</span>, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">pch=</span><span class="dv">20</span>)
+ibest &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">along =</span> subset_mod_out$bic)[subset_mod_out$bic ==<span class="st"> </span>min_bic]
+
+foo &lt;-<span class="st"> </span>subset_mod_out$which[ibest, ]
+form &lt;-<span class="st"> </span><span class="kw">names</span>(foo)[foo][-<span class="dv">1</span>]
+form &lt;-<span class="st"> </span><span class="kw">paste</span>(form, <span class="dt">collapse =</span> <span class="st">&quot; + &quot;</span>)
+form &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;mpg ~&quot;</span>, form)
+
+## 최적 모형
+mtcars_best &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">as.formula</span>(form), <span class="dt">data=</span>df)
+
+<span class="kw">summary</span>(mtcars_best)</code></pre></div>
+<h3 id="회귀식-표현-convert-lm-objects">2.4. 회귀식 표현 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<p>최적의 회귀식을 구축했으면 이제 남은 단계는 이를 문서화하는 것이다.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 5. 회귀식 표현---------------------</span>
+latex_lm &lt;-<span class="st"> </span>function(object, <span class="dt">file=</span><span class="st">&quot;&quot;</span>, <span class="dt">math.env=</span><span class="kw">c</span>(<span class="st">&quot;$&quot;</span>,<span class="st">&quot;$&quot;</span>),
+                     <span class="dt">estimates=</span><span class="st">&quot;none&quot;</span>, <span class="dt">abbreviate =</span> <span class="ot">TRUE</span>, <span class="dt">abbrev.length=</span><span class="dv">8</span>, <span class="dt">digits=</span><span class="dv">3</span>) {
+  <span class="co"># Get and format IV names</span>
+  co &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Int&quot;</span>, <span class="kw">names</span>(object$coefficients)[-<span class="dv">1</span>])
+  co.n &lt;-<span class="st">  </span><span class="kw">gsub</span>(<span class="st">&quot;p.*)&quot;</span>, <span class="st">&quot;&quot;</span>, co)
+  if(abbreviate ==<span class="st"> </span><span class="ot">TRUE</span>) {
+    co.n &lt;-<span class="st"> </span><span class="kw">abbreviate</span>(<span class="kw">gsub</span>(<span class="st">&quot;p.*)&quot;</span>, <span class="st">&quot;&quot;</span>, co), <span class="dt">minlength=</span>abbrev.length)
+  }
+  <span class="co"># Get and format DV</span>
+  m.y &lt;-<span class="st"> </span><span class="kw">strsplit</span>((<span class="kw">as.character</span>(object$call[<span class="dv">2</span>])), <span class="st">&quot; ~ &quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]
+  <span class="co"># Write coefficent labels</span>
+  b.x &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">beta_{&quot;</span>, co.n ,<span class="st">&quot;}&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)
+  <span class="co"># Write error term</span>
+  e &lt;-<span class="st"> &quot;</span><span class="ch">\\</span><span class="st">epsilon_i&quot;</span>
+  <span class="co"># Format coefficint x variable terms</span>
+  m.x &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;}Int&quot;</span>,<span class="st">&quot;}&quot;</span>, <span class="kw">paste</span>(b.x, co.n, <span class="st">&quot; + &quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>, <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>))
+  <span class="co"># If inline estimates convert coefficient labels to values</span>
+  if(estimates ==<span class="st"> &quot;inline&quot;</span>) {
+    m.x &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;Int&quot;</span>, <span class="st">&quot;&quot;</span>,
+               <span class="kw">paste</span>(<span class="kw">round</span>(object$coefficients,<span class="dt">digits=</span>digits), co.n, <span class="st">&quot; + &quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>,
+                     <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>))
+    m.x &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">+ </span><span class="ch">\\</span><span class="st">-&quot;</span>, <span class="st">&quot;-&quot;</span>, m.x)
+  }
+  <span class="co"># Format regression equation</span>
+  eqn &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;:&quot;</span>, <span class="st">&quot; </span><span class="ch">\\\\\\</span><span class="st">times &quot;</span>, <span class="kw">paste</span>(math.env[<span class="dv">1</span>], m.y, <span class="st">&quot; = &quot;</span>,
+                                          m.x, e, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>))
+  <span class="co"># Write the opening math mode tag and the model</span>
+  <span class="kw">cat</span>(eqn, <span class="dt">file=</span>file)
+  <span class="co"># If separae estimates format estimates and write them below the model</span>
+  if(estimates ==<span class="st"> &quot;separate&quot;</span>) {
+    est &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;:&quot;</span>, <span class="st">&quot; </span><span class="ch">\\\\\\</span><span class="st">times &quot;</span>, <span class="kw">paste</span>(b.x, <span class="st">&quot; = &quot;</span>,
+                                            <span class="kw">round</span>(object$coefficients, <span class="dt">digits=</span>digits), <span class="st">&quot;, &quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>, <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>))
+    <span class="kw">cat</span>(<span class="st">&quot;, </span><span class="ch">\\\\</span><span class="st"> </span><span class="ch">\n</span><span class="st"> </span><span class="ch">\\</span><span class="st">text{where }&quot;</span>, <span class="kw">substr</span>(est, <span class="dv">1</span>, (<span class="kw">nchar</span>(est)-<span class="dv">2</span>)), <span class="dt">file=</span>file)
+  }
+  <span class="co"># Write the closing math mode tag</span>
+  <span class="kw">cat</span>(math.env[<span class="dv">2</span>], <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="dt">file=</span>file)
+}
+
+<span class="co"># 회귀식</span>
+mtcars_best &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg~wt+qsec+am, <span class="dt">data=</span>df[,-<span class="dv">1</span>])
+
+<span class="kw">latex_lm</span>(mtcars_best)</code></pre></div>
+<p><span class="math inline">\(mpg = \beta_{Int} + \beta_{wt}wt + \beta_{qsec}qsec + \beta_{am}am + \epsilon_i\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 최종회귀모형 상세</span>
+<span class="kw">stargazer</span>(mtcars_best, df_forward, df_backward, <span class="dt">type=</span><span class="st">&quot;html&quot;</span>, <span class="dt">notes.align =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
+<pre class="output"><code>Error in stargazer(mtcars_best, df_forward, df_backward, type = &quot;html&quot;, : 함수 &quot;stargazer&quot;를 찾을 수 없습니다
+</code></pre>
+<p>이를 위해 다음과 같이 데이터에서 최상부분집합선택법에서 바로 최적 회귀모형을 생성시키도록 <code>latex_lm</code> 함수를 작성하고 이를 문서와 함께 자동화한다. 그리고 나서 <code>stargazer</code> 함수를 통해 최적 모형에 대한 회귀식 문서를 완성시키고 모형에 대한 간략한 설명을 붙여 회귀분석 보고서를 마무리한다.</p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://rstudio-pubs-static.s3.amazonaws.com/2897_9220b21cfc0c43a396ff9abf122bb351.html">All subset regression with leaps, bestglm, glmulti, and meifly</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="https://stat.ethz.ch/pipermail/r-help/2009-October/408317.html">function to convert lm model to LaTeX equation</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>
