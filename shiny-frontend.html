@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">데이터 과학</h1></a>
+          <h2 class="subtitle">Shiny 프론트엔트 개발</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>웹앱 개발을 위한 LAMP를 설치한다.</li>
+<li>프론트엔드 Bootstrap, jQuery, Jekyll을 설치한다.</li>
+<li>부츠트랩 3 CSS, fluidPage, 레이아웃을 Shiny에 맞게 개발한다.</li>
+</ul>
+</div>
+</section>
+<h3 id="웹앱-개발을-위한-툴체인tool-chain-설치">1. 웹앱 개발을 위한 툴체인(Tool Chain) 설치</h3>
+<p>웹앱(Web App)은 웹브라우져가 설치된 클라이언트 컴퓨터에서 동작하는 응용프로그램이다. 통상 웹브라우저에 최적화된 웹(Web) 응용프로그램과 특정 플랫폼에 특화된 앱(App) 응용프로그램을 각각 개발하는 것이 바람직할 수 있지만, 웹과 특정 플랫폼 앱을 모두 학습하고 경험을 한 뒤에 응용프로그램을 개발하는 입장에서는 여간 시간과 노력이 많이 드는 것이 아니다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="웹앱web-application"><span class="glyphicon glyphicon-pushpin"></span>웹앱(Web Application)</h3>
+</div>
+<div class="panel-body">
+<p>소프트웨어 공학적 관점에서 웹 애플리케이션(web application) 또는 웹 앱은 인터넷이나 인트라넷을 통해 웹 브라우저에서 이용할 수 있는 응용 소프트웨어를 말한다.<br />
+출처: 위키피디아 <a href="http://ko.wikipedia.org/wiki/웹_애플리케이션">웹 애플리케이션</a></p>
+</div>
+</aside>
+<p>이것에 비해서 클라이언트에 웹브라우져만 설치되어 있으면 어디서든 동작하게 되는 응용프로그램을 개발하는 것은 매력적이다. 이러한 유형의 응용프로그램을 개발하는데 최적화된 툴체인(Tool Chain)이 LAMP다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h2 id="lamp"><span class="glyphicon glyphicon-pushpin"></span>LAMP</h2>
+</div>
+<div class="panel-body">
+<p>LAMP는 웹사이트나 서버 운영에 자주 같이 쓰이는 다음의 소프트웨어들의 이름을 합한 약자다: Linux (리눅스 운영체제), Apache (아파치 웹 서버), MySQL / MariaDB 데이터베이스 관리 시스템(데이터베이스 서버), PHP, Perl, 또는 Python 프로그래밍 언어. 출처: 위키피디아 <a href="http://ko.wikipedia.org/wiki/LAMP">LAMP</a></p>
+</div>
+</aside>
+<h3 id="lamp-툴체인-설치">2. LAMP 툴체인 설치</h3>
+<h4 id="웹서버-아파치apache-설치">2.1. 웹서버 아파치(Apache) 설치</h4>
+<p>가장 먼저 아파치 웹서버를 설치한다. 웹서버는 웹브라우져 클라이언트에서 HTTP 요청을 받아들여, 주로 그림, 스타일 시트, 자바스크립트를 포함한 HTML 문서를 웹 페이지형태로 클라이언트로 전달하는 것이다.</p>
+<pre class="input"><code>root@dev:/# sudo apt-get update                           # 최신버젼 설치를 위한 준비
+root@dev:/# sudo apt-get install apache2                  # 아파치 웹서버 설치
+root@dev:/# sudo apt-get install mysql-server             # MySQL 데이터베이스 서버 설치, root 비밀번호 설정
+root@dev:/# sudo apt-get install php5 libapache2-mod-php5 # PHP 설치 </code></pre>
+<p>리눅스(우분투) 환경에서 웹서버, 데이터베이스, PHP를 설치했으면 이제 제대로 설치가 되었는지 확인해보자. 웹서버를 <code>sudo /etc/init.d/apache2 restart</code> 명령어로 재가동하고 <code>ifconfig</code> 명령어나 <code>ifconfig eth1 | grep 'inet addr:'</code> 을 통해서 ip 주소를 확인하고 웹브라우저에 주소창에 <code>161.202.103.101</code>을 입력해서 <em>Apache2 Ubuntu Default Page</em>가 보인다면 모든 준비는 완료된 것이다.</p>
+<pre class="input"><code>root@dev:/# sudo /etc/init.d/apache2 restart
+root@dev:~# ifconfig eth1 | grep &#39;inet addr:&#39;
+          inet addr:161.202.103.101  Bcast:161.202.103.127  Mask:255.255.255.224</code></pre>
+<p><img src="fig/shiny-lamp-install.png" alt="LAMP 설치 준비 화면" width="30%" /></p>
+<h3 id="프론트엔드-앱개발">3. 프론트엔드 앱개발</h3>
+<h4 id="프론트엔드-앱개발-툴체인-bootstrap">3.1. 프론트엔드 앱개발 툴체인 : Bootstrap</h4>
+<p>웹앱을 개발 하기 위한 프론트엔드 앱개발 도구는 <a href="http://getbootstrap.com/">Bootstrap</a>과 <a href="https://jquery.com/">jQuery</a>다. Bootstrap을 설치하는 방법은 여러가지가 있다. 가장 간단한 방법 중 하나는 <code>.zip</code>파일을 다운로드 받아서 <code>index.html</code> 파일에 “Hello World!!!”를 찍는 것이다. <code>zip</code> 파일은 <code>http://getbootstrap.com/getting-started/#download</code> 사이트에서 원하는 것을 다운로드 받는다. *Download Bootstrap<code>버튼 위에 마우스 우클릭하면</code>링크주소 복사<code>가 있어</code>wget` 명령뒤에 인자로 붙여넣는다.</p>
+<p>만약 <code>unzip</code>이 설치되어 있지 않다면 <code>apt-get install unzip</code> 명령어로 간단히 설치한 후 <code>unzip</code> 명령을 실행한다.</p>
+<pre class="input"><code>root@dev:~# wget https://github.com/twbs/bootstrap/releases/download/v3.3.4/bootstrap-3.3.4-dist.zip
+root@dev:~# apt-get install unzip
+root@dev:~# unzip bootstrap-3.3.4-dist.zip</code></pre>
+<p>우분투에서 윈도우 탐색기와 유사한 나무구조를 명령라인 인터페이스에서 볼 수 있는 명령어가 <code>tree</code>다. <code>apt-get install tree</code> 명령어로 설치하고, Bootstrap 설치를 완료했다면 <code>css</code>, <code>fonts</code>, <code>js</code> 폴더 아래 14개 파일이 들어 있는 것을 확인할 수 있다.</p>
+<pre class="output"><code>root@dev:~/bootstrap-3.3.4-dist# apt-get install tree
+root@dev:~/bootstrap-3.3.4-dist# tree
+.
+|-- css
+|   |-- bootstrap.css
+|   |-- bootstrap.css.map
+|   |-- bootstrap.min.css
+|   |-- bootstrap-theme.css
+|   |-- bootstrap-theme.css.map
+|   `-- bootstrap-theme.min.css
+|-- fonts
+|   |-- glyphicons-halflings-regular.eot
+|   |-- glyphicons-halflings-regular.svg
+|   |-- glyphicons-halflings-regular.ttf
+|   |-- glyphicons-halflings-regular.woff
+|   `-- glyphicons-halflings-regular.woff2
+`-- js
+    |-- bootstrap.js
+    |-- bootstrap.min.js
+    `-- npm.js
+
+3 directories, 14 files</code></pre>
+<p>Bootstrap 설치가 완료되었으면 “Hello World”를 만들어 보자. 먼저 Bootstrap 이 적용되지 않은 <code>index.html</code> 웹페이지 코드를 HTML로 작성한다.</p>
+<pre class="input"><code>&lt;!--index.html--&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;Bootstrap 없는 HTML&lt;/title&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;여러분 안녕하세요... Hello, world!&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<pre class="input"><code>&lt;!--index-bs.html--&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;Bootstrap 없는 HTML&lt;/title&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+         &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/bootstrap.min.css&quot;&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;여러분 안녕하세요... Hello, world!&lt;/h1&gt;
+        &lt;script src=&quot;https://code.jquery.com/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;js/bootstrap.min.js&quot;&gt;&lt;/script&gt;     
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Bootstrap 없는 <code>index.html</code> 파일과 Bootstrap을 적용한 <code>index-bs.html</code> 파일을 <code>/var/www/html</code> 클라우드 웹서버 배포 위치로 이동한다. 최종 결과는 다음과 같다. <code>index.html</code>, <code>index-bs.html</code> 파일 두개만 추가되었다.</p>
+<pre class="output"><code>root@dev:/var/www/html# tree
+.
+|-- css
+|   |-- bootstrap.css
+|   |-- bootstrap.css.map
+|   |-- bootstrap.min.css
+|   |-- bootstrap-theme.css
+|   |-- bootstrap-theme.css.map
+|   `-- bootstrap-theme.min.css
+|-- fonts
+|   |-- glyphicons-halflings-regular.eot
+|   |-- glyphicons-halflings-regular.svg
+|   |-- glyphicons-halflings-regular.ttf
+|   |-- glyphicons-halflings-regular.woff
+|   `-- glyphicons-halflings-regular.woff2
+|-- index-bs.html
+|-- index.html
+`-- js
+    |-- bootstrap.js
+    |-- bootstrap.min.js
+    `-- npm.js
+
+3 directories, 16 files</code></pre>
+<p><img src="fig/shiny-bootstrap-hello-world.png" alt="Bootstrap Hello World 적용전후 화면" width="70%" /></p>
+<h4 id="프론트엔드-앱개발-툴체인-jquery">3.2. 프론트엔드 앱개발 툴체인 : jQuery</h4>
+<p><a href="https://jquery.com/">jQuery</a>는 사이트 접속해서 <em>Download jQuery</em>를 클릭하면 <a href="https://jquery.com/download/">jQuery 다운로드</a> 사이트로 접속해서 원하는 버젼을 다운로드 받아 사용하면 된다. <code>wget http://code.jquery.com/jquery-2.1.4.min.js</code> 명령어로 다운로드받아서 <code>js</code> 디렉토리에 담아 두면 된다.</p>
+<pre class="input"><code>root@dev:/var/www/html/js# wget http://code.jquery.com/jquery-2.1.4.min.js</code></pre>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="jquery"><span class="glyphicon glyphicon-pushpin"></span>jQuery</h3>
+</div>
+<div class="panel-body">
+<p>jQuery(제이쿼리)는 브라우저 호환성이 있는 HTML 속 자바스크립트 라이브러리이며 클라이언트 사이드 스크립트 언어를 단순화 할 수 있도록 설계되었다. 존 레식이 2006년 뉴욕 시 바캠프(Barcamp NYC)에서 공식적으로 소개하였다. jQuery는 오늘날 가장 인기있는 자바스크립트 라이브러리 중 하나이다. jQuery는 MIT 라이선스와 GNU 일반 공중 사용 허가서v2의 듀얼 라이선스를 가진 자유 오픈 소프트웨어이다. jQuery의 문법은 코드 보기, 문서 객체 모델 찾기, 애니메이션 만들기, 이벤트 제어, Ajax 개발을 쉽게 할 수 있도록 디자인되었다. 또한, jQuery는 개발자가 플러그인을 개발할 수 있는 기능을 제공한다.<br />
+출처: 위키피디아 <a href="http://ko.wikipedia.org/wiki/JQuery">jQuery</a></p>
+</div>
+</aside>
+<p><code>index.html</code> 파일에서 jQuery를 찾는 곳이 외부 인터넷 <code>https://code.jquery.com/jquery-1.11.2.min.js</code> 주소에서 로컬에 다운로드 받은 디렉토리로 변경하면 된다. 기존 1.11.2 버젼에서 2.1.4 버젼으로 변경했다.</p>
+<pre class="input"><code>&lt;!--index-js.html--&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;Bootstrap 없는 HTML&lt;/title&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+         &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/bootstrap.min.css&quot;&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;여러분 안녕하세요... Hello, world!&lt;/h1&gt;
+        &lt;script src=&quot;js/jquery-2.1.4.min.js&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;js/bootstrap.min.js&quot;&gt;&lt;/script&gt;     
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h4 id="프론트엔드-앱개발-툴체인-jekyll">3.3. 프론트엔드 앱개발 툴체인 : Jekyll</h4>
+<p>우분투에서 <strong>Jekyll</strong>을 설치할 때 난관이 많다. 특히 Jekyll이 <code>Ruby</code>기반이라 특히 그렇다. 우분투에서 Jekyll 정적 웹페이지(Static Webpage)를 구축하는 방법은 다음과 같다.</p>
+<h5 id="구-루비-버젼-확인-및-삭제">3.3.1. 구 루비 버젼 확인 및 삭제</h5>
+<pre class="input"><code># 루비 버젼확인 및 설치된 오래된 루비 버젼 삭제
+root@jekyll:~# ruby -v
+ruby 1.8.7 (2011-06-30 patchlevel 352) [x86_64-linux]
+root@jekyll:~# sudo apt-get purge ruby* </code></pre>
+<h5 id="rvm-기반-루비-최신-버젼-설치">3.3.2. RVM 기반 루비 최신 버젼 설치</h5>
+<p>RVM(Ruby Version Management)은 루비버젼관리 소프트웨어다. RVM 잘못된 버젼으로 작업을 하면 우분투 환경에서 엄청난 오류와 싸워야 된다. 먼저 <code>ruby-rvm</code>을 제거하고 깔끔한 상태로 시작한다. 자세한 사항은 <a href="http://stackoverflow.com/questions/9056008/installed-ruby-1-9-3-with-rvm-but-command-line-doesnt-show-ruby-v/9056395#9056395">우분투 루비 설치원문</a>을 참조한다.</p>
+<pre class="input"><code>root@jekyll:~# sudo apt-get --purge remove ruby-rvm
+root@jekyll:~# sudo rm -rf /usr/share/ruby-rvm /etc/rvmrc /etc/profile.d/rvm.sh</code></pre>
+<p>새 터미널 윈도우를 열어서 다음 명령어를 날렸을 때 아무것도 없다면 이제 준비가 완료된 것이다. 만약 뭔가 출력결과가 있다면, 컴퓨터를 다시 부팅하자.</p>
+<pre class="input"><code>root@jekyll:~# env | grep rvm</code></pre>
+<p>다음 명령어를 통해서 <code>RVM</code>을 설치한다.</p>
+<pre class="input"><code>root@jekyll:~# \curl -L https://get.rvm.io | 
+  bash -s stable --ruby --autolibs=enable --auto-dotfiles
+root@jekyll:~# ruby -v
+ruby 2.2.1p85 (2015-02-26 revision 49769) [x86_64-linux]</code></pre>
+<h5 id="jekyll-설치">3.3.3. Jekyll 설치</h5>
+<p>먼길을 돌아 이제야 Jelyll을 설치할 수 있다.<a href="http://jekyllrb.com/">Jekyll</a>은 루비 언어로 만들어졌으며 단순(Simple)하고, 정적(Static)이며, 블로그 친화적이다. 이와 같은 아름다운 장점으로 인해서 루비를 다시 설치하는 고난의 길을 걸어왔다. 다음은 허무하게도 매우 단순하다.</p>
+<p><a href="https://github.com/">GitHub</a>이 워드프레스와 견줄만한 블로그 서비스를 제공하고 있어서 <code>gem install github-pages</code> 명령어를 날리면 모든 설치가 완료된다. <code>jekyll serve</code> 명령어로 정상적으로 실행이 되는지 확인한다.</p>
+<pre class="input"><code>root@jekyll:~# gem install github-pages</code></pre>
+<pre class="output"><code>root@jekyll:~# jekyll serve
+Configuration file: none
+            Source: /root
+       Destination: /root/_site
+      Generating...
+                    done.
+ Auto-regeneration: enabled for &#39;/root&#39;
+Configuration file: none
+    Server address: http://0.0.0.0:4000/
+  Server running... press ctrl-c to stop.</code></pre>
+<h5 id="jekyll-테마-및-정적웹-블로그-서비스-개발">3.3.4. Jekyll 테마 및 정적웹 블로그 서비스 개발</h5>
+<p>Jekyll을 설치한 다음 <a href="http://jekyllthemes.org/">Jekyll 테마</a> 사이트에서 원하는 테마를 얻어 다운로드하고 <code>jekyll serve</code> 혹은 <code>jekyll -t build -d _site</code> 명령어를 보내면 <code>_site</code> 디렉토리에 정적웹 블로그 서비스가 자동 생성된다.</p>
+<p><code>gem install rouge</code>는 다운로드 받은 <code>Jekyll 테마, tufte-jekyll</code>에 의존성이 있어 미리 설치한 것이다. 압축파일을 풀고 테마 디렉토리로 이동해서 <code>jekyll serve</code>를 실행하면 정적 웹페이지를 자동으로 <code>_site</code>에 생성해 준다. <code>_site</code>의 <code>index.html</code> 파일을 포함한 모든 파일을 웹서버 서비스 저장소로 옮겨 놓으면 서비스 준비가 완료된다.</p>
+<pre class="input"><code>root@jekyll:~# gem install rouge 
+root@jekyll:~# wget https://github.com/clayh53/tufte-jekyll/archive/master.zip
+root@jekyll:~# unzip master.zip
+master.zip  tufte-jekyll-master
+root@jekyll:~# cd tufte-jekyll-master/
+root@jekyll:~/tufte-jekyll-master# jekyll serve</code></pre>
+<pre class="output"><code>Configuration file: /root/tufte-jekyll-master/_config.yml
+            Source: /root/tufte-jekyll-master
+       Destination: /root/tufte-jekyll-master/_site
+      Generating...
+                    done.
+ Auto-regeneration: enabled for &#39;/root/tufte-jekyll-master&#39;
+Configuration file: /root/tufte-jekyll-master/_config.yml
+    Server address: http://0.0.0.0:4000
+  Server running... press ctrl-c to stop.
+^Croot@jekyll:~/tufte-jekyll-master# ls
+about        _example-config.yml  LICENSE    Rakefile
+assets       feed.xml             page       README.md
+_config.yml  fonts                _page.txt  _scss
+css          _includes            _plugins   _site
+_data        index.html           _posts     UploadToGithub.Rakefile
+_drafts      _layouts             _post.txt</code></pre>
+<p><img src="fig/shiny-jekyll-static-web.png" alt="Jekyll 정적 웹페이지 서비스" width="30%" /></p>
+<h3 id="shiny-프론트엔드-개발">4. Shiny 프론트엔드 개발</h3>
+<p>Shiny 웹응용프로그램 개발을 위한 프론트엔드 구성요소는 정적-동적 콘텐츠 추가, 레이아웃 설정, 그리고 뷰츠트랩 스타일 요소 추가가 된다.</p>
+<p><img src="fig/shiny-app-frontend.png" alt="Shiny 프론트엔드 개발 구성요소" width="70%" /></p>
+<h4 id="ui---정적-콘텐츠-추가">4.1. <code>ui &lt;-</code> 정적 콘텐츠 추가</h4>
+<p><code>fluidPage()</code> 함수에 HTML 태그를 넣거나 Shiny <code>tag$</code> 태그를 넣어 동일하게 콘텐츠를 넣을 수도 있고, <code>HTML()</code>을 사용해서 전체를 넣어도 좋다. 좀더 자세한 사용은 <a href="http://shiny.rstudio.com/articles/html-ui.html">Build your entire UI with HTML</a>을 참조한다.</p>
+<pre class="input"><code>fluidPage(                            | fluidPage(                                 
+   &lt;h1&gt;My Shiny App&lt;/h1&gt;              |   tags$h1(&quot;My Shiny App&quot;),                 
+   &lt;p style=&quot;font-family:Impact&quot;&gt;     |   tags$p(style = &quot;font-family:Impact&quot;,     
+     See other apps in the            |     &quot;See other apps in the&quot;,               
+     &lt;a href=&quot;http://www.rstudio.com/ |     tags$a(&quot;Shiny Showcase&quot;,               
+        products/shiny/shiny-user-    |       href = &quot;http://www.rstudio.com/      
+        showcase/&quot;&gt;Shiny Showcase&lt;/a&gt; |       products/shiny/shiny-user-showcase/&quot;)
+   &lt;/p&gt;                               |   )                                        
+)                                     | )                                          </code></pre>
+<p><sub>~</sub> {.input}</p>
+fluidPage(<br />
+HTML(<br />
+’
+<div class="container-fluid">
+<pre><code>  &lt;h1&gt;My Shiny App&lt;/h1&gt;       
+  &lt;p style=&quot;font-family:Impact&quot;&gt;     
+     See other apps in the         
+     &lt;a href=&quot;http://www.rstudio.com/
+       products/shiny/shiny-user-    
+       showcase/&quot;&gt;Shiny Showcase&lt;/a&gt; 
+  &lt;/p&gt;     
+ &lt;/div&gt;&#39;    </code></pre>
+<p>) ) <sub>~</sub></p>
+<h4 id="레이아웃layout-추가">4.2. 레이아웃(Layout) 추가</h4>
+<p>하나의 화면을 레이아웃을 조정해서 열(Column)의 경우 12열로 나누어서 6+6 으로 구분된 2개 부화면으로 혹은 2+5+5로 크기가 다른 3개 부화면으로 나누는 것도 가능하다. 열을 나눌 때는 <code>column()</code>을 사용하고 행을 여러 구역으로 나눌 때는 <code>fluidRow()</code>를 사용한다.</p>
+<pre class="input"><code># 세로를 2개 행으로 구분    | # 행 내부에 두 열을 추가하고 오프셋을 설정                                 
+ui &lt;- fluidPage(            | ui &lt;- fluidPage(  
+    fluidRow(),             |   fluidRow(   
+    fluidRow()              |     column(3),   
+)                           |     column(5)),  
+                            |   fluidRow(   
+                            |     column(4, offset = 8)
+                            | ) </code></pre>
+<h4 id="패널panel-추가">4.3. 패널(Panel) 추가</h4>
+<p>패널을 추가해서 연관 요소 콘텐츠를 하나의 그룹을 묶어 심미적, 혹은 기능적으로 통일성을 준다.</p>
+<p><code>tabPanel()</code>, <code>tabsetPanel()</code>, <code>navlistPanel()</code> 패널을 사용한다.</p>
+<p><code>wellPanel</code>을 사용해서 입력값을 통일해서 기능적, 심지적인 일체감을 준다.</p>
+<pre class="input"><code>library(shiny)
+
+ui &lt;- fluidPage(
+  wellPanel(
+    sliderInput(inputId = &quot;num&quot;, 
+      label = &quot;Choose a number&quot;, 
+      value = 25, min = 1, max = 100),
+    textInput(inputId = &quot;title&quot;, 
+      label = &quot;Write a title&quot;,
+      value = &quot;Histogram of Random Normal Values&quot;)
+  ),
+  plotOutput(&quot;hist&quot;)
+)
+
+server &lt;- function(input, output) {
+  output$hist &lt;- renderPlot({
+    hist(rnorm(input$num), main = input$title)
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<p>레이아웃에 대한 자세한 사항은 <a href="http://shiny.rstudio.com/articles/layout-guide.html">Application layout guide</a>를 참조한다.</p>
+<h4 id="css-스타일-추가">4.4. CSS 스타일 추가</h4>
+<ol style="list-style-type: decimal">
+<li>외부 CSS 파일에 연결
+<ul>
+<li><code>.css</code> 파일을 <strong>www</strong> 폴더 내부에 위치시킨다.</li>
+<li><code>theme</code>인자로 해당 <code>*.css</code> 파일을 지정한다.</li>
+<li>혹은 <code>tags$head()</code>, <code>tags$link()</code>와 연결한다.</li>
+</ul></li>
+</ol>
+<pre class="input"><code>ui &lt;- fluidPage(                      |   ui &lt;- fluidPage(                        
+  theme = &quot;bootswatch-cerulean.css&quot;,  |     tags$head(                      
+  sidebarLayout(                      |       tags$link(                      
+      sidebarPanel(),                 |         rel = &quot;stylesheet&quot;,                      
+      mainPanel()                     |         type = &quot;text/css&quot;,                      
+  )                                   |         href = &quot;file.css&quot;                      
+)                                     |       )                      
+                                      |     )                      
+                                      |   )                      </code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>헤더(header)에 전역 CSS를 작성한다.
+<ul>
+<li>전역 CSS (global CSS)를 tags<span class="math inline">\(head(), tags\)</span>style(), HTML()으로 작성한다.</li>
+<li>혹은 <code>includeCSS()</code>를 사용해서 파일로 CSS를 저장한다.</li>
+</ul></li>
+</ol>
+<pre class="input"><code>ui &lt;- fluidPage(      |    ui &lt;- fluidPage(                       
+  tags$head(          |      includeCSS(&quot;file.css&quot;)             
+   tags$style(HTML(&quot;  |    )                       
+     p {              |                                              
+       color:red;     |                                                      
+     }                |                                             
+   &quot;))                |
+  )                   |                                   
+)                     |</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>개별 CSS를 태그 스타일 속성에 맞춰 작성한다.
+<ul>
+<li>Shiny 태그 함수에 스타일 인자를 설정한다.</li>
+</ul></li>
+</ol>
+<pre class="input"><code>ui &lt;- fluidPage(
+  tags$h1(&quot;Title&quot;, style = &quot;color:red;&quot;) 
+)</code></pre>
+<p>Shiny 스타일 추가에 대한 자세한 사항은 <a href="http://shiny.rstudio.com/articles/css.html">Style your apps with CSS</a>을 참고한다.</p>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="bootstrap-3와-shiny"><span class="glyphicon glyphicon-pushpin"></span>Bootstrap 3와 Shiny</h3>
+</div>
+<div class="panel-body">
+<p>Shiny에 <a href="http://getbootstrap.com/">Bootstrap 3</a>가 가장 잘 맞습니다.<br />
+<em>CSS designed to work with Bootstrap 3 will work best with Shiny</em></p>
+</div>
+</aside>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>

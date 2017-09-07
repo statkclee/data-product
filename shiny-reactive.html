@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 과학</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">데이터 과학</h1></a>
+          <h2 class="subtitle">Shiny 반응형 웹앱 개발</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Shiny 반응형 웹앱을 개발한다.</li>
+<li>모듈화 및 다양한 이벤트 처리를 이해한다.</li>
+</ul>
+</div>
+</section>
+<h3 id="반응형-shiny-웹앱-개발-개요">반응형 Shiny 웹앱 개발 개요</h3>
+<p>반응형 Shiny (Reactive Shiny) 웹앱을 개발은 기본적으로 <code>input$x</code> 반응값을 받아 <code>expression()</code> 표현식으로 처리를 하고 <code>output$y</code> 출력결과를 화면에 뿌려주는 것으로 진행된다. 이 과정에서 비동기화, 격리, 지연, 모듈화 등 다양한 조합의 수가 발생한다. 사용자의 요구가 다양한만큼 다양한 방식을 조합해서 Shiny 웹응용프로그램을 개발한다.</p>
+<p><img src="fig/shiny-app-reactive-arch.png" alt="반응형 Shiny 웹앱 개발 개요" width="70%" /></p>
+<pre class="input"><code>library(shiny)                         |  Error in .getReactiveEnvironment() $currentContext() :    
+                                       |  Operation not allowed without an active reactive context. 
+ui &lt;- fluidPage(                       |  (You tried to do something that can only be done 
+   sliderInput(inputId = &quot;num&quot;,        |  from inside a reactive expression or observer.)             
+     label = &quot;Choose a number&quot;,        |                                                           
+     value = 25, min = 1, max = 100),  |                                                              
+   plotOutput(&quot;hist&quot;)                  |                                                  
+)                                      |                             
+                                       |                            
+server &lt;- function(input, output) {    |                                                              
+   output$hist &lt;-                      |                                             
+     hist(rnorm(input$num))            |                                                          
+}                                      |                              
+                                       |                            
+shinyApp(ui = ui, server = server)     |                                                            </code></pre>
+<aside class="callout panel panel-info">
+<div class="panel-heading">
+<h3 id="반응값reactive-value은-반응함수reactive-function와-한짝"><span class="glyphicon glyphicon-pushpin"></span>반응값(Reactive Value)은 반응함수(Reactive Function)와 한짝</h3>
+</div>
+<div class="panel-body">
+<p>반응값(Reactive Value)은 반응함수(Reactive Function)와 함께 동작한다. 따라서 독립적으로 반응값을 호출할 수 없다.<br />
+<code>renderPlot({ hist(rnorm(100, input$num)) })</code> 에서 <code>renderplot</code> 반응함수와 <code>input$num</code> 반응값이 함께 쓰였다.<br />
+하지만, <code>hist(rnorm(100, input$num))</code> 에서 <code>input$num</code> 반응값은 오류가 된다.</p>
+</div>
+</aside>
+<h4 id="반응형-웹응용프로그램-개발-흐름">반응형 웹응용프로그램 개발 흐름</h4>
+<ol style="list-style-type: decimal">
+<li>반응값(reactive value)가 함수에 반응값을 전달한다.</li>
+<li>반응함수(reactive function)가 생성한 객체가 응답한다.</li>
+</ol>
+<pre class="input"><code>library(shiny)                         |                                                     
+                                       |                                                     
+ui &lt;- fluidPage(                       |   input$num : 입력값                                                 
+   sliderInput(inputId = &quot;num&quot;,        |           |                                            
+     label = &quot;Choose a number&quot;,        |           |                                         
+     value = 25, min = 1, max = 100),  |           |                                            
+   plotOutput(&quot;hist&quot;)                  |           |                                         
+)                                      |           |                                         
+                                       |           |                                       
+server &lt;- function(input, output) {    |          \+/                                         
+   output$hist &lt;- renderPlot({         |   output$hist &lt;- renderPlot({                                      
+     hist(rnorm(input$num))            |     hist(rnorm(input$num))                                                  
+   })                                  |   })
+}                                      |                                                    
+                                       |                                                    
+shinyApp(ui = ui, server = server)     |                                                     </code></pre>
+<h4 id="출력표시-함수---render">출력표시 함수 - **render*()**</h4>
+<p><code>renderPlot(  { hist(rnorm(input$num)) })</code></p>
+<p>반응값(reactive value)이 변경되었을 때 **render*()** 함수에서 생성된 객체는 연관된 코드 블록 전체, <code>{ hist(rnorm(input$num)) }</code>, 를 다시 실행한다.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">함수</th>
+<th align="center">생성하는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">renderDataTable()</td>
+<td align="center">인터랙티브 테이블(table)</td>
+</tr>
+<tr class="even">
+<td align="center">renderImage()</td>
+<td align="center">이미지(image)</td>
+</tr>
+<tr class="odd">
+<td align="center">renderPlot()</td>
+<td align="center">플롯 (plot)</td>
+</tr>
+<tr class="even">
+<td align="center">renderPrint()</td>
+<td align="center">출력 결과 코드(code) 블록</td>
+</tr>
+<tr class="odd">
+<td align="center">renderTable()</td>
+<td align="center">테이블 (table)</td>
+</tr>
+<tr class="even">
+<td align="center">renderText()</td>
+<td align="center">문자열</td>
+</tr>
+<tr class="odd">
+<td align="center">renderUI()</td>
+<td align="center">Shiny UI 요소(element)</td>
+</tr>
+</tbody>
+</table>
+<pre class="input"><code>library(shiny) 
+ui &lt;- fluidPage(
+   sliderInput(inputId = &quot;num&quot;,
+     label = &quot;Choose a number&quot;,      
+     value = 25, min = 1, max = 100),   
+   textInput(inputId = &quot;title&quot;,      
+     label = &quot;Write a title&quot;,     
+     value = &quot;Histogram of Random Normal Values&quot;),   
+   plotOutput(&quot;hist&quot;) )
+
+server &lt;- function(input, output) {
+   output$hist &lt;- renderPlot({
+      hist(rnorm(input$num), main = input$title)
+   })
+} 
+shinyApp(ui = ui, server = server)</code></pre>
+<h4 id="코드-모듈화modularize---reactive">코드 모듈화(Modularize) - <strong>reactive()</strong></h4>
+<p><code>rnorm(input$num)</code> 동일한 데이터를 사용해서 히스토그램 및 기술통계량을 출력하는 동일한 코드가 모듈화 되기 전과 모듈화 된 후로 나뉘어 있다. 좌측에 모듈화 되기 전에는 <code>rnorm(input$num)</code> 코드가 히스트그램과 기술통계량에 각기 뿌려진다. 우측 모듈화 된 후에는 <code>reactive()</code>를 사용해서 반응객체(reactive object) 한곳에 집중되고, 히스토그램과 기술통계량 출력함수가 <code>data()</code>만 입력 데이터로 사용하여 깔끔하게 정리되어 있다. <code>data()</code> 반응객체는 함수처럼 반응 표현식(reactive expression)을 호출하고, <code>캐쉬(cashe)</code> 역할로 반응값을 저장하고 있으며 가장 최신 값을 반환한다.</p>
+<pre class="input"><code># 모듈화 되기 전                       | # 모듈화 된 후                             
+library(shiny)                         |   library(shiny)                      
+                                       |                                       
+ui &lt;- fluidPage(                       |   ui &lt;- fluidPage(                    
+  sliderInput(inputId = &quot;num&quot;,         |     sliderInput(inputId = &quot;num&quot;,      
+    label = &quot;Choose a number&quot;,         |       label = &quot;Choose a number&quot;,      
+    value = 25, min = 1, max = 100),   |       value = 25, min = 1, max = 100),
+  plotOutput(&quot;hist&quot;),                  |     plotOutput(&quot;hist&quot;),               
+  verbatimTextOutput(&quot;stats&quot;)          |     verbatimTextOutput(&quot;stats&quot;)       
+)                                      |   )                                   
+                                       |                                       
+server &lt;- function(input, output) {    |   server &lt;- function(input, output) { 
+                                       |                                       
+                                       |     data &lt;- reactive({                
+                                       |       rnorm(input$num)                
+                                       |     })                                
+                                       |                                       
+  output$hist &lt;- renderPlot({          |     output$hist &lt;- renderPlot({       
+    hist(rnorm(input$num))             |       hist(data())                    
+  })                                   |     })                                
+  output$stats &lt;- renderPrint({        |     output$stats &lt;- renderPrint({     
+    summary(rnorm(input$num))          |       summary(data())                 
+  })                                   |     })                                
+}                                      |   }                                   
+                                       |                                       
+shinyApp(ui = ui, server = server)     |   shinyApp(ui = ui, server = server)  </code></pre>
+<h4 id="반응-격리isolate---isolate">반응 격리(isolate) - <strong>isolate()</strong></h4>
+<p><code>isolate({ rnorm(input$num) })</code> 반응격리함수는 <code>input$num</code> 변경에도 격리되어 반응하지 않는다. 결국 <code>isolate()</code> 함수는 비반응 객체(non-reactive object)를 생성해서, <code>isolate()</code> 함수를 사용해서 반응값(reactive value)을 보통 R 값처럼 다룬다.</p>
+<pre class="input"><code>library(shiny)
+
+ui &lt;- fluidPage(
+  sliderInput(inputId = &quot;num&quot;, 
+    label = &quot;Choose a number&quot;, 
+    value = 25, min = 1, max = 100),
+  textInput(inputId = &quot;title&quot;, 
+    label = &quot;Write a title&quot;,
+    value = &quot;Histogram of Random Normal Values&quot;),
+  plotOutput(&quot;hist&quot;)
+)
+
+server &lt;- function(input, output) {
+  output$hist &lt;- renderPlot({
+    hist(rnorm(input$num), main = isolate(input$title))
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<h4 id="이벤트-반응-처리---observeevent">이벤트 반응 처리 - <strong>observeEvent()</strong></h4>
+<p><code>observeEvent(input$clicks, { print(input$clicks) })</code>에서 <code>input$clicks</code> 클릭 이벤트가 발생할 때만<br />
+<code>print(input$clicks)</code> 출력이 실행된다.</p>
+<pre class="input"><code>library(shiny)
+
+ui &lt;- fluidPage(
+  sliderInput(inputId = &quot;num&quot;, 
+    label = &quot;Choose a number&quot;,
+    min = 1, max = 100, value = 25),
+  actionButton(inputId = &quot;go&quot;, 
+    label = &quot;Print Value&quot;)
+)
+
+server &lt;- function(input, output) {
+  
+  # observe responds to the print button
+  # but not the slider
+  observeEvent(input$go, {
+    print(as.numeric(input$num))
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<h4 id="반응-지연---eventreactive">반응 지연 - <strong>eventReactive()</strong></h4>
+<p><code>data &lt;- eventReactive(input$go,  { rnorm(input$num) })</code>에서 <code>input$num</code> 반응값 변경에 즉시 반응하는 것이 아니라, <code>eventReactive()</code> 반응 지연 함수가 실행될 때 비로소 <code>renderPlot()</code>에 값을 전달하여 출력결과를 실행한다.</p>
+<pre class="input"><code>library(shiny)
+
+ui &lt;- fluidPage(
+  sliderInput(inputId = &quot;num&quot;, 
+    label = &quot;Choose a number&quot;, 
+    value = 25, min = 1, max = 100),
+  actionButton(inputId = &quot;go&quot;, 
+    label = &quot;Update&quot;),
+  plotOutput(&quot;hist&quot;)
+)
+
+server &lt;- function(input, output) {
+  data &lt;- eventReactive(input$go, {
+    rnorm(input$num) 
+  })
+  
+  output$hist &lt;- renderPlot({
+    hist(data())
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+<h4 id="상태정보state-관리---reactivevalues">상태정보(state) 관리 - <strong>reactiveValues()</strong></h4>
+<p>사용자가 입력값을 바꿀 때마다 반응입력값은 변한다. 따라서 상태입력값을 프로그램적으로 관리할 필요가 있다. <code>rv &lt;- reactiveValues(data = rnorm(100))</code>에서 <code>reactiveValues()</code> 상태함수가 상태정보를 저장하여 관리한다.</p>
+<p>사용자가 버튼을 달리 클릭해도 동일한 출력결과가 된다.</p>
+<pre class="input"><code>library(shiny)
+
+ui &lt;- fluidPage(
+  actionButton(inputId = &quot;norm&quot;, label = &quot;Normal&quot;),
+  actionButton(inputId = &quot;unif&quot;, label = &quot;Uniform&quot;),
+  plotOutput(&quot;hist&quot;)
+)
+
+server &lt;- function(input, output) {
+
+  rv &lt;- reactiveValues(data = rnorm(100))
+
+  observeEvent(input$norm, { rv$data &lt;- rnorm(100) })
+  observeEvent(input$unif, { rv$data &lt;- runif(100) })
+
+  output$hist &lt;- renderPlot({ 
+    hist(rv$data) 
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>

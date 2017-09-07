@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="pandoc">
+    <title>Software Carpentry: 데이터 제품</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
+    </script>
+  </head>
+  <body class="lesson">
+    <div class="container card">
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
+      </div>
+      <article>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+                    <a href="index.html"><h1 class="title">데이터 제품</h1></a>
+          <h2 class="subtitle">Shiny 웹앱 개발</h2>
+          <section class="objectives panel panel-warning">
+<div class="panel-heading">
+<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</div>
+<div class="panel-body">
+<ul>
+<li>Shiny 기반 간단한 웹앱을 개발한다.</li>
+<li>전반적인 Shiny 웹앱 개발 흐름을 이해한다.</li>
+</ul>
+</div>
+</section>
+<h2 id="개괄적인-shiny-응용프로그램-개발">개괄적인 Shiny 응용프로그램 개발</h2>
+<p>정규분포에서 표본을 추출해서 히스토그램을 화면에 출력하는 간단한 예제다. 히스토그램 간격(bin)을 조절하는 제어 변수를 추가하고 슬라이더바(Sliderbar) 사용자 인터페이스를 통해 제어한다.</p>
+<p><img src="fig/shiny-app-histogram.png" alt="히스토그램 Shiny 응용프로그램" width="50%" /></p>
+<h3 id="shiny-응응프로그램-개발-순서">Shiny 응응프로그램 개발 순서</h3>
+<p><img src="fig/shiny-app-development-process.png" alt="Shiny 응응프로그램 5단계 개발 순서" width="70%" /></p>
+<p><strong>1. 템플릿(Template)으로 시작</strong></p>
+<pre class="input"><code>library(shiny)
+ui &lt;- fluidPage()
+server &lt;- function(input, output) {}
+shinyApp(ui = ui, server = server)</code></pre>
+<p><strong>2. fluidPage()에 인자로 요소를 추가</strong></p>
+<pre class="input"><code>library(shiny)
+ui &lt;- fluidPage(&quot;Hello World!!! 한글&quot;)
+server &lt;- function(input, output) {}
+shinyApp(ui = ui, server = server)</code></pre>
+<p><em>2.1 개발 스텁(stub) 생성</em></p>
+<pre class="input"><code>library(shiny)
+ui &lt;- fluidPage(
+    # *Input() functions,
+    # *Output() functions)
+server &lt;- function(input, output) {
+    # output$
+    # render*()
+    # input$
+}
+shinyApp(ui = ui, server = server)</code></pre>
+<p><strong>3. Input() 함수로 반응형 입력 생성</strong></p>
+<pre class="input"><code>library(shiny)
+ui &lt;- fluidPage(
+    sliderInput(inputId = &quot;num&quot;,  
+        label = &quot;숫자를 선택하세요 (Choose a number): &quot;,  
+        value = 25, min = 1, max = 100) 
+)
+server &lt;- function(input, output) {
+    # output$
+    # render*()
+    # input$
+}
+shinyApp(ui = ui, server = server)</code></pre>
+<p><strong>4. Output() 함수로 반응형 출력결과 생성</strong></p>
+<pre class="input"><code>library(shiny)
+ui &lt;- fluidPage(
+    sliderInput(inputId = &quot;num&quot;,  
+        label = &quot;숫자를 선택하세요 (Choose a number): &quot;,  
+        value = 25, min = 1, max = 100),
+    plotOutput(&quot;hist&quot;)
+)
+server &lt;- function(input, output) {
+    # output$
+    # render*()
+    # input$
+
+}
+shinyApp(ui = ui, server = server)</code></pre>
+<p><strong>5. 서버 함수에서 입력과 출력을 조립</strong></p>
+<p><img src="fig/shiny-app-development-process-server.png" alt="Shiny 응응프로그램 서버 개발 프로세스" width="70%" /></p>
+<p><strong>5.1. <code>output$</code> 화면에 출력할 객체를 저장</strong></p>
+<p><code>output$</code> 화면에 출력할 객체를 저장한다.</p>
+<pre class="input"><code>library(shiny)
+ui &lt;- fluidPage(
+    sliderInput(inputId = &quot;num&quot;,  
+        label = &quot;숫자를 선택하세요 (Choose a number): &quot;,  
+        value = 25, min = 1, max = 100), 
+    plotOutput(&quot;hist&quot;)
+)
+server &lt;- function(input, output) {
+    output$hist &lt;- # 코드 
+}
+shinyApp(ui = ui, server = server)</code></pre>
+<p><strong>5.2. <code>render*()</code> 함수로 화면에 출력할 객체를 만듬(build)</strong></p>
+<pre class="input"><code>library(shiny)
+ui &lt;- fluidPage(
+    sliderInput(inputId = &quot;num&quot;,  
+        label = &quot;숫자를 선택하세요 (Choose a number): &quot;,  
+        value = 25, min = 1, max = 100), 
+    plotOutput(&quot;hist&quot;)
+)
+server &lt;- function(input, output) {
+    output$hist &lt;- renderPlot({
+
+  })
+}
+shinyApp(ui = ui, server = server)</code></pre>
+<p><strong>5.3. <code>input$</code> 변수로 입력값 접근</strong></p>
+<pre class="input"><code>library(shiny)
+ui &lt;- fluidPage(
+    sliderInput(inputId = &quot;num&quot;,  
+        label = &quot;숫자를 선택하세요 (Choose a number): &quot;,  
+        value = 25, min = 1, max = 100), 
+    plotOutput(&quot;hist&quot;)
+)
+server &lt;- function(input, output) {
+    output$hist &lt;- renderPlot({
+        title &lt;- &quot;정규분포 난수 100개 값 분포&quot;
+        hist(rnorm(input$num), main = title)
+  })
+}
+shinyApp(ui = ui, server = server)</code></pre>
+<p><img src="fig/shiny-app-rstudio.png" alt="Shiny 응용프로그램 클라우드 RStudio 개발화면" width="50%" /></p>
+<h4 id="shiny-응응프로그램-저장">Shiny 응응프로그램 저장</h4>
+<p><code>app.R</code>을 포함하는 디렉토리를 생성하고, 데이터셋, 이미지, css, 도움말 등을 함께 저장한다. <code>/srv/shiny-server/</code> 디렉토리가 Shiny 서버 응용프로그램을 배포하는 디렉토리다.</p>
+<h3 id="shinyapp.io-배포">shinyapp.io 배포</h3>
+<p><a href="https://www.shinyapps.io/" class="uri">https://www.shinyapps.io/</a>에 Shiny 응용프로그램을 배포하려면 <code>app.R</code>로 한통으로 개발한 프로그래믕ㄹ 두개 <code>ui.R</code>, <code>server.R</code>로 분리한다.</p>
+<pre class="input"><code>                                            | # ui.R 
+library(shiny)                              | library(shiny)                                                             
+ui &lt;- fluidPage(                            | fluidPage(                                                          
+  sliderInput(inputId = &quot;num&quot;,              |   sliderInput(inputId = &quot;num&quot;,                                            
+        label = &quot;숫자를 선택하세요          |         label = &quot;숫자를 선택하세요                                        
+        (Choose a number): &quot;,               |         (Choose a number): &quot;,                                             
+        value = 25, min = 1, max = 100),    |         value = 25, min = 1, max = 100),                                  
+  plotOutput(&quot;hist&quot;)                        |   plotOutput(&quot;hist&quot;)                                                      
+)                                           | )                                                                         
+                                            |                                                             
+                                            | # server.R                                                            
+                                            | library(shiny)                                                            
+server &lt;- function(input, output) {         | function(input, output) {                              
+  output$hist &lt;- renderPlot({               |   output$hist &lt;- renderPlot({                                    
+    title &lt;- &quot;정규분포 난수 100개 값 분포&quot;  |     title &lt;- &quot;정규분포 난수 100개 값 분포&quot;                       
+    hist(rnorm(input$num), main = title)    |     hist(rnorm(input$num), main = title)                         
+  })                                        |   })                                                             
+}                                           | }                                                                
+                                            |                                                             
+shinyApp(server = server, ui = ui)          |                 </code></pre>
+<p><img src="fig/shiny-app-deployment.png" alt="Shiny 서버에 응용프로그램 배포" width="50%" /></p>
+        </div>
+      </div>
+      </article>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      </div>
+    </div>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+  </body>
+</html>
