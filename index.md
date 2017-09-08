@@ -24,7 +24,8 @@ title: 데이터 제품
     - [Shiny 웹앱 개발](shiny-app.html)    
     - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
     - [Shiny 프론트엔트 개발](shiny-frontend.html)
-
+- **사례**
+    - [대한민국 원자력 발전소 현황](shiny-nucelar-powerplant.html)
 
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
