@@ -22,6 +22,7 @@ library(hrbrthemes)
 library(extrafont)
 library(rsconnect)
 library(ggmap)
+library(DT)
 loadfonts()
 
 ```
@@ -126,7 +127,7 @@ npp_cl_df <- npp_df %>% mutate(설비용량 = as.numeric(str_replace(설비용�
 
 #saveRDS(npp_cl_df, "shinyapp/npp/npp_cl_df.rds")
 DT::datatable(npp_cl_df) %>% 
-    DT::formatDate("상업운전일", method = 'toLocaleDateString', params = list('ko-KR')) %>% 
+    # DT::formatDate("상업운전일", method = 'toLocaleDateString', params = list('ko-KR')) %>% 
     DT::formatRound("발전량", digits=0)
 ```
 
@@ -345,3 +346,37 @@ server <- function(input, output) {
 ```
 
 <img src="fig/shiny-app-nuclear-powerplant.png" alt="원자력 발전소 Shiny App" width= "77%" />
+
+## 5. shinyapps.io Paas 서비스 {#shinyapps}
+
+[shinyapps.io](https://www.shinyapps.io)에 개발된 Shiny 앱을 `publish` 버튼을 눌러 바로 웹에 게시할 수 있다.
+하지만, 한국어를 지원하지 않아 모두 영어로 번역을 하고 올려야만 된다. 
+아래 웹사이트를 클릭하면 [shinyapps.io](https://www.shinyapps.io)에 게시된 대한민국 원자력 발전소 현황에 대한 정보를 인터랙티브 앱 형태로 
+살펴볼 수 있다.
+
+[South Korea Nuclear Power Plant (2016)](https://dl-dashboard.shinyapps.io/npp_server_eng/)
+
+RStudio 서버 버젼과 RStudio 데스크톱 버젼에서 다소 차이가 있지만 대략적인 `shinyapp.io` 웹사이트로 개발된 웹앱을 배포하는 방식은 대동소이하다.
+
+### 5.1. `shinyapps.io` 공용 Shiny 서버 설정
+
+`Tools` --> `ShinyApps` --> `Manage Accounts...`를 통해 RStudio에서 바로 
+[https://www.shinyapps.io/](https://www.shinyapps.io/) 공용 Shiny 서버로 응용프로그램을 배포할 수 있다. 
+먼저 [https://www.shinyapps.io/](https://www.shinyapps.io/) 웹사이트에 접속해서 계정을 생성한다. 
+
+[https://www.shinyapps.io/](https://www.shinyapps.io/) 웹사이트에 로그인한 뒤에 사용자명(우측상단)을 클릭하고 **Tokens**를 클릭하면 토큰과 비밀키 정보가 함께 볼 수 있다. 
+
+``` {r shinyapps-io, eval=FALSE}
+shinyapps::setAccountInfo(name='xwmooc',
+        token='C9CXXXXXXXXXXXXXXXXXXXXX',
+        secret='<SECRET>')
+```
+
+토큰 정보를 `Tools` --> `ShinyApps` --> `Manage Accounts...`에 등록한다.
+
+<img src="fig/toolchain-shiny-shinyapp-io-configuration.png" alt="RStudio IDE에서 shinyapp.io에 바로 연결하기 위한 토근 환경설정" width="30%" />
+
+**주의:** Shiny 응용프로그램을 배포하기 위해서 `ui.R`, `server.R`로 응용프로그램이 나눠줘야 한다.
+
+<img src="fig/toolchain-shiny-shinyapp-io-connect-menu.png" alt="RStudio IDE에서 shinyapp.io에 개발한 응용프로그램을 바로 배포(Publish App...)" width="30%" />
+
