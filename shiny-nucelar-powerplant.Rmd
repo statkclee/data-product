@@ -127,7 +127,7 @@ npp_cl_df <- npp_df %>% mutate(설비용량 = as.numeric(str_replace(설비용�
 
 #saveRDS(npp_cl_df, "shinyapp/npp/npp_cl_df.rds")
 DT::datatable(npp_cl_df) %>% 
-    # DT::formatDate("상업운전일", method = 'toLocaleDateString', params = list('ko-KR')) %>% 
+    DT::formatDate("상업운전일", method = 'toLocaleDateString', params = list('ko-KR')) %>% 
     DT::formatRound("발전량", digits=0)
 ```
 
@@ -136,7 +136,7 @@ DT::datatable(npp_cl_df) %>%
 "가동률과 발전량", "발전소별 발전량", "발전소 설비용량", "이용률과 가동률"을 `ggplot`을 통해 시각화한다.
 문제를 자주 야기하는 가동률이 떨어지는 일부 원전에 대한 정보를 비롯한 다양한 정보를 한눈에 확인이 가능하다.
 
-``` {r }
+``` {r nuclear-power-plant}
 # 3. 데이터 시각화 -----------------------------
 ## 3.1. 가동률과 발전량
 npp_cl_df %>% ggplot(aes(x=가동률, y=발전량, color=노형)) +
@@ -354,8 +354,6 @@ server <- function(input, output) {
 아래 웹사이트를 클릭하면 [shinyapps.io](https://www.shinyapps.io)에 게시된 대한민국 원자력 발전소 현황에 대한 정보를 인터랙티브 앱 형태로 
 살펴볼 수 있다.
 
-[South Korea Nuclear Power Plant (2016)](https://dl-dashboard.shinyapps.io/npp_server_eng/)
-
 RStudio 서버 버젼과 RStudio 데스크톱 버젼에서 다소 차이가 있지만 대략적인 `shinyapp.io` 웹사이트로 개발된 웹앱을 배포하는 방식은 대동소이하다.
 
 ### 5.1. `shinyapps.io` 공용 Shiny 서버 설정
@@ -380,3 +378,19 @@ shinyapps::setAccountInfo(name='xwmooc',
 
 <img src="fig/toolchain-shiny-shinyapp-io-connect-menu.png" alt="RStudio IDE에서 shinyapp.io에 개발한 응용프로그램을 바로 배포(Publish App...)" width="30%" />
 
+### 5.2. `shinyapps.io` 한글 지원
+
+데이터 제품에 대한 고객에 따라 다른데 만약 순수한 개발이 목적이라면 영문으로 개발하면 모든 문제가 수월하게 풀릴 수 있다.
+
+- [South Korea Nuclear Power Plant (2016)](https://dl-dashboard.shinyapps.io/npp_server_eng/)
+
+<img src="fig/shinyapps-io-english.png" alt="원자력 발전소 영문" width="77%" />
+
+하지만, 한글이 포함된 Shiny 어플리케이션을 배포할 경우 윈도우에서는 배포자체가 되지 않는 경험을 하게 되면 포기를 하는 경우가 있다.
+이런 경우 유닉스계열 맥이나 리눅스에서 배포를 할 수 있다. 다만, `ggplot`에 한글이 포함된 경우 유닉스계열에서 배포를 한다고 하더라도 
+한글이 깨지는 경우가 있기 때문에 박찬엽님이 제안해 주신 `showtext` 팩키지 `noto sans` 웹폰트를 활용하는 것도 좋을 듯 하다.
+
+- [South Korea Nuclear Power Plant(원자력 발전소)](https://dl-dashboard.shinyapps.io/npp_server/)
+
+
+<img src="fig/shinyapps-io-korean.png" alt="원자력 발전소 한글" width="77%" />
