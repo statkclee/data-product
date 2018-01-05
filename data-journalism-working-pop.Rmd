@@ -1,0 +1,143 @@
+---
+layout: page
+title: xwMOOC 데이터 저널리즘
+subtitle: 국제노동기구(ILO) 생산가능인구(2000-2017)
+output:
+  html_document: 
+    toc: yes
+    highlight: tango
+    code_folding: hide
+    css: css/swc.css
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+ 
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+
+library(igraph)
+library(tidyverse)
+library(threejs)
+library(readxl)
+library(ggpubr)
+library(forcats)
+library(extrafont)
+loadfonts()
+
+```
+
+## 1. 국제노동기구 데이터 {#ilo-data}
+
+국제노동기구에서 [ILOSTAT - the world leading source on labour statistics](http://www.ilo.org/ilostat/faces/wcnav_defaultSelection) 웹사이트를 통해서 
+다양한 노동관련 풍부한 데이터를 공개하고 있다.
+특히, [Rilostat: ILO Open Data via Ilostat Bulk Download Facility or SDMX Web Service](https://cran.r-project.org/web/packages/Rilostat/index.html) 팩키지를 통해서 
+R에서 손쉽게 데이터를 추출하여 분석작업에 큰 힘을 주고 있다.
+
+## 2. 생산가능인구 변동 {#ilo-data-working-pop}
+
+대한민국이 노령화되면서 여러가지 기회도 생겨나고 있지만, 사회경제적인 문제도 더불어 만들어지고 있다.
+이에 2000년 1월과 2017년 11월 두 시점간 생산가능인구가 얼마나 변화했는지 살펴본다.
+
+### 2.1. 환경설정 {#ilo-data-working-pop-configure}
+
+생산가능인구 변동을 시각화하는데 필요한 팩키지를 설치하여 준비한다.
+
+``` {r ilo-data-working-pop-config}
+# 0. 환경설정 --------
+library(tidyverse)
+library(stringr)
+library(lubridate)
+library(Rilostat)
+library(forcats)
+library(extrafont)
+loadfonts() 
+library(ggpubr)
+```
+
+### 2.1. 생산가능인구 데이터 {#ilo-data-working-pop-import}
+
+[Rilostat GitHub](https://github.com/ilostat/Rilostat) 페이지를 참조하여 데이터를 긁어 오는 방법을 살펴본다.
+`get_ilostat_toc()` 함수를 통해 데이터 추출 가능 목록도 살펴본다.
+
+``` {r ilo-data-working-pop-import-toc}
+# 1. 데이터 가져오기 --------
+## 1.1. 데이터 추출 목록
+# toc <-  dplyr::filter(get_ilostat_toc(), collection == 'STI', freq == 'M')
+
+# DT::datatable()
+```
+
+`POP_XWAP_SEX_AGE_NB_M` 에 생산가능인구 데이터가 담겨있기 때문에 데이터를 가져와서 
+적절한 데이터 전처리 작업을 수행한다.
+
+``` {r ilo-data-working-pop-import}
+## 1.2. 대한민국 생산가능 연령 및 인구
+ilo_df <- get_ilostat(id = 'POP_XWAP_SEX_AGE_NB_M', segment = 'indicator') 
+
+ilo_kr_df <- ilo_df %>% 
+    filter(ref_area == "KOR") %>% 
+    filter(str_detect(classif1, "AGGREGATE")) %>%
+    filter(str_detect(sex, "SEX_T")) %>% 
+    mutate(year = str_sub(time, 1, 4),
+           month = str_sub(time, 6, 7),
+           date = make_date(year, month)) %>% 
+    filter(date %in% c(ymd("2000-01-01"), ymd("2017-11-01"))) %>% 
+    mutate(classif1 = str_replace_all(classif1, "AGE_AGGREGATE_", "")) %>% 
+    arrange(date) %>% 
+    mutate(classif1 = fct_reorder(classif1,
+                                   obs_value,
+                                   last))
+```
+
+### 2.2. 생산가능인구 변화 시각화 {#ilo-data-working-pop-viz}
+
+2000년 1월과 2017년 11월 생산가능인구 변화를 시각화하자. 
+생산가능인구의 변화를 시각화하여 볼 수 있는 형태로 데이터를 도식화한다.
+
+전체적인 생산가능인구는 증가했지만, 특이한 점은 15-24세 생산가능인구는 줄었다는 점이다. 
+특히, 핵심적인 25-54세 인구(30년)는 55-64세(10년) 생산인구 증가에 훨씬 미치지 못한다.
+65세 이상 노령자의 인구 증가도 눈에 확연히 보인다.
+
+
+``` {r ilo-data-working-pop-viz}
+median_ilo_kr_df <- ilo_kr_df %>% 
+    group_by(classif1) %>% 
+    summarise(obs_value = median(obs_value))
+
+ggplot(ilo_kr_df) +
+    geom_path(aes(x=obs_value, y=classif1),
+              color = "blue",
+              size = 0.3,
+              arrow = arrow(length = unit(1.5, "mm"), type = "closed")) +
+    geom_text(
+        aes(x = obs_value, 
+            y = classif1, 
+            label = scales::comma(obs_value, digits=0),
+            hjust = ifelse(date == "2000-01-01", 1.5, -0.5),
+            vjust = ifelse(classif1 == "Y15-24", 1.7, 0)),
+        size = 3, family = "NanumGothic", color = "gray25") +
+    labs(x="생산가능인구(단위:천명)", y="", title="대한민국 생산가능인구 변동", 
+         subtitle="2000년 1월 vs 2017년 11월, 단위:천명",caption="자료출처: 국제노동기구(ILO)") +
+    theme_bw(base_family="NanumGothic") +
+    theme(
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank()
+    ) + 
+    geom_text(data = median_ilo_kr_df,
+        aes(x = obs_value,
+            y = classif1,
+            label = classif1),
+        vjust = -1,
+        color = "gray50"
+    ) +
+    coord_cartesian(xlim = c(3000, 44548))
+```
+
+
