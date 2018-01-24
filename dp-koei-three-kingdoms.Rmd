@@ -152,7 +152,7 @@ city_pop_treemap <- treemap(city_treemap_df,
 
 인터랙티브하게 동적으로 파악하면 좀더 쉽게 인구수 차이를 면밀하게 검토할 수 있다.
 
-``` {r koei-three-kingdoms-pop-treemap-interactive, eval=FALSE}
+``` {r koei-three-kingdoms-pop-treemap-interactive, eval=TRUE}
 ### 인구수 treemap 동적 그래프                 
 d3tree2(city_pop_treemap, rootname = "삼국지")
 ```
@@ -200,7 +200,7 @@ agr_treemap <- treemap(agr_treemap_df,
 
 인터랙티브하게 동적으로 파악하면 좀더 쉽게 농업 차이를 면밀하게 검토할 수 있다.
 
-``` {r koei-three-kingdoms-agri-treemap-interactive, eval=FALSE}
+``` {r koei-three-kingdoms-agri-treemap-interactive, eval=TRUE}
 ### 농업 treemap 동적 그래프                 
 d3tree2(agr_treemap, rootname = "삼국지")
 ```
