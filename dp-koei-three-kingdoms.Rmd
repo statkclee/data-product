@@ -101,14 +101,18 @@ city_df <- city_dat %>%
 
 삼국 도시와 인구수를 먼저 뽑아 이를 표로 표현한다.
 
-``` {r koei-three-kingdoms-pop}
+``` {r koei-three-kingdoms-pop-city}
 # 3. EDA - 도시수와 인구수 -----
 ## 3.1. 도시수
 city_df %>% group_by(삼국) %>% 
   count(주) %>% 
   spread(삼국, n, fill=0)  %>% 
   datatable()
+```
 
+삼국 인구수를 좀더 상세히 살펴보면 다음과 같다.
+
+``` {r koei-three-kingdoms-pop}
 ## 3.2. 인구수
 city_df %>% group_by(삼국) %>% 
   summarise(인구수 = sum(인구)) %>% 
@@ -138,8 +142,11 @@ city_pop_treemap <- treemap(city_treemap_df,
                               fontfamily.title = "NanumGothic",
                               format.legend = list(scientific = FALSE, big.mark = ","),
                               title.legend="")
+```
 
+인터랙티브하게 동적으로 파악하면 좀더 쉽게 인구수 차이를 면밀하게 검토할 수 있다.
 
+``` {r koei-three-kingdoms-pop-treemap-interactive}
 ### 인구수 treemap 동적 그래프                 
 d3tree2(city_pop_treemap, rootname = "삼국지")
 ```
@@ -165,13 +172,13 @@ city_df %>% group_by(삼국, 주) %>%
 
 삼국 농업을 뽑아 `treemap`으로 시각화한다.
 
-``` {r koei-three-kingdoms-agri}
+``` {r koei-three-kingdoms-agri-treemap}
 ## 3.3. treemap: 삼국 - 주 - 도시 - 농업
 
 agr_treemap_df <- city_df %>% group_by(삼국, 주, 도시) %>% 
   summarise(농업 = sum(농업))
 
-agr_pop_treemap <- treemap(agr_treemap_df, 
+agr_treemap <- treemap(agr_treemap_df, 
                             index = c("삼국", "주", "도시"),  
                             vSize = "농업", 
                             vColor = "삼국",
@@ -183,7 +190,10 @@ agr_pop_treemap <- treemap(agr_treemap_df,
                             fontfamily.title = "NanumGothic",
                             format.legend = list(scientific = FALSE, big.mark = ","),
                             title.legend="")
+```
 
+인터랙티브하게 동적으로 파악하면 좀더 쉽게 농업 차이를 면밀하게 검토할 수 있다.
 
+``` {r koei-three-kingdoms-agri-treemap-interactive}
 ### 농업 treemap 동적 그래프                 
-d3tree2(agr_pop_treemap, rootname = "삼국지")
+d3tree2(agr_treemap, rootname = "삼국지")
