@@ -292,13 +292,18 @@ sam_tbl <- datatable(sam_sd, extensions="Scroller",
                            options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
 
 ### 4.2.4. 시각화
-force_g <- ggplot(sam_sd, aes(x=무력, y=통솔, color=삼국)) +
+force_g <- ggplot(sam_sd, aes(x=무력, y=통솔, color=삼국,
+                              text = paste('이름 :', 무장, "\n",
+                                           '통솔:', 통솔, "\n",
+                                           '무력:', 무력, "\n",
+                                           '지력:', 지력, "\n",
+                                           '정치:', 정치, "\n"))) +
   geom_point() +
   theme(legend.position = "none") +
   labs(x="무력", y="통솔") +
   scale_color_manual(values = c("red", "green", "blue"))
 
-force_gg <- ggplotly(force_g)
+force_gg <- ggplotly(force_g, tooltip = "text")
 
 ### 4.2.5. 인터랙티브 시각화
 
