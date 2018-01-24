@@ -74,6 +74,12 @@ library(tidyverse)
 library(readxl)
 library(DT)
 library(treemap)
+library(ggridges)
+library(ggpubr)
+library(d3scatter)
+library(plotly)
+library(crosstalk)
+library(htmltools)
 library(d3treeR)
 library(extrafont)
 loadfonts()
@@ -146,7 +152,7 @@ city_pop_treemap <- treemap(city_treemap_df,
 
 인터랙티브하게 동적으로 파악하면 좀더 쉽게 인구수 차이를 면밀하게 검토할 수 있다.
 
-``` {r koei-three-kingdoms-pop-treemap-interactive}
+``` {r koei-three-kingdoms-pop-treemap-interactive, eval=FALSE}
 ### 인구수 treemap 동적 그래프                 
 d3tree2(city_pop_treemap, rootname = "삼국지")
 ```
@@ -194,6 +200,109 @@ agr_treemap <- treemap(agr_treemap_df,
 
 인터랙티브하게 동적으로 파악하면 좀더 쉽게 농업 차이를 면밀하게 검토할 수 있다.
 
-``` {r koei-three-kingdoms-agri-treemap-interactive}
+``` {r koei-three-kingdoms-agri-treemap-interactive, eval=FALSE}
 ### 농업 treemap 동적 그래프                 
 d3tree2(agr_treemap, rootname = "삼국지")
+```
+
+### 3.4. 국력으로 본 인재 {#koei-three-kingdoms-personel}
+
+인재는 무장 데이터를 가져와서 이를 도시 데이터와 붙여 위촉오 인재를 비교할 수 있도록 준비한다.
+
+``` {r koei-three-kingdoms-personel}
+# 1. 데이터 가져오기 -----
+
+general_dat <- read_excel("data/삼국지13.xlsx", sheet="무장")
+
+# 2. 도시정보에서 장군 위촉오 소속 매칭
+city_sam_mapping <- city_df %>% select(소재=도시, 삼국)
+
+general_df <- general_dat %>% 
+  select(무장, 군단, 소속, 소재, 성별, 통솔=원시통솔, 무력=원시무력, 지력=원시지력, 정치=원시정치, 생년, 등장년, 졸년, 혈연) %>% 
+  left_join(city_sam_mapping) %>% 
+  filter(!is.na(삼국)) %>% 
+  mutate(나이 = 210 - 생년) %>% 
+  mutate(삼국 = factor(삼국, levels=c("위", "오", "촉")))
+
+general_df %>% 
+  select(삼국, everything()) %>% 
+  datatable()
+```
+
+위촉오에 속한 인재 숫자를 비교하고, 더 나아가 성비 균형을 맞추려고 노력한 국가를 파악한다.
+오나라에 여성 인재가 촉이나 위나라와 비교하여 더 많다.
+
+``` {r koei-three-kingdoms-personel-eda}
+# 3. EDA - 인재 -----
+## 3.1. 삼국 인재숫자 비교
+general_df %>% count(삼국, sort=TRUE) %>% 
+  mutate(인재비율 = n / sum(n)) %>% 
+  rename(인재수=n) %>% 
+  datatable() %>% 
+    formatPercentage("인재비율", digits=1)
+
+## 3.2. 성비
+general_df %>% count(삼국, 성별) %>% 
+  spread(성별, n) %>% 
+  mutate(성비 = 여/(남+여)) %>% 
+  datatable() %>% 
+  formatPercentage("성비", digits=1)
+```
+
+210년을 기준으로 나이를 계산한다. 물론 210년 이후 상당기간 삼국관계가 지속되어 
+음의 나이를 갖는 인재도 있지만 전반적인 인재 등용에 대한 추세를 파악할 수는 있다.
+즉, 촉나라는 지속적인 인재공급이 부족하여 고령화에 따른 국력약화가 시각적으로 파악된다.
+
+``` {r koei-three-kingdoms-personel-ggplot}
+# 4. 시각화 -----
+## 4.1. 촉나라에 나타난 고령화
+general_df %>% 
+  ggplot(aes(x = 나이, y = 삼국, fill=삼국)) +
+  geom_density_ridges(scale = 3, alpha=0.9) + 
+  theme_minimal(base_size = 14, base_family = "NanumGothic") + 
+  theme(legend.position = "none",
+        axis.text=element_text(size=12)) +
+  labs(x="기준나이: 210년", y="", title="삼국지 인재 나이분포") +
+  guides(fill = guide_legend(nrow = 1)) +
+  geom_vline(xintercept = 0) +
+  scale_color_manual(values = c("red", "green", "blue"))
+```
+
+무엇보다 인재의 능력치가 삼국지를 관통하는 주된 흐름 중의 하나로 일기토의 추억을 누구나 갖고 있을 것이다.
+이를 인터랙티브하게 살펴볼 수 있도록 추진해보자.
+
+``` {r koei-three-kingdoms-personel-ability}
+## 4.2. 능력치
+### 4.2.1. 공유 데이터
+general_sd_df <- general_df %>% 
+  select(삼국, 무장, 소속, 통솔, 무력, 지력, 정치, 생년)
+
+sam_sd <- SharedData$new(general_sd_df)
+
+### 4.2.2. 제어
+# year_ctrl <- filter_slider("생년", "출생년도", sam_sd, ~생년, width = "50%")
+# sam_ctrl <- filter_checkbox("삼국", "위촉오", sam_sd, ~삼국, inline = TRUE)
+filter_checkbox("삼국", "위촉오", sam_sd, ~삼국, inline = TRUE)
+filter_slider("생년", "출생년도", sam_sd, ~생년, width = "50%")
+
+### 4.2.3. 표
+sam_tbl <- datatable(sam_sd, extensions="Scroller", 
+                           style="bootstrap", 
+                           class="compact", width="100%",
+                           options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
+
+### 4.2.4. 시각화
+force_g <- ggplot(sam_sd, aes(x=무력, y=통솔, color=삼국)) +
+  geom_point() +
+  theme(legend.position = "none") +
+  labs(x="무력", y="통솔") +
+  scale_color_manual(values = c("red", "green", "blue"))
+
+force_gg <- ggplotly(force_g)
+
+### 4.2.5. 인터랙티브 시각화
+
+bscols(widths = c(7,5),
+       sam_tbl,
+       force_gg)
+```
