@@ -27,7 +27,7 @@ title: 데이터 제품
     - [국제노동기구(ILO) 생산가능인구(2000-2017)](data-journalism-working-pop.html)
 - **사례**
     - [대한민국 원자력 발전소 현황](shiny-nucelar-powerplant.html)
-
+    - [코에이(Koei) 삼국지](dp-koei-three-kingdoms.html)
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
 
