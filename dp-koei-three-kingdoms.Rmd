@@ -42,7 +42,7 @@ library(timevis) # devtools::install_github("daattali/timevis")
 
 # 1. 데이터 가져오기 -----
 
-# Sys.setlocale("LC_ALL", "C")
+Sys.setlocale("LC_ALL", "C")
 
 ## 1.1. 삼국지 13 역사 이벤트 목록
 tk_timeline_url <- "https://namu.wiki/w/%EC%82%BC%EA%B5%AD%EC%A7%80%2013/%EC%97%AD%EC%82%AC%20%EC%9D%B4%EB%B2%A4%ED%8A%B8"
@@ -53,7 +53,7 @@ tk_timeline_dat <- tk_timeline_url %>%
   html_table(fill = TRUE) %>% 
   .[[1]]
 
-# Sys.setlocale("LC_ALL", "Korean")
+Sys.setlocale("LC_ALL", "Korean")
 
 # 2. 데이터 정제 -----
 
@@ -66,10 +66,7 @@ tk_timeline_df <- tk_timeline_dat %>%
          월   = str_extract(시나리오, "[0-9]+월")) %>% 
   mutate(연도 = str_extract(연도, "[0-9]+"),
          월   = ifelse(is.na(월), 7, str_extract(월, "[0-9]+"))) %>% 
-  mutate(연월 = make_date(year=as.numeric(연도), month=as.numeric(월))) %>% 
-  mutate(content = str_replace_all(시나리오, "[0-9]+년 [0-9]+월 |[0-9]+년 ", ""),
-         content = str_c("<strong>", 이벤트명, "</strong><br>", content, ": ", 등장인물)) %>% 
-  mutate(적벽전투 = ifelse(연월 < ymd("0208-08-01"), "삼국이전", "삼국이후"))
+  mutate(연월 = make_date(year=as.numeric(연도), month=as.numeric(월)))
 
 DT::datatable(tk_timeline_df)
 ```
@@ -80,6 +77,11 @@ DT::datatable(tk_timeline_df)
 
 ``` {r three-kingdoms-timeline-viz, fig.width=12, fig.height=12}
 # 3. 타임라인 -----
+
+tk_timeline_df <- tk_timeline_df %>% 
+  mutate(content = str_replace_all(시나리오, "[0-9]+년 [0-9]+월 |[0-9]+년 ", ""),
+         content = str_c("<strong>", 이벤트명, "</strong><br>", content, ": ", 등장인물)) %>% 
+  mutate(적벽전투 = ifelse(연월 < ymd("0208-08-01"), "삼국이전", "삼국이후"))
 
 tk_timeline_df %>% 
   rename(id = 이벤트명,
