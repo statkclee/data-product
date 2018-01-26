@@ -1,7 +1,7 @@
 ---
 layout: page
 title: xwMOOC 데이터 저널리즘
-subtitle: 코에이(Koei) 삼국지
+subtitle: 코에이(Koei) 삼국지 - 인물중심
 output:
   html_document: 
     toc: yes
@@ -17,56 +17,86 @@ mainfont: NanumGothic
 source("tools/chunk-options.R")
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 
-library(igraph)
-library(tidyverse)
-library(threejs)
-library(readxl)
-library(ggpubr)
-library(forcats)
-library(extrafont)
-loadfonts()
-
 ```
 
-## 1. 팟캐스트로 듣는 코에이 삼국지 [^xsfm-koei] {#podcast-koei-three-kingdoms}
+## 1. 코에이 삼국지에 나온 연대기 {#koei-three-kingdoms-timeline}
 
-[^xsfm-koei]: [256a. 팟캐문학관:코에이 삼국지(1/2) /이경혁](http://xsfm.co.kr/wp/?p=2101)
+[코에이 삼국지 13 역사 이벤트](https://namu.wiki/w/%EC%82%BC%EA%B5%AD%EC%A7%80%2013/%EC%97%AD%EC%82%AC%20%EC%9D%B4%EB%B2%A4%ED%8A%B8)를 참조하면,
+황건적의 난을 배경으로 한 "도원결의" 부터 오장원에서 제갈량의 사망까지 연대기를 시각화해 보자.
 
-[그것은 알기 싫다(XSFM)](http://xsfm.co.kr/wp/) 팟캐스트에 최근 코에이 삼국지를 주제로 방송을 시작했다.
-서양에 [시오노 나나미](https://ko.wikipedia.org/wiki/%EC%8B%9C%EC%98%A4%EB%85%B8_%EB%82%98%EB%82%98%EB%AF%B8) "로마인 이야기"가 있다면 동양은 
-나관중의 삼국지가 있다고 생각하는 한국인이 많다.
+### 1.1. 나무위키 연대기 데이터 가져오기 {#koei-three-kingdoms-timeline-import}
 
-코에이 삼국지 1,2,3편을 직접 플레이하면 숫자와 문자만 가득하다. 
-삼국을 통일하기 위해서 몇달을 고생해서 밤을 새워가며 시간을 보낸 분들도 주변에서 부지기수로 볼 수 있고, 
-삼국지 게임을 더 잘 하기 위해서 삼국지를 게임을 한 후에 정독하는 사례도 심심치 않게 볼 수 있다.
+연대표를 작성하는 다양한 팩키지가 존재한다. 
+여기서는 [`timevis`](https://github.com/daattali/timevis) 팩키지를 GitHub에서 다운로드 받아 사용한다. 
+[코에이 삼국지 13 역사 이벤트](https://namu.wiki/w/%EC%82%BC%EA%B5%AD%EC%A7%80%2013/%EC%97%AD%EC%82%AC%20%EC%9D%B4%EB%B2%A4%ED%8A%B8) 웹사이트에서 
+데이터를 다운로드 받아 이를 연대표 작성에 활용하기 위해서 텍스트 데이터 전처리 작업을 수행한다.
 
-이번에는 코에이 삼국지 게임 데이터를 추출하여 데이터를 분석해 보자.
+``` {r three-kingdoms-timeline-setup}
+# 0. 환경설정 -----
 
-## 2. 삼국지 실제 국력차이 {#keoi-three-kingdoms-reality}
+library(rvest)
+library(tidyverse)
+library(lubridate)
+library(timevis) # devtools::install_github("daattali/timevis")
 
-삼국지의 조조, 유비, 손권이 게임에서는 대등하게 나오지만, 
-최근에 출시되는 삼국지는 실제 역사적 사실에 근거를 두고 나름 정확한 데이터가 담겨있다.
-문명도 예외가 아닌데 양성균형, 서양, 백인, 남성 중심의 세계관을 조금 약화시키고 
-동양을 비롯한 제3세계와 여성의 비중을 늘리는 것도 사실이다.
+# 1. 데이터 가져오기 -----
 
-위촉오 삼국간의 국력에 대한 주제를 다루었던 유튜브 동영상에 근거하여 실제 게임에서 데이터를 추출하여 
-비교분석해 보자.
+Sys.setlocale("LC_ALL", "C")
 
-- 영토크기
-- 인구: 위나라 440만, 오나라 230만, 촉나라 90만, 
-- 토지: 위나라 고품질 토지, 오나라 수상지역, 촉나라 산악지역
-- 인재 
+## 1.1. 삼국지 13 역사 이벤트 목록
+tk_timeline_url <- "https://namu.wiki/w/%EC%82%BC%EA%B5%AD%EC%A7%80%2013/%EC%97%AD%EC%82%AC%20%EC%9D%B4%EB%B2%A4%ED%8A%B8"
 
-<iframe width="300" height="180" src="https://www.youtube.com/embed/DbpKKZMe52s" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+tk_timeline_dat <- tk_timeline_url %>% 
+  read_html() %>% 
+  html_nodes(xpath='/html/body/div[2]/article/div[3]/div/div[4]/div[1]/table') %>% 
+  html_table(fill = TRUE) %>% 
+  .[[1]]
 
-## 3. 코에이 삼국지 13에 표현된 국력차이 {#koei-three-kingdoms-ingame}
+Sys.setlocale("LC_ALL", "Korean")
 
-### 3.1. 데이터 가져오기 {#import-data}
+# 2. 데이터 정제 -----
 
-코에이 삼국지 게임에 편집기를 붙여 데이터를 추출하여 엑셀로 저장한다. 
-다양한 데이터를 추출할 수 있지만, 인재와 관련된 장군 데이터와 주/도시와 관련된 데이터를 붙인다.
-그리고 군단 정보에서 관우와 장로는 촉으로 장료와 공손공은 조조는 위로 손권은 오로 범주를 구분하고 
-결측값이 포함된 나머지는 분석에서 제외한다.
+tk_timeline_df <- tk_timeline_dat %>% 
+  tbl_df() %>% 
+  rename(이벤트명=X1, 등장인물=X2, 시나리오=X3, 상세=X4) %>% 
+  filter(row_number() != 1) %>% 
+  select(-상세) %>% 
+  mutate(연도 = str_extract(시나리오, "[0-9]+년"),
+         월   = str_extract(시나리오, "[0-9]+월")) %>% 
+  mutate(연도 = str_extract(연도, "[0-9]+"),
+         월   = ifelse(is.na(월), 7, str_extract(월, "[0-9]+"))) %>% 
+  mutate(연월 = make_date(year=as.numeric(연도), month=as.numeric(월))) %>% 
+  mutate(content = str_replace_all(시나리오, "[0-9]+년 [0-9]+월 |[0-9]+년 ", ""),
+         content = str_c("<strong>", 이벤트명, "</strong><br>", content, ": ", 등장인물)) %>% 
+  mutate(적벽전투 = ifelse(연월 < ymd("0208-08-01"), "삼국이전", "삼국이후"))
+
+DT::datatable(tk_timeline_df)
+```
+
+### 1.2. 나무위키 연대기 데이터 가져오기 {#koei-three-kingdoms-timeline-import}
+
+`timevis()` 함수로 시각화하는데 `id`, `start`, `content` 등 매개변수를 맞춰주는 작업을 수행하면 쉽게 데이터를 시각화할 수 있다.
+
+``` {r three-kingdoms-timeline-viz, fig.width=12, fig.height=12}
+# 3. 타임라인 -----
+
+tk_timeline_df %>% 
+  rename(id = 이벤트명,
+         start = 연월,
+         content = content) %>% 
+  timevis(height=500)
+```
+
+
+## 2. 코에이 삼국지 13에 표현된 국력차이 - 인재 {#koei-three-kingdoms-ingame}
+
+[코에이(Koei) 삼국지 국력비교](dp-koei-three-kingdoms-powers.html) 웹사이트에서 토지면적, 농업생산성, 상업 등의 측도를 바탕으로 
+삼국의 국력을 살펴봤다. 이번에는 연대표에 나타난 주요 등장인물을 바탕으로 삼국의 국력의 변화를 살펴보자.
+
+
+### 2.1. 국력으로 본 인재 - 데이터 가져오기 {#koei-three-kingdoms-personel}
+
+도시 정보를 바탕으로 위, 촉, 오를 구분한다. 이를 통해 "무장" 인재의 위, 촉, 오 소속을 파악한다.
 
 ``` {r koei-three-kingdoms-import}
 # 0. 환경설정 -----
@@ -103,110 +133,6 @@ city_df <- city_dat %>%
   mutate(인구 = 비병역인구 + 병역인구)
 ```
 
-### 3.2. 국력으로 본 인구수 {#koei-three-kingdoms-pop}
-
-삼국 도시와 인구수를 먼저 뽑아 이를 표로 표현한다.
-
-``` {r koei-three-kingdoms-pop-city}
-# 3. EDA - 도시수와 인구수 -----
-## 3.1. 도시수
-city_df %>% group_by(삼국) %>% 
-  count(주) %>% 
-  spread(삼국, n, fill=0)  %>% 
-  datatable()
-```
-
-삼국 인구수를 좀더 상세히 살펴보면 다음과 같다.
-
-``` {r koei-three-kingdoms-pop}
-## 3.2. 인구수
-city_df %>% group_by(삼국) %>% 
-  summarise(인구수 = sum(인구)) %>% 
-  mutate(인구비율 = 인구수/ sum(인구수)) %>% 
-  arrange(desc(인구수)) %>% 
-  datatable() %>% 
-    formatCurrency("인구수", currency="", digits=0) %>% 
-    formatPercentage("인구비율", digits=1) 
-```
-
-삼국 도시와 인구수를 먼저 뽑은 자료를 `treemap`을 통해 시각화한다.
-
-``` {r koei-three-kingdoms-pop-treemap}
-## 3.3. treemap: 삼국 - 주 - 도시 - 인구수
-city_treemap_df <- city_df %>% group_by(삼국, 주, 도시) %>% 
-  summarise(인구수 = sum(인구))
-
-city_pop_treemap <- treemap(city_treemap_df, 
-                              index = c("삼국", "주", "도시"),  
-                              vSize = "인구수", 
-                              vColor = "삼국",
-                              title = "삼국지 국력 - 인구수", 
-                              fontsize.labels=c(12, 8), 
-                              draw = TRUE,
-                              type = "categorical", 
-                              palette = c("red", "blue", "green"),
-                              fontfamily.title = "NanumGothic",
-                              format.legend = list(scientific = FALSE, big.mark = ","),
-                              title.legend="")
-```
-
-인터랙티브하게 동적으로 파악하면 좀더 쉽게 인구수 차이를 면밀하게 검토할 수 있다.
-
-``` {r koei-three-kingdoms-pop-treemap-interactive, eval=TRUE}
-### 인구수 treemap 동적 그래프                 
-d3tree2(city_pop_treemap, rootname = "삼국지")
-```
-
-### 3.3. 국력으로 본 농업 {#koei-three-kingdoms-agri}
-
-삼국 농업과 상업을 뽑아 동일한 방식으로 비교한다.
-
-``` {r koei-three-kingdoms-agri}
-# 4. EDA - 농업/상업 -----
-## 4.1. 농업
-city_df %>% group_by(삼국, 주) %>% 
-  summarise(도시수 = n(),
-            농업 = sum(농업),
-            상업 = sum(상업)) %>% 
-  ungroup() %>% 
-  mutate(농업비율 = 농업/ sum(농업),
-         상업비율 = 상업/ sum(상업)) %>% 
-  datatable() %>% 
-  formatCurrency(c("농업","상업"), currency="", digits=0) %>% 
-  formatPercentage(c("농업비율", "상업비율"), digits=1) 
-```
-
-삼국 농업을 뽑아 `treemap`으로 시각화한다.
-
-``` {r koei-three-kingdoms-agri-treemap}
-## 3.3. treemap: 삼국 - 주 - 도시 - 농업
-
-agr_treemap_df <- city_df %>% group_by(삼국, 주, 도시) %>% 
-  summarise(농업 = sum(농업))
-
-agr_treemap <- treemap(agr_treemap_df, 
-                            index = c("삼국", "주", "도시"),  
-                            vSize = "농업", 
-                            vColor = "삼국",
-                            title = "삼국지 국력 - 농업", 
-                            fontsize.labels=c(12, 8), 
-                            draw = TRUE,
-                            type = "categorical", 
-                            palette = c("red", "blue", "green"),
-                            fontfamily.title = "NanumGothic",
-                            format.legend = list(scientific = FALSE, big.mark = ","),
-                            title.legend="")
-```
-
-인터랙티브하게 동적으로 파악하면 좀더 쉽게 농업 차이를 면밀하게 검토할 수 있다.
-
-``` {r koei-three-kingdoms-agri-treemap-interactive, eval=TRUE}
-### 농업 treemap 동적 그래프                 
-d3tree2(agr_treemap, rootname = "삼국지")
-```
-
-### 3.4. 국력으로 본 인재 {#koei-three-kingdoms-personel}
-
 인재는 무장 데이터를 가져와서 이를 도시 데이터와 붙여 위촉오 인재를 비교할 수 있도록 준비한다.
 
 ``` {r koei-three-kingdoms-personel}
@@ -229,8 +155,9 @@ general_df %>%
   datatable()
 ```
 
-위촉오에 속한 인재 숫자를 비교하고, 더 나아가 성비 균형을 맞추려고 노력한 국가를 파악한다.
-오나라에 여성 인재가 촉이나 위나라와 비교하여 더 많다.
+### 2.2. 삼국 인재 숫자 {#koei-three-kingdoms-personel-headcount}
+
+위촉오에 속한 인재 숫자를 비교할 때, 가장 먼저 물량 즉 인재숫자를 비교한다.
 
 ``` {r koei-three-kingdoms-personel-eda}
 # 3. EDA - 인재 -----
@@ -240,7 +167,15 @@ general_df %>% count(삼국, sort=TRUE) %>%
   rename(인재수=n) %>% 
   datatable() %>% 
     formatPercentage("인재비율", digits=1)
+```
 
+### 2.2. 삼국 인재 숫자 {#koei-three-kingdoms-personel-headcount}
+
+위촉오에 속한 인재 숫자를 비교한 다음 더 나아가 성비 균형을 맞추려고 노력한 국가를 파악한다.
+오나라에 여성 인재가 촉이나 위나라와 비교하여 더 많다. 
+표본이 많이 있지는 않지만, 오나라가 상대적으로 양성 평등(?)에 신경을 많이 쓴 것으로 볼 수 있다.
+
+``` {r koei-three-kingdoms-personel-gender}
 ## 3.2. 성비
 general_df %>% count(삼국, 성별) %>% 
   spread(성별, n) %>% 
@@ -249,7 +184,9 @@ general_df %>% count(삼국, 성별) %>%
   formatPercentage("성비", digits=1)
 ```
 
-210년을 기준으로 나이를 계산한다. 물론 210년 이후 상당기간 삼국관계가 지속되어 
+### 2.3. 삼국 인재 나이 분포 {#koei-three-kingdoms-personel-age}
+
+210년을 기준으로 나이를 계산해 보자. 물론 210년 이후 상당기간 삼국관계가 지속되어 
 음의 나이를 갖는 인재도 있지만 전반적인 인재 등용에 대한 추세를 파악할 수는 있다.
 즉, 촉나라는 지속적인 인재공급이 부족하여 고령화에 따른 국력약화가 시각적으로 파악된다.
 
@@ -268,8 +205,11 @@ general_df %>%
   scale_color_manual(values = c("red", "green", "blue"))
 ```
 
+## 3. 인터랙티브 삼국 인재 분석 {#koei-three-kingdoms-personel-interactive}
+
 무엇보다 인재의 능력치가 삼국지를 관통하는 주된 흐름 중의 하나로 일기토의 추억을 누구나 갖고 있을 것이다.
-이를 인터랙티브하게 살펴볼 수 있도록 추진해보자.
+이를 인터랙티브하게 살펴보자. `crosstalk` 팩키지는 상대적으로 `shiny`로 무겁게 인터랙티브 데이터 분석을 `.Rmd` 파일 내부에서 
+구현할 수 있도록 도움을 주고 있어, 작은 데이터의 경우 효과적일 수 있다.
 
 ``` {r koei-three-kingdoms-personel-ability}
 ## 4.2. 능력치
