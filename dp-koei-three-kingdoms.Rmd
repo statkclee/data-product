@@ -37,11 +37,12 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 library(rvest)
 library(tidyverse)
 library(lubridate)
+library(stringr)
 library(timevis) # devtools::install_github("daattali/timevis")
 
 # 1. 데이터 가져오기 -----
 
-Sys.setlocale("LC_ALL", "C")
+# Sys.setlocale("LC_ALL", "C")
 
 ## 1.1. 삼국지 13 역사 이벤트 목록
 tk_timeline_url <- "https://namu.wiki/w/%EC%82%BC%EA%B5%AD%EC%A7%80%2013/%EC%97%AD%EC%82%AC%20%EC%9D%B4%EB%B2%A4%ED%8A%B8"
@@ -52,7 +53,7 @@ tk_timeline_dat <- tk_timeline_url %>%
   html_table(fill = TRUE) %>% 
   .[[1]]
 
-Sys.setlocale("LC_ALL", "Korean")
+# Sys.setlocale("LC_ALL", "Korean")
 
 # 2. 데이터 정제 -----
 
