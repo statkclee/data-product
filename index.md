@@ -30,6 +30,9 @@ title: 데이터 제품
     - **코에이(Koei) 삼국지** 
         - [코에이(Koei) 삼국지 - 인물중심](dp-koei-three-kingdoms.html)
         - [코에이(Koei) 삼국지 국력비교](dp-koei-three-kingdoms-powers.html)
+    - **공기 품질 &rarr; (초)미세먼지** 
+        - [측정소 위치 - OpenAQ](dp-aq-location.html)
+
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
 
