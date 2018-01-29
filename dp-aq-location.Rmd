@@ -65,15 +65,23 @@ data_station_df %>%
 - co  :  일산화타소(CO)
 - bc  :  BC
 
+전세계 위치는 [OpenAQ Map](https://openaq.org/#/map?_k=j1gabo)을 참조하고, 우리나라와 관계있는 아시아 지역 공기품질 측정소 위치만 시각화한다.
 
 ``` {r airquality-location-viz}
 # 2. 공간정보 시각화 -----
 ## 2.1. 공유 데이터
+iso2_continent_lookup <- read_csv("https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.csv")
 
-aq_sd <- SharedData$new(data_station_df)
+names(iso2_continent_lookup) <- c("name", "country", "alpha-3", "country-code", "iso_3166-2", 
+                                  "region", "sub-region", "region-code", "sub-region-code")
+
+data_station_asia_df <- left_join(data_station_df, iso2_continent_lookup) %>% 
+    filter(region == "Asia")
+
+aq_sd <- SharedData$new(data_station_asia_df)
 
 ## 3.2. 제어
-filter_checkbox("pm25", "PM 2.5", aq_sd, ~pm25, inline = TRUE)
+filter_checkbox("pm25", "PM 2.5", aq_sd, ~pm25, inline = TRUE, allLevels = FALSE, TRUE)
 filter_checkbox("pm10", "PM 10",  aq_sd, ~pm10, inline = TRUE)
 filter_checkbox("so2",  "이산화황(SO2)",  aq_sd, ~so2, inline = TRUE)
 filter_checkbox("o3",  "오존(O3)",  aq_sd, ~o3, inline = TRUE)
@@ -93,5 +101,5 @@ world_pm_leaflet <- leaflet(aq_sd) %>%
 bscols(world_pm_leaflet)
 ```
 
-
+? filter_checkbox
 
