@@ -1,7 +1,7 @@
 ---
 layout: page
 title: xwMOOC 데이터 저널리즘
-subtitle: 측정소 위치 - OpenAQ
+subtitle: 측정소 위치 - 대한민국
 output:
   html_document: 
     toc: yes
@@ -100,6 +100,4 @@ world_pm_leaflet <- leaflet(aq_sd) %>%
 ## 3.4. 인터랙티브 시각화
 bscols(world_pm_leaflet)
 ```
-
-? filter_checkbox
 
