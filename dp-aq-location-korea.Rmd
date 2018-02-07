@@ -40,6 +40,7 @@ library(purrr)
 library(xts)
 library(leaflet)
 library(crosstalk)
+library(DT)
 
 # 1. 데이터 가져오기 -----
     
@@ -120,6 +121,7 @@ air_df <- air_df %>%
            측정소명 = na.locf(측정소명))
 ```
 
+
 ## 3. 측정 기능별 측정소 위치 시각화 {#air-quality-inequality-korea-leaflet}
 
 총 12 개 기능을 갖는 다양한 공기품질 측정소가 전국에 산재하여 있다.
@@ -127,7 +129,7 @@ air_df <- air_df %>%
 
 그리고 나서, `crosstalk` 기능을 추가하여 `leaflet`에서 공기품질 측정기능별로 측정소 위치를 파악할 수 있도록 작업한다.
 
-``` {r airquality-location-korea-leaflet}
+``` {r airquality-location-korea-leaflet,fig.width=10}
 # 1. 데이터 정제: 도분초 --> 도 변환 -----
 
 air_df <- air_df %>% 
@@ -160,6 +162,14 @@ leaflet(data = air_sd) %>%
 
 
 
+## 3. 측정 기능별 측정소 위치 상세 {#air-quality-inequality-korea-table}
 
+층정 기능별 측정소 상세정보를 표로 살펴보자.
 
-
+``` {r airquality-location-korea-table}
+air_df %>% 
+    select(측정기능, 시도, 도시, 측정소코드, 측정소명, 주소, 비고, 
+             경도=longitude, 위도=latitude) %>% 
+    DT::datatable(filter = "top") %>% 
+    formatCurrency(c("경도", "위도"), currency="", digits=6)
+```
