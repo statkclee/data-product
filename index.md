@@ -44,6 +44,7 @@ title: 데이터 제품
     - **공기 품질 &rarr; (초)미세먼지** 
         - [측정소 위치 - OpenAQ](dp-aq-location.html)
         - [측정소 위치 - 대한민국](dp-aq-location-korea.html)
+        - [시도별 공기품질](dp-aq-sido.html)
 
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
