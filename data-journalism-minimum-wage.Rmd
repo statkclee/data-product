@@ -1,0 +1,142 @@
+---
+layout: page
+title: xwMOOC 데이터 제품
+subtitle: 최저임금위원회 - 최저임금 추세
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: hide
+mainfont: NanumGothic
+---
+ 
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+
+```
+
+## 1. 최저임금액 현황 데이터 {#min-wage-data}
+
+늘 그렇지만, 정부에서 제공하는 [데이터](http://www.minimumwage.go.kr/stat/statMiniStat.jsp)에는 영혼이 없는 듯하다. 
+윗사람이 데이터를 볼 수 있는 시야가 있다면 어떻게 대한민국 공무원이 이와 같이 무성의하게 데이터를 공개할 수 있을까?
+어떤 공무원분이 데이터를 게시했는지는 모르겠지만 최저임금에 관심을 갖고 데이터를 분석하시는 분의 소중한 시간을 참 많이 날려먹게 생겼네요.
+
+## 2. 최저임금 데이터 시각화 논쟁 {#min-wage-data-debate}
+
+페이스북에 데이터를 분석하시는 전문가들이 최저임금위원회 데이터를 시각화한 것에 대해 논쟁을 시작했습니다.
+정규 교과과정을 이수하신 분은 누구나 이와 같은 의도된 시각화에는 뭔가 깊은 뜻이 숨겨있다고 생각하고 있습니다.
+특히 무슨 기준으로 3개로 쪼갰는지, 그리고 왜 시작되는 y축 값이 0이 아니고 대략 3,500원에서 2009년 최저임금액 현황을 표현했는지도 무척이나 궁금한 내용입니다.
+
+<iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fmrchypark%2Fposts%2F1798270026879504&width=500" 
+width="500" height="304" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+
+## 3. 최저임금 데이터 시각화 {#min-wage-viz}
+
+### 3.1. 데이터 긁어오기 {#min-wage-setup}
+
+정성스럽게 데이터를 최저임금위원회에서 보기좋은 형태로 올려주셔서 한땀한땀 데이터 시각화를 하고자하는 수많은 데이터과학자가 고생을 하네요.
+한땀한땀 정성스러운 고생의 결과물을 다음 코드에서 확인해 보세요.
+
+``` {r min-wage-setup}
+# 0. 환경설정 -----
+
+library(tidyverse)
+library(rvest)
+library(lubridate)
+library(xts)
+library(dygraphs)
+library(DT)
+
+
+# 1. 데이터 가져오기 -----
+
+min_wage_url <- "http://www.minimumwage.go.kr/stat/statMiniStat.jsp"
+
+Sys.setlocale("LC_ALL", "C")
+
+minw_dat <- min_wage_url %>%
+    read_html() %>%
+    html_nodes(xpath='//*[@id="contents"]/div[3]/table') %>%
+    html_table(fill = TRUE) %>% 
+    .[[1]]
+
+Sys.setlocale("LC_ALL", "Korean")
+
+# 2. 데이터 전처리 -----
+
+names(minw_dat)  <- c("적용년도", "시간급", "일급", "월급", 
+                      "인상률(인상액)", "심의의결일", "결정고시일")
+
+minw_dat <- minw_dat %>% 
+    separate(적용년도, into=c("시작", "끝"), "~") %>% 
+    mutate(시작 = str_replace_all(시작, "\\'", "")) %>% 
+    mutate(끝 = str_replace_all(끝, "\\'|’", ""))    
+
+minw_df <- minw_dat %>% 
+    mutate(시작 = case_when(시작 %in% c("88", "89", "90", "91", "92", "93") ~ paste0("19", 시작, "-01-01"),
+                            시작 %in% "94.(1" ~ "1994-01-01",
+                            str_detect(시작, "94.9|95.9|96.9|97.9|98.9|99.9") ~ paste0("19", 시작, "-01"),
+                            str_detect(시작, "00.9|01.9|02.9|03.9|04.9|05.9") ~ paste0("20", 시작, "-01"),
+                            TRUE ~ paste0("20", 시작))) %>% 
+    mutate(시작 = ymd(str_replace_all(시작, "\\.", "-0"))) %>% 
+    mutate(끝 = case_when(row_number() >= 26 ~ paste0(str_sub(시작, 1,8),"31"),
+                          str_detect(끝, "^8") ~ "1994-08-30",
+                          str_detect(끝, "95.8|96.8|97.8|98.8|99.8") ~ paste0("19", 끝, "-30"),
+                          str_detect(끝, "00.8|01.8|02.8|03.8|04.8|05.8") ~ paste0("20", 끝, "-30"),
+                         str_detect(끝, "06.12") ~ paste0("20", 끝, "-31"),
+                          TRUE ~ paste0("20", 끝))) %>% 
+    mutate(끝 = ymd(str_replace_all(끝, "\\.", "-"))) %>% 
+    mutate(시간급 = ifelse(str_detect(시간급, "그룹"), 475, str_replace_all(시간급, ",", "")) %>% as.numeric) %>% 
+    select(시작, 끝, 시간급)  %>% as_tibble()
+```
+
+
+### 3.2. 정제된 데이터 {#min-wage-wrangling}
+
+정제된 데이터를 시각화하기 전에 적용시점, 시간급, 인상율등을 통해 살펴보자.
+데이터 정제과정에서 최저임금 초기 messy한 데이터를 나름대로 철학을 가지고 데이터분석에 적합한 형태로 정리를 했는데 이유는 20년도 넘은 데이터로 최근 최저임금 관련된 이슈에 커다란 기여를 하지 않기 때문이다. 나름대로 데이터를 분석가 작위적으로 처리한 사항은 R 코드를 살펴보면 자세히 나와있습니다.
+
+``` {r min-wage-wrangling}
+minw_viz_df <- minw_df %>% 
+    mutate(시간급_1 = lead(시간급)) %>% 
+    mutate(인상율 = (시간급-시간급_1) / 시간급_1,
+              인상금액 = 시간급 - 시간급_1) %>% 
+    select(시작, 시간급, 인상율, 인상금액)
+
+minw_viz_df %>% 
+    select(적용시점=시작, everything()) %>% 
+    DT::datatable() %>% 
+      formatCurrency(c("시간급", "인상금액"), currency="", digits=0) %>% 
+      formatPercentage("인상율", digits=1)    
+```
+
+### 3.3. 최저임금 시각화 {#min-wage-viz}
+
+데이터에 숨겨진 의미를 다양한 관점에서 볼 수 있도록 데이터를 시각화한다.
+
+``` {r min-wage-viz, fig.width=12}
+# 3. 데이터 시각화 -----
+
+minw_viz_xts <- xts(minw_viz_df[, -1], order.by = minw_viz_df$시작)
+
+dygraph(data = minw_viz_xts, main = "최저임금") %>% 
+    dyHighlight(highlightCircleSize = 5, 
+                highlightSeriesBackgroundAlpha = 0.2,
+                hideOnMouseOut = FALSE, highlightSeriesOpts = list(strokeWidth = 3)) %>%
+    dyRangeSelector(height = 50, dateWindow = c(paste(Sys.Date()-365*20), paste(Sys.Date()))) %>% 
+    dyLegend(width = 500, show = "onmouseover", hideOnMouseOut = FALSE) %>% 
+    dyAxis("y",
+           label = "최저임금(원)",
+           axisLabelFormatter = 'function(d){return d.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");}',
+           axisLabelFontSize = 10,
+           axisLabelWidth = 70,
+           valueFormatter = 'function(d){return d.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");}'
+    )  %>% 
+    dyAxis("y2", label = "인상율(%)", independentTicks = TRUE,
+           valueFormatter = 'function(d){return Math.round(d*100) + "%"}',
+           axisLabelFormatter = 'function(d){return Math.round(d*100) + "%"}') %>% 
+    dySeries("인상율", axis=('y2')) %>% 
+    dyCSS("blockchain.css")
+```
