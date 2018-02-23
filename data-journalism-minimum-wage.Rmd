@@ -54,7 +54,7 @@ library(DT)
 
 min_wage_url <- "http://www.minimumwage.go.kr/stat/statMiniStat.jsp"
 
-# Sys.setlocale("LC_ALL", "C")
+Sys.setlocale("LC_ALL", "C")
 
 minw_dat <- min_wage_url %>%
     read_html() %>%
@@ -62,7 +62,7 @@ minw_dat <- min_wage_url %>%
     html_table(fill = TRUE) %>% 
     .[[1]]
 
-# Sys.setlocale("LC_ALL", "Korean")
+Sys.setlocale("LC_ALL", "Korean")
 
 # 2. 데이터 전처리 -----
 
