@@ -26,6 +26,7 @@ title: 데이터 제품
     - [이미지 분류 - 케라스(딥러닝)](shiny-image-classification.html)
     - [주사위 던지기 - `shinydashbaord`](shiny-draw-dice.html)
     - [주사위 & 동전 던지기(UI) - `shinydashbaord`](shiny-die-coin.html)
+    - [보안기능을 탑재한 Shiny 웹앱 서버 - AWS](shiny-webweb-server.html)
 - **제품 배포(Product Deployment)** 
     - [**도커**: 재현가능한 제품개발](http://statkclee.github.io/r-docker/) 
         - [도커는 무엇이고 왜 사용하나](http://statkclee.github.io/r-docker/01-what-and-why.html)
