@@ -3,84 +3,118 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: 데이터 과학</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-59802572-17', 'auto');
-      ga('send', 'pageview');
-    
+    <title>Software Carpentry: 데이터 제품</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
     </script>
   </head>
   <body class="lesson">
     <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
       </div>
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-                    <a href="index.html"><h1 class="title">데이터 과학</h1></a>
-          <h2 class="subtitle">Shiny 기반 데이터 제품 개발</h2>
+                    <a href="index.html"><h1 class="title">데이터 제품</h1></a>
+          <h2 class="subtitle">Shiny 데이터 제품 개발</h2>
           <section class="objectives panel panel-warning">
 <div class="panel-heading">
 <h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
 </div>
 <div class="panel-body">
 <ul>
-<li>데이터 과학을 개괄적으로 이해한다.</li>
+<li>데이터 과학을 이해한다.</li>
 <li>Shiny 아키텍쳐를 설명한다.</li>
-<li>Shiny 기반 데이터 제품을 개발한다.</li>
+<li>Shiny를 도구로 데이터 제품을 개발한다.</li>
 </ul>
 </div>
 </section>
-<h2 id="데이터-과학-data-science">데이터 과학 (Data Science)</h2>
+<h1 id="data-science">1. 데이터 과학 (Data Science)</h1>
 <p>자연법칙은 변수(Variable), 관측점(Observation), 값(Value)으로 구성된다. 변수는 측정한 정량 혹은 정성적 특성이 되고, 값은 측정한 시점에 변수의 상태이며, 관측점은 유사한 조건하에 측정한 여러 변수값 집합이다. 자연법칙은 동일한 관측점 값에 적용되어 동작하는 변수를 다룬다. 따라서, 자연법칙은 데이터에 <strong>패턴(pattern)</strong>으로 나타난다.</p>
 <p>변수, 관측점, 값으로 구성된 데이터를 가지고 있지만 현실 세계를 움직이는 자연법칙을 모른다면 패턴을 찾아서 자연법칙을 모사할 수 있고, 현실 세계에 대한 자연법칙을 찾았다면 데이터를 통해서 확증하는 것도 가능하다.</p>
 <p><img src="fig/data-science-overview.png" alt="데이터 과학 개요" width="70%" /></p>
-<h3 id="데이터-과학-프로세스">데이터 과학 프로세스</h3>
+<h2 id="data-science-process">1.1. 데이터 과학 프로세스</h2>
+<p><a href="https://en.wikipedia.org/wiki/Cross-industry_standard_process_for_data_mining">CRISP-DM(Cross-industry standard process for data mining)</a>가 과거 유명한 데이터 마이닝 모형이었다. <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<ul>
+<li>Business Understanding: 비즈니스 문제 인식 및 해결을 위한 데이터 마이닝 프로세스 명료화</li>
+<li>Data understanding: 데이터 탐색 및 이해</li>
+<li>Data prepation: 데이터를 통한 문제 인식 및 해결</li>
+<li>Modelding: 데이터 마이닝 기법 적용</li>
+<li>Evaluation: 비즈니스 상황에 따른 데이터 마이닝 결과의 해설</li>
+<li>Deployment: 데이터 마이닝 결과의 전개 및 유지</li>
+</ul>
 <p><img src="fig/data-science-process-as-is-to-be.png" alt="데이터 과학 프로세스 비교" width="50%" /></p>
-<h2 id="shiny-전시장showcaseshiny-showcase"><a href="http://www.rstudio.com/products/shiny/shiny-user-showcase/">Shiny 전시장(Showcase)</a></h2>
-<p><a href="http://d3js.org/">D3</a>, <a href="http://leafletjs.com/">Leaflet</a>, <a href="https://developers.google.com/chart/">구글 챠트(Google Chart)</a>같은 자바스크립트 라이브러리를 함께 사용해서 다양한 Shiny 응용프로그램을 개발한 사례가 다음에 있다. 영감을 받아 나만의 Shiny 앱을 개발한다.</p>
+<p>최근에 RStudio의 최고 데이터과학자 위캠 박사가 <code>tidyverse</code>을 통해 데이터과학을 새롭게 정의하고 있다.</p>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
 <h3 id="데이터와-사투data-wrangling"><span class="glyphicon glyphicon-pushpin"></span>데이터와 사투(Data Wrangling)</h3>
 </div>
 <div class="panel-body">
-<p>데이터 먼징(Data Munging) 혹은 데이터 랭글링(Data Wrangling)은 원자료(raw data)를 또다른 형태로 수작업으로 전환하거나 매핑하는 과정으로 데이터 원천(Data Source)에서 원래 최초 형태로 자료를 추출, 알고리즘(예로, 정렬)을 사용해서 원자료를 “먼징(munging”하거나 사전 정의된 자료구조로 데이터를 파싱(parsing)한다. 마지막으로 저장이나 미래 사용을 위해 작업완료한 콘텐츠를 데이터 싱크(data sink)에 놓아두는 과정.</p>
+<p>데이터 먼징(Data Munging) 혹은 데이터 랭글링(Data Wrangling)은 원자료(raw data)를 또다른 형태로 수작업으로 전환하거나 매핑하는 과정으로 데이터 원천(Data Source)에서 원래 최초 형태로 자료를 추출, 알고리즘(예로, 정렬)을 사용해서 원자료를 “먼징(munging)”하거나 사전 정의된 자료구조로 데이터를 파싱(parsing)한다. 마지막으로 저장이나 미래 사용을 위해 작업완료한 콘텐츠를 데이터 싱크(data sink)에 놓아두는 과정.</p>
+<p><strong>데이터 랭글링(Data Wrangling)</strong> - 데이터 조작(Data Manipulation) : <code>dplyr</code> - 데이터 깔끔화(Data Tidying) : <code>tidyr</code> - 데이터 시각화(Data Visualization) : <code>ggplot</code> - 모형(Modelling) : <code>broom</code> - 데이터 프로그래밍(Data Programming) : <code>purrr</code></p>
 </div>
 </aside>
-<p><strong>데이터 랭글링(Data Wrangling)</strong> - 데이터 조작(Data Manipulation) : dplyr - 데이터 깔끔화(Data Tidying) : tidyr - 데이터 시각화(Data Visualization) : ggvis</p>
-<h2 id="shiny-응용프로그램-아키텍처">Shiny 응용프로그램 아키텍처</h2>
+<h2 id="shiny-showcase">1.2. Shiny 전시장(Showcase) <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h2>
+<p><a href="http://d3js.org/">D3</a>, <a href="http://leafletjs.com/">Leaflet</a>, <a href="https://developers.google.com/chart/">구글 챠트(Google Chart)</a>같은 자바스크립트 라이브러리를 함께 사용해서 다양한 Shiny 응용프로그램을 개발한 사례가 다음에 있다.</p>
+<h2 id="shiny-architecture">1.3. Shiny 응용프로그램 아키텍처</h2>
 <p>Shiny 응용프로그램 개발 아키텍쳐는 R코드와 UI로 구성된다. 데이터를 서버에서 처리하는 로직을 담고 있는 R코드(<code>server.r</code>)와 사용자 웹인터페이스를 담고 있고 있는 UI(<code>ui.r</code>)다.</p>
 <p><img src="fig/shiny-app-architecture.png" alt="Shiny 응용프로그램 아키텍쳐" width="50%" /></p>
-<h2 id="shiny-주요-주제">Shiny 주요 주제</h2>
+<h2 id="shiny-ecosystem">1.4. Shiny 생태계 구성원</h2>
+<p><code>shiny</code>자체도 의미가 있지만 다양한 <code>shiny</code> 생태계 구성원도 꾸준히 개발되고 있다.</p>
+<ul>
+<li><a href="https://ebailey78.github.io/shinyBS/index.html">shinyBS</a>: CSS Bootstrap 컴포넌트.</li>
+<li><a href="https://rstudio.github.io/shinythemes/">Shiny Themes</a>: Shiny 테마</li>
+<li><a href="https://rstudio.github.io/shinydashboard/index.html">shinydashboard</a>: 대쉬보드 개발 목적</li>
+<li><a href="https://deanattali.com/shinyjs/">shinyjs</a>: 자바스크립트 shiny 적용</li>
+</ul>
+<h2 id="shiny-toc">3. Shiny 학습 목차</h2>
 <ul>
 <li><a href="shiny-overview.html">Shiny 웹앱</a>
-<ol style="list-style-type: decimal">
+<ul>
+<li><strong><code>shiny</code> 1010</strong>
+<ul>
 <li><a href="shiny-app.html">Shiny 웹앱 개발</a><br />
 </li>
 <li><a href="shiny-reactive.html">Shiny 반응형 웹앱 개발</a><br />
 </li>
 <li><a href="shiny-frontend.html">Shiny 프론트엔트 개발</a></li>
-</ol></li>
+</ul></li>
+<li><strong>shinydashboard 101</strong>
+<ul>
+<li><a href="shiny-draw-dice.html">주사위 던지기 - <code>shinydashbaord</code></a></li>
+<li><a href="shiny-die-coin.html">주사위 &amp; 동전 던지기(UI) - <code>shinydashbaord</code></a></li>
+</ul></li>
+<li><strong><code>shiny</code> 제품</strong>
+<ul>
+<li><a href="shiny-webweb-server.html">보안기능을 탑재한 Shiny 웹앱 서버 - AWS</a></li>
+</ul></li>
+<li><strong>딥러닝(Deep Learning)</strong>
+<ul>
+<li><a href="shiny-image-classification.html">이미지 분류 - 케라스(딥러닝)</a></li>
+</ul></li>
+</ul></li>
 </ul>
 <aside class="callout panel panel-info">
 <div class="panel-heading">
@@ -90,19 +124,26 @@
 <p>RStudio 웨비나 <em><a href="http://www.rstudio.com/resources/webinars/">How to start with Shiny–Part 1,2,3</a></em> 내용을 기반하여 작성되었습니다. 웨비나 소스 및 발표자료는 <a href="https://github.com/rstudio/webinars">GitHub</a>에서 <code>git clone</code>하여 이용가능합니다. RStudio 웨비나 콘텐츠는 <a href="http://creativecommons.org/licenses/by-nc/3.0/us/">CC-BY-NC</a>로 배포됩니다.</p>
 </div>
 </aside>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://itlab.tistory.com/122">데이터 마이닝 방법론/프로세스 CRISP-DM</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="http://www.rstudio.com/products/shiny/shiny-user-showcase/">Shiny User Showcase</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
         </div>
       </div>
       </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>
     </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
   </body>
 </html>
