@@ -2,6 +2,7 @@
 layout: page
 title: 데이터 제품
 subtitle: Shiny 웹앱 개발
+runtime: shiny
 output:
   html_document: 
     toc: yes
@@ -19,8 +20,6 @@ mainfont: NanumGothic
 
 <img src="fig/shiny-app-histogram.png" alt="히스토그램 Shiny 응용프로그램" width="50%" />
 
-> 인터랙티브 실습 코드가 필요한 경우 [shiny-app-interactive.Rmd](shiny-app-interactive.Rmd) 파일을 다운로드 받아 사용한다. `yaml` 헤더에 `runtime: shiny`가 추가되어 있다.
-
 # 2. Shiny 응응프로그램 개발 순서 {#shiny-webapp-flow}
 
 아무것도 없는 `shiny` 템플릿을 가지고 차근히 시작한다.
@@ -36,35 +35,41 @@ mainfont: NanumGothic
 
 > `shinyApp()`을 코드에 추가하고 `shinyApp(ui = ui, server = server)`을 제거한 이유는 `rmarkdown` 파일에서 `shiny` 앱을 올리기 위한 것이니 `shinyApp()` 내부 `ui`, `server`만 집중하자.
 
-``` {r, eval=FALSE}
-ui <- fluidPage()
-server <- function(input, output) {}
-shinyApp(ui = ui, server = server)
+``` {r, echo=TRUE}
+shinyApp(
+  ui <- fluidPage(),
+  server <- function(input, output) {},
+  options = list(height = 50)
+)
 ```
 
 ## 2.2. fluidPage()에 인자로 요소를 추가 {#shiny-element}
 
-```{r, eval=FALSE}
-ui <- fluidPage("데이터 과학에 오신 것을 환영합니다!!!")
-server <- function(input, output) {}
-shinyApp(ui = ui, server = server)
+``` {r, echo=TRUE}
+shinyApp(
+  ui <- fluidPage("데이터 과학에 오신 것을 환영합니다!!!"),
+  server <- function(input, output) {},
+  options = list(height = 50)
+)
 ```
 
 ### 2.2.1. 개발 스텁(stub) 생성 {#shiny-element-stub}
 
 본격적인 `shiny` 프로그래밍을 시작하기에 앞서 작성할 코드 내용을 다음과 같이 주석으로 처리하여 채워넣는다.
 
-```{r, eval=FALSE}
-ui <- fluidPage(
-  # *Input() functions,
-  # *Output() functions
+``` {r, echo=TRUE}
+shinyApp(
+  ui <- fluidPage(
+      # *Input() functions,
+      # *Output() functions
+      ),
+  server <- function(input, output) {
+      # output$
+	  # render*()
+	  # input$
+  },
+  options = list(height = 50)
 )
-server <- function(input, output) {
-  # output$
-  # render*()
-  # input$
-)
-shinyApp(ui = ui, server = server)
 ```
 
 ## 2.3. Input() 함수로 반응형 입력 생성 {#shiny-element-input}
@@ -72,38 +77,42 @@ shinyApp(ui = ui, server = server)
 본격적으로 입력을 `sliderInput()`함수로 입력 인터페이스를 정의하자.
 `inputId`를 지정하여 입력값을 `server()` 함수에서 사용할 수 있도록 지정한다.
 
-```{r, eval=FALSE}
-ui <- fluidPage(
-       sliderInput(inputId = "num",  
-                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
-                   value = 25, min = 1, max = 100) 
-)
+``` {r, echo=TRUE}
+shinyApp(
+  ui <- fluidPage(
+           sliderInput(inputId = "num",  
+	                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
+	                   value = 25, min = 1, max = 100) 
+  ),
 
-server <- function(input, output) {
-    # output$
-    # render*()
-    # input$
-}
-shinyApp(ui = ui, server = server)
+  server <- function(input, output) {
+	# output$
+	# render*()
+	# input$
+  }, 
+  options = list(height = 100)
+)
 ```
 
 ## 2.4. Output() 함수로 반응형 출력결과 생성 {#shiny-element-output}
 
 `plotOutput()` 함수로 `ui` 인터페이스에 출력값을 지정한다. 
 
-```{r, eval=FALSE}
-ui <- fluidPage(
-       sliderInput(inputId = "num",  
-                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
-                   value = 25, min = 1, max = 100),
-       plotOutput("hist")
+``` {r, echo=TRUE}
+shinyApp(
+  ui <- fluidPage(
+           sliderInput(inputId = "num",  
+	                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
+	                   value = 25, min = 1, max = 100),
+           plotOutput("hist")
+  ),
+  server <- function(input, output) {
+	# output$
+	# render*()
+	# input$
+  }, 
+  options = list(height = 100)
 )
-server <- function(input, output) {
-    # output$
-    # render*()
-    # input$
-}
-shinyApp(ui = ui, server = server)
 ```
 
 ## 2.5. 서버 함수에서 입력과 출력을 조립 {#shiny-element-input-output}
@@ -118,56 +127,62 @@ shinyApp(ui = ui, server = server)
 
 `output$` 화면에 출력할 객체를 저장한다.
 
-```{r, eval=FALSE}
-ui <- fluidPage(
-       sliderInput(inputId = "num",  
-                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
-                   value = 25, min = 1, max = 100),
-       plotOutput("hist")
+``` {r, echo=TRUE, eval=FALSE}
+shinyApp(
+  ui <- fluidPage(
+           sliderInput(inputId = "num",  
+	                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
+	                   value = 25, min = 1, max = 100),
+           plotOutput("hist")
+  ),
+  server <- function(input, output) {
+	output$hist <- # 코드 
+  }, 
+  options = list(height = 100)
 )
-server <- function(input, output) {
-        output$hist <- # 코드 
-}
-shinyApp(ui = ui, server = server)
 ```
 
 ### 2.5.2. ` render*()` 함수로 화면에 출력할 객체를 만듬(build) {#shiny-server-step02-build}
 
 `output$` 화면에 출력할 객체를 저장한다. 히스토그램을 출력하는 함수만 자리를 잡았기 때문에 `renderPlot()` 아무것도 나타나지 않는다. 
 
-```{r, eval=FALSE}
-ui <- fluidPage(
-       sliderInput(inputId = "num",  
-                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
-                   value = 25, min = 1, max = 100),
-       plotOutput("hist")
-)
-server <- function(input, output) {
-    output$hist <- renderPlot({
+``` {r, echo=TRUE}
+shinyApp(
+  ui <- fluidPage(
+           sliderInput(inputId = "num",  
+	                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
+	                   value = 25, min = 1, max = 100),
+           plotOutput("hist")
+  ),
+  server <- function(input, output) {
+	output$hist <- renderPlot({
+
     })
-}
-shinyApp(ui = ui, server = server)
+  }, 
+  options = list(height = 100)
+)
 ```
 
 ### 2.5.3. `input$` 변수로 입력값 접근 {#shiny-server-step03-input}
 
-```{r, eval=FALSE}
-ui <- fluidPage(
-       sliderInput(inputId = "num",  
-                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
-                   value = 25, min = 1, max = 100),
-       plotOutput("hist")
-)
-server <- function(input, output) {
-    output$hist <- renderPlot({
-        title <- "정규분포 난수 100개 값 분포"
-        hist(rnorm(input$num), main = title)
-    })
-}
-shinyApp(ui = ui, server = server)
-```
 
-<img src="fig/shiny-app-rstudio.png" alt="Shiny 응용프로그램 클라우드 RStudio 개발화면" width="50%" />
+``` {r, echo=TRUE}
+shinyApp(
+  ui <- fluidPage(
+           sliderInput(inputId = "num",  
+	                   label = "구간크기 숫자를 선택하세요 (Choose a number): ",  
+	                   value = 25, min = 1, max = 100),
+           plotOutput("hist")
+  ),
+  server <- function(input, output) {
+	output$hist <- renderPlot({
+	    title <- "정규분포 난수 100개 값 분포"
+	    hist(rnorm(input$num), main = title)
+    })
+  }, 
+  options = list(height = 700)
+)
+```
 
 # 3. Shiny 응응프로그램 저장 {#save-shiny-app}
 
