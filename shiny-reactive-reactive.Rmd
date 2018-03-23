@@ -2,6 +2,7 @@
 layout: page
 title: 데이터 제품
 subtitle: Shiny 반응형(reactive) 웹앱 개발
+runtime: shiny
 output:
   html_document: 
     toc: yes
@@ -12,9 +13,8 @@ mainfont: NanumGothic
 ---
 
 
-# 1. 반응형 Shiny 웹앱 개발 개요 [^shiny-runtime-download] {#reactive-overview}
 
-[^shiny-runtime-download]: 클릭해서 shiny runtime으로 문서를 파악하고자 하시는 분은 [shiny-reactive-reactive.Rmd](shiny-reactive-reactive.Rmd) 문서 클릭해서 다운로드.
+# 1. 반응형 Shiny 웹앱 개발 개요 {#reactive-overview}
 
 반응형 Shiny (Reactive Shiny) 웹앱 개발은 기본적으로 `input$x` 반응값을 받아 
 `expression()` 표현식으로 처리를 하고 `output$y` 출력결과를 화면에 뿌려주는 것으로 진행된다. 
@@ -25,18 +25,24 @@ mainfont: NanumGothic
 
 만약 반응형(reactive) 처리를 하지 않는 경우 발생하는 오류를 살펴보자.
 
-``` {r shiny-error, eval=FALSE}
-ui <- fluidPage(                       
-   sliderInput(inputId = "num",        
-     label = "Choose a number",        
-     value = 25, min = 1, max = 100),  
-   plotOutput("hist")                  
+``` {r shiny-error}
+library(shiny)                         
+
+shinyApp(
+    ui <- fluidPage(                       
+       sliderInput(inputId = "num",        
+         label = "Choose a number",        
+         value = 25, min = 1, max = 100),  
+       plotOutput("hist")                  
+    ),
+                                           
+    server <- function(input, output) {    
+       output$hist <-                      
+         hist(rnorm(input$num))            
+    },
+    options = list(height = 400)
 )
-                                       
-server <- function(input, output) {    
-   output$hist <-                      
-     hist(rnorm(input$num))            
-}
+
 ```
 
 정상적인 실행이 되지 않고 다음과 같은 오류 메시지가 나오게 된다. 
@@ -61,25 +67,27 @@ Error in .getReactiveEnvironment()$currentContext() :
 
 <div class = "row">
   <div class = "col-md-6">
-**shiny 웹앱**
+**`app.R` 한 파일**
 ``` {r shiny-dev-workflow, eval=FALSE}
-ui <- fluidPage(                      
-   sliderInput(inputId = "num",       
-     label = "Choose a number",       
-     value = 25, min = 1, max = 100), 
-   plotOutput("hist")                 
+shinyApp(
+    ui <- fluidPage(                      
+       sliderInput(inputId = "num",       
+         label = "Choose a number",       
+         value = 25, min = 1, max = 100), 
+       plotOutput("hist")                 
+    ),
+                                          
+    server <- function(input, output) {   
+       output$hist <- renderPlot({        
+         hist(rnorm(input$num))           
+       })                                 
+    },
+    options = list(height = 400)
 )
-                                      
-server <- function(input, output) {   
-   output$hist <- renderPlot({        
-     hist(rnorm(input$num))           
-   })                                 
-}
-shinyApp(ui = ui, server = server)
 ```
   </div>
   <div class = "col-md-6">
-**입력값 작동원리**
+**`ui.R`과 `server.R` 두 파일**
 ```{r eval=FALSE}
 
 
@@ -99,6 +107,7 @@ shinyApp(ui = ui, server = server)
 ```
   </div>
 </div>
+
 
 
 # 3. 출력표시 함수 - `render*()` {#shiny-process-render}
@@ -122,23 +131,25 @@ shinyApp(ui = ui, server = server)
 | renderUI()        | Shiny UI 요소(element)    |
 
 
-``` {r shiny-dev-workflow2, eval = FALSE}
-ui <- fluidPage(                      
-   sliderInput(inputId = "num",
-     label = "Choose a number",      
-     value = 25, min = 1, max = 100),   
-   textInput(inputId = "title",      
-     label = "Write a title",     
-     value = "Histogram of Random Normal Values"),   
-   plotOutput("hist", height=300)
-)
-
-server <- function(input, output) {
-   output$hist <- renderPlot({
-      hist(rnorm(input$num), main = input$title)
-   })
-}
-shinyApp(ui = ui, server = server)
+``` {r shiny-dev-workflow2}
+shinyApp(
+    ui <- fluidPage(                      
+       sliderInput(inputId = "num",
+         label = "Choose a number",      
+         value = 25, min = 1, max = 100),   
+       textInput(inputId = "title",      
+         label = "Write a title",     
+         value = "Histogram of Random Normal Values"),   
+       plotOutput("hist", height=300)
+    ),
+    
+    server <- function(input, output) {
+       output$hist <- renderPlot({
+          hist(rnorm(input$num), main = input$title)
+       })
+     },
+     options = list(height = 500)
+) 
 ```
 
 # 4. 코드 모듈화(Modularize) - `reactive()`  {#shiny-process-reactive-data}
@@ -156,55 +167,59 @@ shinyApp(ui = ui, server = server)
   <div class = "col-md-6">
 **모듈화 되기 전**
 ``` {r shiny-dev-module-before, eval=FALSE}
-ui <- fluidPage(                       
-  sliderInput(inputId = "num",         
-    label = "Choose a number",         
-    value = 25, min = 1, max = 100),   
-  plotOutput("hist"),                  
-  verbatimTextOutput("stats")          
-)
-                                       
-server <- function(input, output) {    
+shinyApp(
+    ui <- fluidPage(                       
+      sliderInput(inputId = "num",         
+        label = "Choose a number",         
+        value = 25, min = 1, max = 100),   
+      plotOutput("hist"),                  
+      verbatimTextOutput("stats")          
+    ),                                      
+                                           
+    server <- function(input, output) {    
 
-    
-    
-    
-    
-  output$hist <- renderPlot({          
-    hist(rnorm(input$num))             
-  })                                   
-  output$stats <- renderPrint({        
-    summary(rnorm(input$num))          
-  })                                   
-}
-shinyApp(ui = ui, server = server)
+        
+        
+        
+        
+      output$hist <- renderPlot({          
+        hist(rnorm(input$num))             
+      })                                   
+      output$stats <- renderPrint({        
+        summary(rnorm(input$num))          
+      })                                   
+    },
+    options = list(height = 400)
+)
 ```
   </div>
   <div class = "col-md-6">
 **모듈화 한 후**
 ``` {r shiny-dev-workflow-module, eval=FALSE}
-ui <- fluidPage(                    
- sliderInput(inputId = "num",      
-   label = "Choose a number",      
-   value = 25, min = 1, max = 100),
- plotOutput("hist"),               
- verbatimTextOutput("stats")       
+shinyApp(
+   ui <- fluidPage(                    
+     sliderInput(inputId = "num",      
+       label = "Choose a number",      
+       value = 25, min = 1, max = 100),
+     plotOutput("hist"),               
+     verbatimTextOutput("stats")       
+   ),
+                                       
+   server <- function(input, output) { 
+                                       
+     data <- reactive({                
+       rnorm(input$num)                
+     })                                
+                                       
+     output$hist <- renderPlot({       
+       hist(data())                    
+     })                                
+     output$stats <- renderPrint({     
+       summary(data())                 
+     })                                
+   },
+   options = list(height = 400)
 )
-                                   
-server <- function(input, output) { 
-                                   
- data <- reactive({                
-   rnorm(input$num)                
- })                                
-                                   
- output$hist <- renderPlot({       
-   hist(data())                    
- })                                
- output$stats <- renderPrint({     
-   summary(data())                 
- })                                
-}
-shinyApp(ui = ui, server = server)
 ```
   </div>
 </div>
@@ -217,23 +232,27 @@ shinyApp(ui = ui, server = server)
 
 `input$title`을 격리시켜서 **Write a title** 제목을 바뀌어도 이전과 달리 변경사항이 즉각 반영되지 않는다.
 
-``` {r shiny-dev-workflow-isolate, eval = FALSE}
-ui <- fluidPage(
-  sliderInput(inputId = "num", 
-    label = "Choose a number", 
-    value = 25, min = 1, max = 100),
-  textInput(inputId = "title", 
-    label = "Write a title",
-    value = "Histogram of Random Normal Values"),
-  plotOutput("hist")
+``` {r shiny-dev-workflow-isolate}
+shinyApp(
+    
+    ui <- fluidPage(
+      sliderInput(inputId = "num", 
+        label = "Choose a number", 
+        value = 25, min = 1, max = 100),
+      textInput(inputId = "title", 
+        label = "Write a title",
+        value = "Histogram of Random Normal Values"),
+      plotOutput("hist")
+    ),
+    
+    server <- function(input, output) {
+      output$hist <- renderPlot({
+        hist(rnorm(input$num), main = isolate(input$title))
+      })
+    },
+    
+   options = list(height = 600) 
 )
-
-server <- function(input, output) {
-  output$hist <- renderPlot({
-    hist(rnorm(input$num), main = isolate(input$title))
-  })
-}
-shinyApp(ui = ui, server = server)
 ```
 
 # 6. 이벤트 반응 처리 - `observeEvent()` {#shiny-observeEvent}
@@ -246,28 +265,31 @@ shinyApp(ui = ui, server = server)
 출력값을 뽑아내어 화면에 출력할 수 있도록 한다.
 
 
-``` {r shiny-dev-workflow-event, eval = FALSE}
-ui <- fluidPage(
-  sliderInput(inputId = "num", 
-    label = "Choose a number",
-    min = 1, max = 100, value = 25),
-  actionButton(inputId = "go", label = "Print Value"),
-  tags$br(),
-  verbatimTextOutput("print")
+``` {r shiny-dev-workflow-event}
+shinyApp(
+    
+    ui <- fluidPage(
+      sliderInput(inputId = "num", 
+        label = "Choose a number",
+        min = 1, max = 100, value = 25),
+      actionButton(inputId = "go", label = "Print Value"),
+      tags$br(),
+      verbatimTextOutput("print")
+    ),
+    
+    server <- function(input, output) {
+        value <- reactiveValues(data = NULL)
+        
+        observeEvent(input$go, {
+            value$input_value <-  paste0("슬라이더 입력값: ", input$num)
+        })
+        
+        output$print <- renderPrint({
+           value$input_value
+        })
+    },
+    options = list(height = 600) 
 )
-
-server <- function(input, output) {
-    value <- reactiveValues(data = NULL)
-    
-    observeEvent(input$go, {
-        value$input_value <-  paste0("슬라이더 입력값: ", input$num)
-    })
-    
-    output$print <- renderPrint({
-       value$input_value
-    })
-}
-shinyApp(ui = ui, server = server)
 ```
 
 # 7. 반응 지연 - `eventReactive()` {#shiny-event-delay}
@@ -275,26 +297,29 @@ shinyApp(ui = ui, server = server)
 `data <- eventReactive(input$go,  { rnorm(input$num) })`에서 `input$num` 반응값 변경에 즉시 반응하는 것이 아니라,
 `eventReactive()` 반응 지연 함수가 실행될 때 비로소 `renderPlot()`에 값을 전달하여 출력결과를 실행한다.
 
-``` {r shiny-dev-workflow-reactive, eval = FALSE}
-ui <- fluidPage(
-  sliderInput(inputId = "num", 
-    label = "Choose a number", 
-    value = 25, min = 1, max = 100),
-  actionButton(inputId = "go", label = "Update"),
-  plotOutput("hist")
-)
+``` {r shiny-dev-workflow-reactive}
+shinyApp(
 
-server <- function(input, output) {
+    ui <- fluidPage(
+      sliderInput(inputId = "num", 
+        label = "Choose a number", 
+        value = 25, min = 1, max = 100),
+      actionButton(inputId = "go", label = "Update"),
+      plotOutput("hist")
+    ),
     
-  data <- eventReactive(input$go, {
-    rnorm(input$num) 
-  })
-  
-  output$hist <- renderPlot({
-    hist(data())
-  })
-}
-shinyApp(ui = ui, server = server)
+    server <- function(input, output) {
+        
+      data <- eventReactive(input$go, {
+        rnorm(input$num) 
+      })
+      
+      output$hist <- renderPlot({
+        hist(data())
+      })
+    },
+    options = list(height = 600) 
+)
 ```
 
 # 8. 상태정보(state) 관리 - `reactiveValues()` {#shiny-state-mgmt}
@@ -304,23 +329,27 @@ shinyApp(ui = ui, server = server)
 
 사용자가 버튼을 달리 클릭해도 동일한 출력결과가 된다.
 
-``` {r shiny-dev-workflow-state, eval = FALSE}
-ui <- fluidPage(
-  actionButton(inputId = "norm", label = "Normal"),
-  actionButton(inputId = "unif", label = "Uniform"),
-  plotOutput("hist")
+``` {r shiny-dev-workflow-state}
+shinyApp(
+
+    ui <- fluidPage(
+      actionButton(inputId = "norm", label = "Normal"),
+      actionButton(inputId = "unif", label = "Uniform"),
+      plotOutput("hist")
+    ),
+    
+    server <- function(input, output) {
+    
+      rv <- reactiveValues(data = rnorm(100))
+    
+      observeEvent(input$norm, { rv$data <- rnorm(100) })
+      observeEvent(input$unif, { rv$data <- runif(100) })
+    
+      output$hist <- renderPlot({ 
+        hist(rv$data) 
+      })
+    },
+    options = list(height = 600) 
 )
-
-server <- function(input, output) {
-
-  rv <- reactiveValues(data = rnorm(100))
-
-  observeEvent(input$norm, { rv$data <- rnorm(100) })
-  observeEvent(input$unif, { rv$data <- runif(100) })
-
-  output$hist <- renderPlot({ 
-    hist(rv$data) 
-  })
-}
-shinyApp(ui = ui, server = server)
 ```
+
