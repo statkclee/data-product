@@ -20,10 +20,11 @@ title: 데이터 제품
     - [공공 데이터 제품](data-product-civic-hacking.html)
     - [야구 MLB](ds-baseball-mlb.html)    
 - [Shiny 웹앱](shiny-overview.html)
-    - **`shiny` 1010**
+    - **`shiny` 101**
         - [Shiny 웹앱 개발](shiny-app.html)    
         - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
         - [Shiny 프론트엔트 개발](shiny-frontend.html)
+        - [Shiny 모듈 개발](shiny-module.html)
     - **shinydashboard 101**    
         - [주사위 던지기 - `shinydashbaord`](shiny-draw-dice.html)
         - [주사위 & 동전 던지기(UI) - `shinydashbaord`](shiny-die-coin.html)
