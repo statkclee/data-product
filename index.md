@@ -30,6 +30,7 @@ title: 데이터 제품
         - [주사위 던지기 - `shinydashbaord`](shiny-draw-dice.html)
         - [주사위 & 동전 던지기(UI) - `shinydashbaord`](shiny-die-coin.html)
     - **`shiny` 제품**    
+        - [데이터 제품 서버 - 디지털오션(Digital Ocean)](shiny-digital-ocean.html)
         - [보안기능을 탑재한 Shiny 웹앱 서버 - AWS](shiny-webweb-server.html)
     - **딥러닝(Deep Learning)**
         - [이미지 분류 - 케라스(딥러닝)](shiny-image-classification.html)

@@ -1,0 +1,128 @@
+---
+layout: page
+title: xwMOOC 데이터 제품
+subtitle: 보데이터 제품 서버 - 디지털오션(Digital Ocean)
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+mainfont: NanumGothic
+---
+ 
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+
+```
+
+# 1. 디지털 오션(Digital Ocean) {#digital-ocean}
+
+[DigitalOcean](https://www.digitalocean.com/)도 [AWS](https://aws.amazon.com/)와 유사한 컴퓨팅 자원을 
+시간당 사용료를 받고 공급해주는 회사다. 가격이 상대적으로 AWS 보다 저렴하고 사용하기 편한 다양한 서비스를 제공하고 있어 인기가 많다.
+
+# 2. 우분투 서버 준비 [^ubuntu-server] {#digital-ocean-ubuntu}
+
+[^ubuntu-server]: [Initial Server Setup with Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-16-04)
+
+[DigitalOcean](https://www.digitalocean.com/)에 회원가입하고 나면 우측 상단에 녹색 **create** 버튼이 있다. 
+이를 클릭하면 `Create Droplets` 화면에서 운영체제와 함께 적절한 컴퓨팅 자원을 선정하여 생성시킨다.
+
+그러면 `Dashoboard`에서 `DROPLETS(1)`와 같이 우분투 운영체제가 탑재된 컴퓨터가 한대 배달된다.
+
+우분투가 탐재된 컴퓨터에 로그인하여 추가적인 작업을 수행한다.
+
+## 2.1. `root` 로그인 {#root-login}
+
+`ssh root@your_server_ip` 명령어를 통해 로그인한다.
+
+``` {r root-login, eval = FALSE}
+$ ssh root@10.203.23.21
+```
+
+## 2.2. `shiny` 사용자 추가 {#shiny-login}
+
+`root`로 로그인한 것은 여러가지 편리한 점이 있지만, 해킹에 취약하다.
+이를 방지하기 위한 일환으로 새로운 사용자를 만들어 낸다. `rstudio`, `shiny`가 그것이다.
+
+``` {r shiny-login, eval = FALSE}
+$ adduser shiny
+```
+
+## 2.3. `shiny` 사용자에 `root` 권한 부여 {#shiny-privileges}
+
+신규 사용자를 `shiny`나 `rstudio`로 만들었다면 다음 단계로 작업을 원활히 할 수 있도록
+`shiny` 사용자에게 `root`권한을 부여한다.
+
+``` {r shiny-privileges, eval = FALSE}
+$ usermod -aG sudo shiny
+```
+
+## 2.4. `shiny` 사용자 ssh 로그인 [^ssh-key-add] {#shiny-ssh-login}
+
+[^ssh-key-add]: [How To Use SSH Keys with DigitalOcean Droplets](https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets)
+
+`shiny` 사용자에 `root` 권한을 부여했다면, 다음 단계로 패스워드 로그인이 아니라 `ssh` 로그인을 해야 한다.
+이를 위해서 `ssh-keygen -t rsa` 명령어로 로컬 컴퓨터에서 공개키와 비밀키를 생성시킨다.
+윈도우 사용자라면 `C:\Users\사용자명\.ssh` 디렉토리에 `id_rsa`, `id_rsa.pub`, `known_hosts` 파일이 생성된다.
+
+- 비밀키: `id_rsa`
+- 공개키: `id_rsa.pub` 
+- 인증키로 접속할 호스트목록: `known_hosts`
+
+공개키를 [DigitalOcean](https://www.digitalocean.com/) `add SSH Key`에 등록하면 `root` 권한으로 로그인할 때 비밀번호가 필요없게 된다.
+마찬가지로 `shiny` 사용자도 `root`사용자와 마찬가지로 `ssh` 로그인을 위해서 공개키 등록작업을 우분투 컴퓨터에 실행한다.
+
+``` {r shiny-ssh-login, eval = FALSE}
+$ su - shiny
+$ mkdir ~/.ssh
+$ chmod 700 ~/.ssh
+$ nano ~/.ssh/authorized_keys
+$ chmod 600 ~/.ssh/authorized_keys
+```
+
+`nano` 편집기로 `authorized_keys` 파일에 앞서 `ssh-keygen -t rsa` 명령어로 생성된 `id_rsa.pub` 을 열어 복사해서 붙여넣는다.
+그리고 `CTRL-x`, `y`를 눌러 저장하고 `ENTER`키로 마무리한다.
+`chmod 600 ~/.ssh/authorized_keys` 명령어로 접근 권한을 제약해서 보안을 높인다.
+
+## 2.5. `shiny` 사용자 비번 로그인 금지 {#shiny-passwd-login}
+
+`ssh`로그인 되어 있으니, 이제 비밀번호 로그인을 금지한다.
+이를 위해서 `sudo nano /etc/ssh/sshd_config` 명령어로 내부에 설정을 다음과 같이 변경한다.
+
+``` {r shiny-passwd-login, eval = FALSE}
+# sshd_config 
+.....
+PasswordAuthentication no
+.....
+PubkeyAuthentication yes
+ChallengeResponseAuthentication no
+.....
+```
+
+이제 모든 작업이 완료되었으니 `sudo systemctl reload sshd` 명령어로 비번 로그인을 금지하던지 
+컴퓨터를 다시 부팅한다.
+
+
+``` {r digital-ocean-droplet-login, eval = FALSE}
+xwmooc@xwmooc-PC1 MINGW64 /d/xwmooc
+$ ssh shiny@123.45.56.789
+Welcome to Ubuntu 16.04.4 LTS (GNU/Linux 4.4.0-116-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+0 packages can be updated.
+0 updates are security updates.
+
+
+Last login: Tue Mar 27 08:07:31 2018 from xxx.xxx.xx.xxx
+shiny@rstudio:~$
+```
+
+
