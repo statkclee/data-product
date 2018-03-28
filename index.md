@@ -26,6 +26,7 @@ title: 데이터 제품
         - [Shiny 프론트엔트 개발](shiny-frontend.html)
         - [Shiny 모듈 101](shiny-module-101.html)
         - [Shiny 모듈 - 대입정원과 학령기 학생수](shiny-module.html)
+        - [많이 사용되는 Shiny 핵심 기능](shiny-key-features.html)
     - **shinydashboard 101**    
         - [주사위 던지기 - `shinydashbaord`](shiny-draw-dice.html)
         - [주사위 & 동전 던지기(UI) - `shinydashbaord`](shiny-die-coin.html)
