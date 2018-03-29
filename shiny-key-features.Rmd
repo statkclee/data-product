@@ -611,3 +611,134 @@ shinyApp(ui,server)
 
 <img src="fig/shiny-feature-dashboard-conditional.png" alt="메뉴 도입" width="77%" />
 
+
+# 8. 하위 메뉴 숨겼다가 보이는 기능 [^so-menu-show-hide] {#shiny-dashboard-menu-show-hide}
+
+[^so-menu-show-hide]: [stackoverflow, React to menuItem() tab selection](https://stackoverflow.com/questions/37595124/react-to-menuitem-tab-selection)
+
+제어가 포함된 `shiny` 앱을 제작할 때 특정 메뉴에 관련된 제어 입력기(`*input`)를 배치할 경우가 있다.
+이런 경우 [React to menuItem() tab selection](https://stackoverflow.com/questions/37595124/react-to-menuitem-tab-selection) 코드를 참고하여 이를 반영한다.
+
+``` {r shiny-dashboard-menu, eval = FALSE}
+library(shinydashboard)
+library(tidyverse)
+
+convertMenuItem <- function(mi, tabName) {
+    mi$children[[1]]$attribs['data-toggle']="tab"
+    mi$children[[1]]$attribs['data-value'] = tabName
+    if(length(mi$attribs$class)>0 && mi$attribs$class=="treeview"){
+        mi$attribs$class=NULL
+    }
+    mi
+}
+
+# 1. Header ------
+header <- dashboardHeader(title = "xwMOOC Dashboard")
+
+# 2. Sidebar ------
+sidebar <- dashboardSidebar(
+    sidebarMenu(id = "menu",
+        convertMenuItem(
+            menuItem(" Data", tabName = "data_menu", icon = icon(name = "table"),
+                radioButtons("data", "Select data", choices=c("mtcars", "iris", "rock", "airquality", "diamonds"), selected="iris"),
+                checkboxInput("showtable","Show data Table", value=TRUE)), 'data_menu'
+            ),
+        convertMenuItem(
+            menuItem(" Variable", tabName = "var_menu", icon = icon(name = "columns"),
+              selectInput('y', 'Response variable', choices = c("")),
+              selectInput('x', 'Explanatory variable(s)', choices = c(""), multiple=FALSE)), 'var_menu'
+        ),
+
+        # Built with Shiny by RStudio
+        br(), br(),
+        h5(img(src = "xwMOOC.png", height = "30px"), "Built with",
+           img(src = "shiny.png", height = "20px"), "and" ,img(src = "RStudio-Logo-Blue-Gray.png", height = "15px"),
+           ".")
+    )
+)
+
+# 3. Body ------
+body <- dashboardBody(
+    
+    conditionalPanel(condition = "input.menu == 'data_menu'", 
+        box(width = 10, title = "Data Name", status = "primary", solidHeader = TRUE,
+            verbatimTextOutput("text")
+        )
+    ),
+    
+    conditionalPanel(condition = "input.menu == 'var_menu'", 
+        box(width = 8, title = "Dataset Content", status = "primary", solidHeader = TRUE,
+            conditionalPanel(condition = "input.showtable == true",
+                             DT::dataTableOutput("table")
+            )
+        ),
+        
+        box(width = 4, title = "Visualization", status = "primary", solidHeader = TRUE,
+                plotOutput("plot")
+        )
+    )
+)
+
+ui <- dashboardPage(header, sidebar, body, skin = "blue")
+
+server <- function(input,output,session){
+    
+    observeEvent(input$showtable, {
+        shinyjs::hide(id = "data")
+        shinyjs::hide(id = "x")
+    })
+        
+    # 1. dataset -----
+    dataset <- reactive({
+          eval(parse(text=input$data))
+    })
+    
+    # 2. UI update -----
+    observeEvent(input$data,{
+        updateSelectInput(session,"y", choices = colnames(dataset()))  
+    })
+    
+    observeEvent(input$y,{
+        x_var <- setdiff(colnames(dataset()), input$y)
+        updateSelectInput(session,"x", choices = x_var)  
+    })
+    
+    # 3. Regression Formula -----
+    reg_formula <- reactive({
+        reg_formula <- vector("character", 0)
+        
+        if(length(input$x) > 0) {
+            reg_formula <- paste0(input$y, "~", stringr::str_c(input$x, collapse="+"))
+        }
+    })
+    
+    # 4. Data Set & Regression Model -----
+    output$text <- renderPrint({
+        cat("The selected dataset is ", input$data, "\n")
+        cat("Regression Formula ", reg_formula(), "\n")
+        cat("Menu Item selected: ", input$menu)
+    })
+    
+    # 5. Data Set Display -----
+    output$table <- DT::renderDataTable({
+        dataset()
+    })
+
+    # 6. Render Plot -----
+    output$plot <- renderPlot({
+        req(input$x)
+        req(input$y)
+        
+        ggplot(dataset(), aes_string(input$y, input$x)) +
+            geom_point() +
+            geom_smooth(method="lm")
+    })
+
+}
+
+shinyApp(ui,server)
+```
+
+<img src="fig/shiny-feature-menu.gif" alt="Shiny 메뉴 보이고 숨기기" width="77%" />
+
+
