@@ -268,11 +268,11 @@ div.tocify {
 
 
 <div id="digital-ocean" class="section level1">
-<h1>1. 디지털 오션(Digital Ocean)</h1>
+<h1>1. 디지털 오션(Digital Ocean) <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h1>
 <p><a href="https://www.digitalocean.com/">DigitalOcean</a>도 <a href="https://aws.amazon.com/">AWS</a>와 유사한 컴퓨팅 자원을 시간당 사용료를 받고 공급해주는 회사다. 가격이 상대적으로 AWS 보다 저렴하고 사용하기 편한 다양한 서비스를 제공하고 있어 인기가 많다.</p>
 </div>
 <div id="digital-ocean-ubuntu" class="section level1">
-<h1>2. 우분투 서버 준비 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h1>
+<h1>2. 우분투 서버 준비 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h1>
 <p><a href="https://www.digitalocean.com/">DigitalOcean</a>에 회원가입하고 나면 우측 상단에 녹색 <strong>create</strong> 버튼이 있다. 이를 클릭하면 <code>Create Droplets</code> 화면에서 운영체제와 함께 적절한 컴퓨팅 자원을 선정하여 생성시킨다.</p>
 <p>그러면 <code>Dashoboard</code>에서 <code>DROPLETS(1)</code>와 같이 우분투 운영체제가 탑재된 컴퓨터가 한대 배달된다.</p>
 <p>우분투가 탐재된 컴퓨터에 로그인하여 추가적인 작업을 수행한다.</p>
@@ -292,7 +292,7 @@ div.tocify {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">$</span><span class="st"> </span>usermod <span class="op">-</span>aG sudo shiny</code></pre></div>
 </div>
 <div id="shiny-ssh-login" class="section level2">
-<h2>2.4. <code>shiny</code> 사용자 ssh 로그인 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h2>
+<h2>2.4. <code>shiny</code> 사용자 ssh 로그인 <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h2>
 <p><code>shiny</code> 사용자에 <code>root</code> 권한을 부여했다면, 다음 단계로 패스워드 로그인이 아니라 <code>ssh</code> 로그인을 해야 한다. 이를 위해서 <code>ssh-keygen -t rsa</code> 명령어로 로컬 컴퓨터에서 공개키와 비밀키를 생성시킨다. 윈도우 사용자라면 <code>C:\Users\사용자명\.ssh</code> 디렉토리에 <code>id_rsa</code>, <code>id_rsa.pub</code>, <code>known_hosts</code> 파일이 생성된다.</p>
 <ul>
 <li>비밀키: <code>id_rsa</code></li>
@@ -508,8 +508,9 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-16-04">Initial Server Setup with Ubuntu 16.04</a><a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p><a href="https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets">How To Use SSH Keys with DigitalOcean Droplets</a><a href="#fnref2">↩</a></p></li>
+<li id="fn1"><p><a href="https://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/">How to get your very own RStudio Server and Shiny Server with DigitalOcean, Posted on May 9, 2015 | Last updated March 29, 2018</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-16-04">Initial Server Setup with Ubuntu 16.04</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets">How To Use SSH Keys with DigitalOcean Droplets</a><a href="#fnref3">↩</a></p></li>
 </ol>
 </div>
 

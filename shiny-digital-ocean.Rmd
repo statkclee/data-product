@@ -17,7 +17,9 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 
 ```
 
-# 1. 디지털 오션(Digital Ocean) {#digital-ocean}
+# 1. 디지털 오션(Digital Ocean) [^attali-shiny] {#digital-ocean}
+
+[^attali-shiny]: [How to get your very own RStudio Server and Shiny Server with DigitalOcean, Posted on May 9, 2015 | Last updated March 29, 2018](https://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/)
 
 [DigitalOcean](https://www.digitalocean.com/)도 [AWS](https://aws.amazon.com/)와 유사한 컴퓨팅 자원을 
 시간당 사용료를 받고 공급해주는 회사다. 가격이 상대적으로 AWS 보다 저렴하고 사용하기 편한 다양한 서비스를 제공하고 있어 인기가 많다.
