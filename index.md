@@ -55,10 +55,13 @@ title: 데이터 제품
         - [코에이(Koei) 삼국지 - 인물중심](dp-koei-three-kingdoms.html)
         - [코에이(Koei) 삼국지 국력비교](dp-koei-three-kingdoms-powers.html)
     - **공기 품질 &rarr; (초)미세먼지** 
-        - [측정소 위치 - OpenAQ](dp-aq-location.html)
-        - [측정소 위치 - 대한민국](dp-aq-location-korea.html)
-        - [시도별 공기품질](dp-aq-sido.html)
-        - [등록된 자동차 현황 - 성남시](dp-aq-auto.html)
+        - **데이터 분석** 
+            - [측정소 위치 - OpenAQ](dp-aq-location.html)
+            - [측정소 위치 - 대한민국](dp-aq-location-korea.html)
+            - [시도별 공기품질](dp-aq-sido.html)
+            - [등록된 자동차 현황 - 성남시](dp-aq-auto.html)
+        - **공기품질 예측 서비스**
+            - [공기 품질 예측서비스 - Prototype](dp-airquality-proto.html) 
 
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
