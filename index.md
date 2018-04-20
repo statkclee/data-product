@@ -16,7 +16,7 @@ title: 데이터 제품
 
 - [R 데이터 제품(Data Product)](data-product.html)
     - [보고서 작성 자동화(30분)](ds-report-automation.html)
-    - [R로 전자우편 자동 전송](ds-gmail.html)        
+    - [**전자우편 보고서 발송 자동화**](cron-automation.html)        
     - [공공 데이터 제품](data-product-civic-hacking.html)
     - [야구 MLB](ds-baseball-mlb.html)    
 - [Shiny 웹앱](shiny-overview.html)
@@ -62,6 +62,7 @@ title: 데이터 제품
             - [등록된 자동차 현황 - 성남시](dp-aq-auto.html)
         - **공기품질 예측 서비스**
             - [공기 품질 예측서비스 - Prototype](dp-airquality-proto.html) 
+            - [공기 품질 예측서비스 - 자동화](dp-airquality-automation.html) 
 
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
