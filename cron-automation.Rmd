@@ -127,8 +127,8 @@ library(gmailr)    # devtools::install_github("jimhester/gmailr")
 use_secret_file("gmail.json")
 
 test_email <- mime(
-    To = "kwangchun.lee.7@gmail.com",
-    From = "kwangchun.lee.7@gmail.com",
+    To = "kxxxxxx@gmail.com",
+    From = "kzzzzz@gmail.com",
     Subject = "Welcome to the R Meetup",
     body = "R Meetup에 오신 것을 환영합니다!!!")
 
