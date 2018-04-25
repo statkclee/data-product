@@ -4,10 +4,11 @@ title: 데이터 제품
 subtitle: 데이터 저널리즘 - Andrew Flowers
 output:
   html_document: 
-    keep_md: yes
     toc: yes
-  pdf_document:
-    latex_engine: xelatex
+    toc_float: true
+    highlight: tango
+    code_folding: hide
+    number_sections: TRUE
 mainfont: NanumGothic
 ---
 
@@ -16,16 +17,15 @@ mainfont: NanumGothic
 source("tools/chunk-options.R")
 ```
 
-> ## 학습 목표 {.objectives}
->
-> * 데이터 저널리즘의 훌륭한 이야기를 만들어내는 방식을 살펴본다.
-> * Andrew Flowers의 "538" 에서 직접 경험한 데이터 저널리즘 이야기 창출 방식을 살펴보자.
 
-## 데이터 저널리즘 [^rstudio-conf-2017-data-story]
+# 데이터 저널리즘 [^rstudio-conf-2017-data-story]
 
 [^rstudio-conf-2017-data-story]: [Talks by Andrew Flowers](https://github.com/andrewflowers/talks)
 
->  ### Principles of good data **journalism** are principles of good data **storytelling**.  {.callout}
+데이터 저널리즘의 훌륭한 이야기를 만들어내는 방식을 살펴보고, 
+Andrew Flowers의 "538" 에서 직접 경험한 데이터 저널리즘 이야기 창출 방식을 살펴보자.
+
+>  Principles of good data **journalism** are principles of good data **storytelling**.
 >
 > 데이터 저널리즘(Data Journalism)은 마감시한이 있는 경험적 사회과학이다.
 >
@@ -33,7 +33,7 @@ source("tools/chunk-options.R")
 > - 엄격하지만 해석가능한 방법론을 사용한다.
 > - 정확성이 생명이고, 빠르고, 투명성이 담보되어야 한다.
 
-### R을 사용하는 이유
+# R을 사용하는 이유
 
 R을 데이터 저널리즘에서 사용하는 이유가 다수 있지만 무엇보다 신속히 공유가능한 데이터 분석을 위한 최선의 도구다.
 
@@ -56,7 +56,7 @@ R을 데이터 저널리즘에서 사용하는 이유가 다수 있지만 무엇
 - 생각 &middot; 믿음이 틀렸음을 증명(debunk)
 - 예측(Forecast)
 
-## 신선함(Novelty)
+# 신선함(Novelty)
 
 우버라는 공유경제(?)를 대표하는 운송수단이 생성됨으로써 기존 전통적인 택시같은 운송수단과 경쟁에 따른 신선한 정보를 제공받을 수도 있다.
 
@@ -72,7 +72,7 @@ R을 데이터 저널리즘에서 사용하는 이유가 다수 있지만 무엇
 | 질문   | 데이터가 독자에게도 유의미할까?   | 
 
 
-## 이상점(Outlier)
+# 이상점(Outlier)
 
 축구의 메시와 미국 NBA의 Curry는 어떻게 보면 불가능에 가까운 능력을 소유하고 있다. 
 이것을 어떤 면에서 긍정적인 스타, 혹은 영웅으로 볼 수 있는데 통계적으로 이상점 ... 영향력있는 젊고 어린 세대들이 닮아가야하는 도전과 꿈으로 볼 수도 있다.
@@ -89,7 +89,7 @@ R을 데이터 저널리즘에서 사용하는 이유가 다수 있지만 무엇
 
 - [The Economic Guide To Picking A College Major](https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/)
 
-## 전형(Archetype)
+# 전형(Archetype)
 
 - [Surviving Suicide In Wyoming](https://fivethirtyeight.com/features/suicide-in-wyoming/)
 - [The Poorest Corner Of Town](https://fivethirtyeight.com/features/ferguson-missouri/)
@@ -103,7 +103,7 @@ R을 데이터 저널리즘에서 사용하는 이유가 다수 있지만 무엇
 | 질문   | 어떤 변수를 빼먹었는가?           | 
 
 
-## 추세(Trend)
+# 추세(Trend)
 
 - [The Rise Of Terrorism Inspired By Religion In France](https://fivethirtyeight.com/features/the-rise-of-religiously-inspired-terrorism-in-france/)
 - [The Dallas Shooting Was Among The Deadliest For Police In U.S. History](https://fivethirtyeight.com/features/the-dallas-shooting-was-among-the-deadliest-for-police-in-u-s-history/)
@@ -116,7 +116,7 @@ R을 데이터 저널리즘에서 사용하는 이유가 다수 있지만 무엇
 | 질문   | 신호냐? 아니면 잡음이냐?          | 
 
 
-## 생각 &middot; 믿음이 틀렸음을 증명(debunk)
+# 생각 &middot; 믿음이 틀렸음을 증명(debunk)
 
 - [The Dollar-And-Cents Case Against Hollywood’s Exclusion of Women](https://fivethirtyeight.com/features/the-dollar-and-cents-case-against-hollywoods-exclusion-of-women/)
 - [You Can’t Trust What You Read About Nutrition. We found a link between cabbage and innie bellybuttons, but that doesn’t mean it’s real.](http://fivethirtyeight.com/features/you-cant-trust-what-you-read-about-nutrition/)
@@ -128,7 +128,7 @@ R을 데이터 저널리즘에서 사용하는 이유가 다수 있지만 무엇
 | 질문   | 어느 정도 생각 &middot; 믿음이 틀렸음을 증명하고자 하는가? | 
 
 
-## 예측(Forecast)
+# 예측(Forecast)
 
 - [Who will win the presidency?](https://projects.fivethirtyeight.com/2016-election-forecast/)
 - [Deshaun Watson And Clemson Made History Against Alabama](https://fivethirtyeight.com/features/deshaun-watson-and-clemson-made-history-against-alabama/)
@@ -139,7 +139,7 @@ R을 데이터 저널리즘에서 사용하는 이유가 다수 있지만 무엇
 | 전략   | 모의실험과 시나리오(Simulations and scenarios)     |
 | 질문   | 모형에 적절히 불확실성이 담겨져 있는가? | 
 
-## 데이터 저널리즘 요약
+# 데이터 저널리즘 요약
 
 전개할 가치가 있는 데이터 이야기는 신선함, 이상점, 전형, 추세, 잘못알고 있음을 증명, 예측하는 방식이 있는데
 곳곳에 도사리는 위험은 시시함, 허위 결과, 과다한 단순화, 확증편향, 과대적합이 있다.
