@@ -94,6 +94,7 @@ title: 데이터 제품
         + [고생대 프로젝트](http://statkclee.github.io/trilobite)
         + [금융(finance)](https://statkclee.github.io/finance/)
         + [자동차 데이터 분석](https://statkclee.github.io/automotive/)
+        + 비즈니스 프로세스(Business Process) - bupar
     - [~~R 팩키지~~](http://r-pkgs.xwmooc.org/)
     - [~~통계적 사고~~](http://think-stat.xwmooc.org/)
 - **빅데이터**
