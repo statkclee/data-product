@@ -3,56 +3,46 @@
   <head>
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
-    <title>Software Carpentry: </title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-59802572-17', 'auto');
-      ga('send', 'pageview');
-    
+    <title>Software Carpentry: 데이터 제품</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
     </script>
   </head>
   <body class="lesson">
     <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
       </div>
       <article>
       <div class="row">
         <div class="col-md-10 col-md-offset-1">
-                    <h1 class="title"></h1>
-          <h1 id="데이터-제품">데이터 제품</h1>
-<section class="objectives panel panel-warning">
-<div class="panel-heading">
-<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
-</div>
-<div class="panel-body">
-<ul>
-<li>데이터 저널리즘의 훌륭한 이야기를 만들어내는 방식을 살펴본다.</li>
-<li>Andrew Flowers의 “538” 에서 직접 경험한 데이터 저널리즘 이야기 창출 방식을 살펴보자.</li>
-</ul>
-</div>
-</section>
-<h2 id="데이터-저널리즘-rstudio-conf-2017-data-story">데이터 저널리즘 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h2>
+                    <a href="index.html"><h1 class="title">데이터 제품</h1></a>
+          <h2 class="subtitle">데이터 저널리즘 - Andrew Flowers</h2>
+          <h1 id="데이터-저널리즘-rstudio-conf-2017-data-story">데이터 저널리즘 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h1>
+<p>데이터 저널리즘의 훌륭한 이야기를 만들어내는 방식을 살펴보고, Andrew Flowers의 “538” 에서 직접 경험한 데이터 저널리즘 이야기 창출 방식을 살펴보자.</p>
 <blockquote>
-<p>### Principles of good data <strong>journalism</strong> are principles of good data <strong>storytelling</strong>. {.callout}</p>
+<p>Principles of good data <strong>journalism</strong> are principles of good data <strong>storytelling</strong>.</p>
 <p>데이터 저널리즘(Data Journalism)은 마감시한이 있는 경험적 사회과학이다.</p>
 <ul>
 <li>스토리가 이끌어 나가고 데이터가 받혀준다.</li>
@@ -60,7 +50,7 @@
 <li>정확성이 생명이고, 빠르고, 투명성이 담보되어야 한다.</li>
 </ul>
 </blockquote>
-<h3 id="r을-사용하는-이유">R을 사용하는 이유</h3>
+<h1 id="r을-사용하는-이유">R을 사용하는 이유</h1>
 <p>R을 데이터 저널리즘에서 사용하는 이유가 다수 있지만 무엇보다 신속히 공유가능한 데이터 분석을 위한 최선의 도구다.</p>
 <ul>
 <li>오픈 소스 소프트웨어: 투명성, GitHub</li>
@@ -78,7 +68,7 @@
 <li>생각 · 믿음이 틀렸음을 증명(debunk)</li>
 <li>예측(Forecast)</li>
 </ul>
-<h2 id="신선함novelty">신선함(Novelty)</h2>
+<h1 id="신선함novelty">신선함(Novelty)</h1>
 <p>우버라는 공유경제(?)를 대표하는 운송수단이 생성됨으로써 기존 전통적인 택시같은 운송수단과 경쟁에 따른 신선한 정보를 제공받을 수도 있다.</p>
 <ul>
 <li><a href="https://fivethirtyeight.com/features/uber-is-serving-new-yorks-outer-boroughs-more-than-taxis-are/">Uber Is Serving New York’s Outer Boroughs More Than Taxis Are</a></li>
@@ -89,26 +79,26 @@
 <table>
 <thead>
 <tr class="header">
-<th>구분</th>
-<th>상세 설명</th>
+<th align="left">구분</th>
+<th align="left">상세 설명</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>위험성</td>
-<td>시시함(Triviality)</td>
+<td align="left">위험성</td>
+<td align="left">시시함(Triviality)</td>
 </tr>
 <tr class="even">
-<td>전략</td>
-<td>단순 요약(Simple Summary)</td>
+<td align="left">전략</td>
+<td align="left">단순 요약(Simple Summary)</td>
 </tr>
 <tr class="odd">
-<td>질문</td>
-<td>데이터가 독자에게도 유의미할까?</td>
+<td align="left">질문</td>
+<td align="left">데이터가 독자에게도 유의미할까?</td>
 </tr>
 </tbody>
 </table>
-<h2 id="이상점outlier">이상점(Outlier)</h2>
+<h1 id="이상점outlier">이상점(Outlier)</h1>
 <p>축구의 메시와 미국 NBA의 Curry는 어떻게 보면 불가능에 가까운 능력을 소유하고 있다. 이것을 어떤 면에서 긍정적인 스타, 혹은 영웅으로 볼 수 있는데 통계적으로 이상점 … 영향력있는 젊고 어린 세대들이 닮아가야하는 도전과 꿈으로 볼 수도 있다.</p>
 <ul>
 <li><a href="https://fivethirtyeight.com/features/lionel-messi-is-impossible/">Lionel Messi Is Impossible</a></li>
@@ -117,29 +107,29 @@
 <table>
 <thead>
 <tr class="header">
-<th>구분</th>
-<th>상세 설명</th>
+<th align="left">구분</th>
+<th align="left">상세 설명</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>위험성</td>
-<td>허위 결과(Spurious Result)</td>
+<td align="left">위험성</td>
+<td align="left">허위 결과(Spurious Result)</td>
 </tr>
 <tr class="even">
-<td>전략</td>
-<td>인물(Characters)</td>
+<td align="left">전략</td>
+<td align="left">인물(Characters)</td>
 </tr>
 <tr class="odd">
-<td>질문</td>
-<td>실제로 그렇게 차이가 나거나 다른가?</td>
+<td align="left">질문</td>
+<td align="left">실제로 그렇게 차이가 나거나 다른가?</td>
 </tr>
 </tbody>
 </table>
 <ul>
 <li><a href="https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/">The Economic Guide To Picking A College Major</a></li>
 </ul>
-<h2 id="전형archetype">전형(Archetype)</h2>
+<h1 id="전형archetype">전형(Archetype)</h1>
 <ul>
 <li><a href="https://fivethirtyeight.com/features/suicide-in-wyoming/">Surviving Suicide In Wyoming</a></li>
 <li><a href="https://fivethirtyeight.com/features/ferguson-missouri/">The Poorest Corner Of Town</a></li>
@@ -148,26 +138,26 @@
 <table>
 <thead>
 <tr class="header">
-<th>구분</th>
-<th>상세 설명</th>
+<th align="left">구분</th>
+<th align="left">상세 설명</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>위험성</td>
-<td>과다 간략화(Oversimplification)</td>
+<td align="left">위험성</td>
+<td align="left">과다 간략화(Oversimplification)</td>
 </tr>
 <tr class="even">
-<td>전략</td>
-<td>모형(Modeling)</td>
+<td align="left">전략</td>
+<td align="left">모형(Modeling)</td>
 </tr>
 <tr class="odd">
-<td>질문</td>
-<td>어떤 변수를 빼먹었는가?</td>
+<td align="left">질문</td>
+<td align="left">어떤 변수를 빼먹었는가?</td>
 </tr>
 </tbody>
 </table>
-<h2 id="추세trend">추세(Trend)</h2>
+<h1 id="추세trend">추세(Trend)</h1>
 <ul>
 <li><a href="https://fivethirtyeight.com/features/the-rise-of-religiously-inspired-terrorism-in-france/">The Rise Of Terrorism Inspired By Religion In France</a></li>
 <li><a href="https://fivethirtyeight.com/features/the-dallas-shooting-was-among-the-deadliest-for-police-in-u-s-history/">The Dallas Shooting Was Among The Deadliest For Police In U.S. History</a></li>
@@ -176,26 +166,26 @@
 <table>
 <thead>
 <tr class="header">
-<th>구분</th>
-<th>상세 설명</th>
+<th align="left">구분</th>
+<th align="left">상세 설명</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>위험성</td>
-<td>분산(Variance)</td>
+<td align="left">위험성</td>
+<td align="left">분산(Variance)</td>
 </tr>
 <tr class="even">
-<td>전략</td>
-<td>보수적 접근(Be conservative)</td>
+<td align="left">전략</td>
+<td align="left">보수적 접근(Be conservative)</td>
 </tr>
 <tr class="odd">
-<td>질문</td>
-<td>신호냐? 아니면 잡음이냐?</td>
+<td align="left">질문</td>
+<td align="left">신호냐? 아니면 잡음이냐?</td>
 </tr>
 </tbody>
 </table>
-<h2 id="생각-믿음이-틀렸음을-증명debunk">생각 · 믿음이 틀렸음을 증명(debunk)</h2>
+<h1 id="생각-믿음이-틀렸음을-증명debunk">생각 · 믿음이 틀렸음을 증명(debunk)</h1>
 <ul>
 <li><a href="https://fivethirtyeight.com/features/the-dollar-and-cents-case-against-hollywoods-exclusion-of-women/">The Dollar-And-Cents Case Against Hollywood’s Exclusion of Women</a></li>
 <li><a href="http://fivethirtyeight.com/features/you-cant-trust-what-you-read-about-nutrition/">You Can’t Trust What You Read About Nutrition. We found a link between cabbage and innie bellybuttons, but that doesn’t mean it’s real.</a></li>
@@ -203,26 +193,26 @@
 <table>
 <thead>
 <tr class="header">
-<th>구분</th>
-<th>상세 설명</th>
+<th align="left">구분</th>
+<th align="left">상세 설명</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>위험성</td>
-<td>확증편향(Confirmation bias)</td>
+<td align="left">위험성</td>
+<td align="left">확증편향(Confirmation bias)</td>
 </tr>
 <tr class="even">
-<td>전략</td>
-<td>공개방식으로 잘못됨 증명(Showcase failures)</td>
+<td align="left">전략</td>
+<td align="left">공개방식으로 잘못됨 증명(Showcase failures)</td>
 </tr>
 <tr class="odd">
-<td>질문</td>
-<td>어느 정도 생각 · 믿음이 틀렸음을 증명하고자 하는가?</td>
+<td align="left">질문</td>
+<td align="left">어느 정도 생각 · 믿음이 틀렸음을 증명하고자 하는가?</td>
 </tr>
 </tbody>
 </table>
-<h2 id="예측forecast">예측(Forecast)</h2>
+<h1 id="예측forecast">예측(Forecast)</h1>
 <ul>
 <li><a href="https://projects.fivethirtyeight.com/2016-election-forecast/">Who will win the presidency?</a></li>
 <li><a href="https://fivethirtyeight.com/features/deshaun-watson-and-clemson-made-history-against-alabama/">Deshaun Watson And Clemson Made History Against Alabama</a></li>
@@ -230,61 +220,31 @@
 <table>
 <thead>
 <tr class="header">
-<th>구분</th>
-<th>상세 설명</th>
+<th align="left">구분</th>
+<th align="left">상세 설명</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>위험성</td>
-<td>과대적합(Overfitting)</td>
+<td align="left">위험성</td>
+<td align="left">과대적합(Overfitting)</td>
 </tr>
 <tr class="even">
-<td>전략</td>
-<td>모의실험과 시나리오(Simulations and scenarios)</td>
+<td align="left">전략</td>
+<td align="left">모의실험과 시나리오(Simulations and scenarios)</td>
 </tr>
 <tr class="odd">
-<td>질문</td>
-<td>모형에 적절히 불확실성이 담겨져 있는가?</td>
+<td align="left">질문</td>
+<td align="left">모형에 적절히 불확실성이 담겨져 있는가?</td>
 </tr>
 </tbody>
 </table>
-<h2 id="데이터-저널리즘-요약">데이터 저널리즘 요약</h2>
+<h1 id="데이터-저널리즘-요약">데이터 저널리즘 요약</h1>
 <p>전개할 가치가 있는 데이터 이야기는 신선함, 이상점, 전형, 추세, 잘못알고 있음을 증명, 예측하는 방식이 있는데 곳곳에 도사리는 위험은 시시함, 허위 결과, 과다한 단순화, 확증편향, 과대적합이 있다.</p>
-<table>
-<thead>
-<tr class="header">
-<th>데이터 이야기 전개</th>
-<th>도사리고 있는 위험</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>신선함(Novelty)</td>
-<td>시시함(Triviality)</td>
-</tr>
-<tr class="even">
-<td>이상점(Outlier)</td>
-<td>허위 결과(Spurious Result)</td>
-</tr>
-<tr class="odd">
-<td>전형(Archetype)</td>
-<td>과다한 단순화(Oversimplification)</td>
-</tr>
-<tr class="even">
-<td>추세(Trend)</td>
-<td>분산(Variance)</td>
-</tr>
-<tr class="odd">
-<td>생각 · 믿음이 틀렸음을 증명(debunk)</td>
-<td>확증편향(Confirmation bias)</td>
-</tr>
-<tr class="even">
-<td>예측(Forecast)</td>
-<td>과대적합(Overfitting)</td>
-</tr>
-</tbody>
-</table>
+<p>| 데이터 이야기 전개 | 도사리고 있는 위험 | |——————————————–|———————————-| | 신선함(Novelty) | 시시함(Triviality) | | 이상점(Outlier) | 허위 결과(Spurious Result) |<br />
+| 전형(Archetype) | 과다한 단순화(Oversimplification)|<br />
+| 추세(Trend) | 분산(Variance) | | 생각 · 믿음이 틀렸음을 증명(debunk) | 확증편향(Confirmation bias) |<br />
+| 예측(Forecast) | 과대적합(Overfitting) |</p>
 <div class="footnotes">
 <hr />
 <ol>
@@ -294,16 +254,16 @@
         </div>
       </div>
       </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>
     </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
   </body>
 </html>
