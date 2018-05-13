@@ -1,0 +1,171 @@
+---
+layout: page
+title: xwMOOC 데이터 제품
+subtitle: 슈퍼영웅(Super Heores)
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: hide
+    number_sections: TRUE
+    self_contained: false
+mainfont: NanumGothic
+---
+ 
+``` {r, include=FALSE}
+source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+
+library(tidyverse)
+library(rvest)
+library(httr)
+library(glue)
+library(trelliscopejs)
+
+# 1. 데이터 가져오기 -----
+
+sh_powerstat_list <- read_rds("data/sh_powerstat_list.rds")
+sh_image_list  <- read_rds("data/sh_image_list.rds")
+```
+
+# 어벤져스 - 인피니티 워 {#super-hero} 
+
+[어벤져스: 인피니티 워 (Avengers: Infinity War), 2018](https://movie.naver.com/movie/bi/mi/basic.nhn?code=136315)가 절찬상영중이다.
+이에 따라 슈퍼영웅에 대한 통계분석이 필요한 시점이 되었다.
+
+
+# 슈퍼영웅(Super Heroes) {#super-hero-api}
+
+다행히 [SuperHero API](http://superheroapi.com/)를 통해서 슈퍼 영웅과 악당에 대한 세세한 정보를 받아서 지구를 지킬 수 있는 기반이 마련되었다.
+
+## 슈퍼영웅 명단 {#super-hero-api-name}
+
+[SuperHero API](http://superheroapi.com/)의 API 계층구조를 숙독하고 각 영웅에 대한 상세 정보를 가져오기 앞서 
+[SuperHero API](http://superheroapi.com/)에서 제공하는 전체 슈퍼영웅의 ID와 이름을 가져온다.
+
+``` {r super-hero-api-name, eval=TRUE}
+# 0. 환경설정 -----
+library(tidyverse)
+library(rvest)
+library(httr)
+library(glue)
+library(trelliscopejs)
+
+# 1. 데이터 가져오기 -----
+## 1.1. 캐릭터 ID 
+sh_url <- "http://superheroapi.com/ids.html"
+
+sh_one_df <- sh_url %>% 
+  read_html() %>% 
+  html_node(xpath='/html/body/main/div[1]/table') %>% 
+  html_table() %>% 
+  as_tibble() %>% 
+  rename(char_id = X1, char_name = X2)
+
+sh_two_df <- sh_url %>% 
+  read_html() %>% 
+  html_node(xpath='/html/body/main/div[2]/table') %>% 
+  html_table() %>% 
+  as_tibble() %>% 
+  rename(char_id = X1, char_name = X2)
+
+sh_three_df <- sh_url %>% 
+  read_html() %>% 
+  html_node(xpath='/html/body/main/div[3]/table') %>% 
+  html_table() %>% 
+  as_tibble() %>% 
+  rename(char_id = X1, char_name = X2)
+
+sh_char_df <- bind_rows(sh_one_df, sh_two_df) %>% 
+  bind_rows(sh_three_df)
+
+DT::datatable(sh_char_df)
+```
+
+## 슈퍼영웅 능력치와 이미지 {#super-hero-api-powerstat}
+
+슈퍼영웅의 능력치(`powerstats`)와 이미지(`image`)를 긁어와서 영웅을 비교할 수 있도록 준비한다.
+`access_token`은 간단한 가입절차를 통해서 쉽게 얻을 수 있다.
+
+``` {r super-hero-api-powerstat, eval=FALSE}
+# 2. 슈퍼히어로 데이터 가져오기 -----
+## 2.1. 슈퍼히어로 능력치
+superhero_endpoint <- 'http://superheroapi.com/api/'
+access_token <- "101xxxxxxxxxxxxxxxxxxx"
+
+sh_powerstat_list <- vector("list", nrow(sh_char_df))
+
+for(i in 1:nrow(sh_char_df)) {
+  sh_powerstat_resp <- glue(superhero_endpoint, access_token, '/', sh_char_df$char_id[i], '/powerstats') %>% 
+    GET() %>% 
+    content()
+  sh_powerstat_list[[i]] <- sh_powerstat_resp
+}
+
+names(sh_powerstat_list) <- sh_char_df$char_name
+
+listviewer::jsonedit(sh_powerstat_list)
+
+## 2.2. 슈퍼히어로 이미지
+
+sh_image_list <- vector("list", nrow(sh_char_df))
+
+for(i in 1:nrow(sh_char_df)) {
+  sh_image_resp <- glue(superhero_endpoint, access_token, '/', sh_char_df$char_id[i], '/image') %>% 
+    GET() %>% 
+    content()
+  sh_image_list[[i]] <- sh_image_resp
+  cat(i, ":", sh_char_df$char_name[i], "\n")
+}
+
+names(sh_image_list) <- sh_char_df$char_name
+
+listviewer::jsonedit(sh_image_list)
+```
+
+## 리스트를 데이터프레임으로 변환 {#super-hero-api-list2dataframe}
+
+능력치와 이미지를 리스트로 다운로드 받은 후에 이를 데이터프레임으로 변환시킨다.
+
+``` {r super-hero-api-powerstat-df, eval=TRUE}
+# 2. 리스트 데이터프레임 변환 -----
+sh_df <- tibble(
+  id = map_chr(sh_powerstat_list, "id"),
+  name = map_chr(sh_powerstat_list, "name"),
+  intelligence = map_chr(sh_powerstat_list, "intelligence"),
+  strength = map_chr(sh_powerstat_list, "strength"),
+  speed = map_chr(sh_powerstat_list, "speed"),
+  durability = map_chr(sh_powerstat_list, "durability"),
+  power = map_chr(sh_powerstat_list, "power"),
+  combat = map_chr(sh_powerstat_list, "combat"),
+  image = map_chr(sh_image_list, "url")
+)
+
+sh_df <- sh_df %>% 
+  mutate(intelligence = as.integer(intelligence),
+         strength     = as.integer(strength),
+         speed        = as.integer(speed),
+         durability   = as.integer(durability),
+         power        = as.integer(power),
+         combat       = as.integer(combat))
+
+DT::datatable(sh_df)
+
+```
+
+## 슈퍼영웅을 작은 창에 넣기 {#super-hero-api-trelliscopejs}
+
+슈퍼영웅을 작은 창에 넣어 생김새와 능력치를 비교해보자.
+
+``` {r super-hero-api-powerstat-trelliscopejs, eval=TRUE}
+# 3. 데이터 시각화 -----
+sh_df %>%
+  mutate(panel = img_panel(image)) %>%
+  trelliscope("SuperHeroes", nrow = 3, ncol = 6,
+              state = list(labels = c("name", "commbat", "intelligence")),
+              path="superhero_trellis")
+```
+
+
+
