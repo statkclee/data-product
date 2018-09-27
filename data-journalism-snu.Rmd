@@ -1,0 +1,191 @@
+---
+layout: page
+title: xwMOOC 데이터 제품
+subtitle: 서울대학교 경제학과 - 국내박사배출
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+    lib_dir: gapminder
+editor_options: 
+  chunk_output_type: console
+---
+ 
+``` {r, include=FALSE}
+# source("tools/chunk-options.R")
+
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE, cache=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = TRUE, fig.align = 'center',
+                      fig.width = 12, fig.height = 10)
+
+
+```
+
+# 서울대 경제학부 토종박사 [^snu-phd] {#경제학과-토종박사}
+
+매일경제에서 한국경제 전문 토종박사를 키운다는 기사에서 "국내 경제 맥락에 정통한 서울대 출신 경제학 박사 배출"을 목표로 한다는 내용이 주요 골자다.  
+
+[^snu-phd]: [매경(2018-09-26), "서울대 경제학부 석사과정 폐지…韓경제 전문 `토종 박사` 키운다"]()http://news.mk.co.kr/newsRead.php?year=2018&no=602978
+
+SKY 대학에서 국내박사는 정말 몇명이나 되는지 실증적으로 파악해 보자. 
+아마도 국내경제 맥락이 정확히 연구되지 않아 제대로된 방향이 설정되지 않아 현재와 같은 경제침체의 원인이 있을 수 있다는 가설도 힘을 싣고 있다.
+
+- 서울대학교 경제학과: [CURRENT FACULTY: Welcome to the Department of Economics at Seoul National University.](http://econ.snu.ac.kr/people/faculty)
+- 연세대학교 경제학과: [연세대학교 전임교수](http://web.yonsei.ac.kr/economics/전임교수.htm)
+- 고려대학교 경제학과: [고려대학교 전임교원](http://econ.korea.ac.kr/?page=faculty)
+
+# 수여대학 데이터 {#경제학과}
+
+## 서울대 경제학과 {#서울대-경제학과}
+
+```{r 서울대학교}
+library(tidyverse)
+library(rvest)
+library(glue)
+
+Sys.setlocale("LC_ALL", "C")
+snu_url <- "http://econ.snu.ac.kr/people/faculty"
+
+snu_html <- snu_url %>% 
+    read_html()
+
+snu_name <- snu_major <- snu_univ <- vector("character", length=12)
+
+for(i in 1:32) {
+    # 교수명
+    snu_name[i] <- snu_html %>% 
+        html_nodes(xpath=glue('//*[@id="portfolio"]/div[', i, ']/div/div[2]/div[1]/h4')) %>% 
+        html_text() %>% as.character()
+    # 전공 
+    snu_major[i] <- snu_html %>% 
+        html_nodes(xpath=glue('//*[@id="portfolio"]/div[', i, ']/div/div[2]/div[2]/p[1]')) %>% 
+        html_text() %>% as.character()
+    # 박사 수여대학 //*[@id="portfolio"]/div[2
+    snu_univ[i] <- snu_html %>% 
+        html_nodes(xpath=glue('//*[@id="portfolio"]/div[', i, ']/div/div[2]/div[2]/p[2]')) %>% 
+        html_text() %>% as.character()
+}
+
+Sys.setlocale("LC_ALL", "Korean")
+snu_dat <- tibble(name=snu_name, major=snu_major, univ=snu_univ) 
+
+snu_df <- snu_dat %>% 
+    mutate(univ = str_replace_all(univ, "Ph.D.,", "")) %>% 
+    mutate(university = str_replace_all(univ, "Statistics and Economics, |Finance\\,|Economics\\,", "")) %>% 
+    select(name, major, univ=university) %>% 
+    mutate(sky="서울대")
+
+snu_df %>% 
+    DT::datatable()
+
+```
+
+## 연세대 경제학과 {#연세대-경제학과}
+
+```{r 연세대학교}
+## 교수명 + 수여대학
+yonsei_dat <- read_lines("data/yonsei.txt")
+yonsei_tf <- str_detect(yonsei_dat, "Ph.D|h.D.")
+yonsei_dat <- yonsei_dat[yonsei_tf] %>% 
+    tbl_df %>% 
+    separate(value, into=c("name", "etc"), sep="Ph.D,")
+
+yonsei_df <- yonsei_dat %>% 
+    mutate(univ = str_remove_all(etc, "[0-9]|조교수|명예교수|부교수|학장|교수|학부장|\\)|\\,")) %>% 
+    mutate(name = str_remove(name, "\\(")) %>% 
+    select(name, univ)
+
+## 교수명 + 전공
+yonsei_dat <- read_lines("data/yonsei.txt")
+major_tf <- str_detect(yonsei_dat, "전공")
+major_dat <- yonsei_dat[major_tf] %>% 
+    tbl_df %>% 
+    separate(value, into=c("idx", "major"), sep="전공\t")
+
+## 데이터 결합
+yonsei_df <- yonsei_df %>% 
+    bind_cols(major_dat) %>% 
+    select(name, major, univ) %>% 
+    mutate(name = str_trim(name),
+           major = str_trim(major),
+           univ = str_trim(univ)) %>% 
+    mutate(name = str_replace_all(name, fixed(" "), "")) %>% 
+    mutate(sky="연세대")
+
+yonsei_df %>% 
+    DT::datatable()
+
+```
+
+## 고려대학교 경제학과 {#고려대-경제학과}
+
+```{r 고려대학교}
+korea_url <- "http://econ.korea.ac.kr/?page=faculty"
+
+Sys.setlocale("LC_ALL", "C")
+korea_dat <- korea_url %>% 
+    read_html() %>% 
+    html_node(xpath='//*[@id="showfaculty"]/table') %>% 
+    html_table(fill=TRUE) 
+Sys.setlocale("LC_ALL", "Korean")
+
+korea_dat <- korea_dat %>% 
+    separate(X2, into=c("name", "etc"), sep="Ph.D") %>% 
+    select(-X1)
+
+korea_df <- korea_dat %>% 
+    separate(etc, into=c("univ", "etc"), sep="전공:|Fields:")  %>% 
+    separate(etc, into=c("major", "etc"), sep="Ph:") %>% 
+    mutate(univ = str_extract_all(univ, "[:alpha:].+")) %>% 
+    mutate(university = str_extract_all(univ, "[:alpha:].+\\s") %>% unlist) %>% 
+    select(name, major, univ=university) %>% 
+    mutate(sky="고려대") %>% 
+    tbl_df
+
+korea_df %>% 
+    DT::datatable()
+
+```
+
+# SKY 대학 학위수여 대학 {#sky-univ-dataset}
+
+각 대학별로 교수가 그리 많지 않아 눈으로 확인을 해도 가능할 정도다 각 대학 홈페이지에서 학위수여대학과 전공을 웹크롤링하여 추출한 결과를 텍스트 데이터 전처리한 결과는 다음 DT 표에서 확인이 가능하다.
+
+```{r sky-univ-dataset}
+sky_df <- snu_df %>% 
+    bind_rows(yonsei_df) %>% 
+    bind_rows(korea_df)
+
+sky_df %>% 
+    DT::datatable()
+```
+
+연세대학교의 경우 <http://economics.yonsei.ac.kr/economics/faculty/faculty.do> 공식 웹사이트에서 박사학위수여 정보가 확인이 되지 않아 부득이 구글에서 유사한 페이지를 찾아 크롤링한 것으로 현재와 차이가 있을 수 있으니 참고로 활용한다. 하지만, 국내박사학위를 보는데는 큰 지장은 없는 것으로 보인다.
+
+```{r sky-univ-dataset-count}
+sky_df %>% 
+    count(sky) %>% 
+    arrange(desc(n)) %>% 
+    mutate(pcnt = scales::percent(n /sum(n)))
+```
+
+데이터가 크지 않아 쭉 일별해 보면 전체 `r nrow(sky_df)` 명 교원 중 1명만 국내대학에서 박사학위를 받은 것으로 나타난다.
+
+```{r sky-univ-dataset-count-korea}
+sky_df %>% 
+    count(univ, sort=TRUE) %>% 
+    DT::datatable()
+
+```
+
+연세대에서 한국경제사로 박사를 받은 홍성찬 교수만 눈에 띈다.
+
+```{r sky-univ-dataset-count-korea-one}
+sky_df %>% 
+    filter(str_detect(univ, "Yonsei"))
+```

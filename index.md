@@ -49,6 +49,7 @@ title: 데이터 제품
 - [**자체 서버**: 재현가능한 제품개발](http://statkclee.github.io/r-docker/) 
 - **사례**
     - [데이터 저널리즘 - Andrew Flowers](data-journalism-flowers.html)
+        - [서울대학교 경제학과 - 국내박사배출](data-journalism-snu.html)
     - [국제노동기구(ILO) 생산가능인구(2000-2017)](data-journalism-working-pop.html)
     - [최저임금위원회 - 최저임금 추세](data-journalism-minimum-wage.html)
     - [대한민국 원자력 발전소 현황](shiny-nucelar-powerplant.html)
