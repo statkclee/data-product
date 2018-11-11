@@ -19,6 +19,8 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
                     comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
 
+# setwd("D:/docs/data-product")
+
 library(httr)
 library(rvest)
 library(tidyverse)
@@ -383,5 +385,127 @@ np_comp_df %>%
 
 ```
 
-# 유튜브 트래픽 {#dp-congressman-sns-youtube}
+# 유튜브 트래픽 [^yt-data-mining] {#dp-congressman-sns-youtube}
+
+[^yt-data-mining]: [YouTube Data Mining : Experiences of using R.](https://medium.com/@tumuhimbisemoses/youtube-data-mining-experiences-of-using-r-1419e9aefcc5)
+
+## 유튜브 채널ID 알아내기 {#dp-congressman-sns-youtube-channel-id}
+
+
+```{r dp-congressman-sns-youtube-channel-id}
+np_comp_list  <- read_rds("data/np_comp_list.rds")
+
+np_comp_df  <- read_rds("data/np_comp_df")
+
+np_comp_yt_df <- np_comp_df %>% 
+  filter(str_detect(site, "youtube")) %>% 
+  select(name, site) %>% 
+  mutate(channel = str_replace(site, "^(http|https)://www.youtube.com/", "")) %>% 
+  mutate(channel_id = case_when(
+    str_detect(channel, "^(c/|user/)") ~ str_replace(channel, "c/|user/", ""),
+    str_detect(channel, "^channel/") ~ str_replace(channel, "channel/", ""),
+    TRUE ~ channel)) %>% 
+  mutate(channel_len = str_length(channel_id)) 
+
+user_v <- np_comp_yt_df %>% 
+  filter(channel_len < 20) %>% 
+  pull(channel_id)
+
+
+```
+
+
+## 유튜브 ID를 채널로 바꾸기  {#dp-congressman-sns-youtube-channel-id-convert}
+
+```{r dp-congressman-sns-youtube-channel-id-convert, eval=FALSE}
+library(RSelenium)
+
+# 1. 데이터 ----
+rem_driver <- rsDriver(browser="chrome", port=77L)
+remdrv_client <- rem_driver[["client"]]
+
+remdrv_client$navigate("http://johnnythetank.github.io/youtube-channel-name-converter/")
+
+yt_web_element <- remdrv_client$findElement('class', 'form-control')
+
+yt_web_element$clearElement()
+yt_web_element$sendKeysToElement(list('maumgil88', key='enter'))
+
+yt_channel_web_element <- remdrv_client$findElement('class', 'ng-binding')
+
+yt_channel_web_element$getElementText() %>% unlist()
+
+```
+
+
+다음 코드는 동작을 하지 않네요... ㅎㅎ
+
+```{r dp-congressman-sns-youtube-channel-id-convert-function, eval=FALSE}
+
+yt_web_element <- remdrv_client$findElement('class', 'form-control')
+
+query_channel_id <- function(yt_name) {
+  
+  tryCatch({
+     
+    yt_web_element$clearElement()
+    yt_web_element$sendKeysToElement(list(yt_name, key='enter'))
+
+    yt_channel_web_element <- remdrv_client$findElement('class', 'ng-binding')
+    channel_id <- yt_channel_web_element$getElementText()
+
+  }, warning = function(yt_name) {
+    channel_id <- yt_name
+  }, error = function(yt_name) {
+    channel_id <- yt_name
+  })
+  return(channel_id)
+}
+
+query_channel_id('2haechan')
+
+```
+
+
+
+```{r dp-congressman-sns-yt-crawl, eval = TRUE}
+library(tuber) # devtools::install_github("soodoku/tuber", build_vignettes = TRUE)
+
+yt_oauth(yt_app_id, yt_app_pw)
+
+get_stats(video_id = "peLTHX-rBxM")
+
+channel_id <- np_comp_yt_df %>% 
+  filter(channel_len == 24) %>% 
+  pull(channel_id)
+
+yt_congress_stat <- list()
+  
+for(channel in channel_id) {
+  
+  print(channel)
+  yt_congress_stat[[channel]] <-  get_channel_stats(channel_id=channel)
+}
+
+listviewer::jsonedit(yt_congress_stat)
+
+yt_congress_stat_df <- tibble(
+  channel_id = channel_id,
+  view_count = map(yt_congress_stat, ~.$statistics$viewCount) %>% unlist %>% as.integer,
+  video_count = map(yt_congress_stat, ~.$statistics$videoCount) %>% unlist %>% as.integer,
+  subscriber_count = map(yt_congress_stat, ~.$statistics$subscriberCount) %>% unlist %>% as.integer,
+  comment_count = map(yt_congress_stat, ~.$statistics$commentCount) %>% unlist %>% as.integer
+) 
+
+np_comp_yt_df <- np_comp_yt_df %>% 
+   filter(channel_len == 24) %>% 
+  left_join(yt_congress_stat_df)
+
+yt_congress_stat_df %>% ggplot(aes(x=view_count)) +
+  geom_density()
+
+yt_congress_stat_df %>% 
+  arrange(-view_count)
+
+```
 
