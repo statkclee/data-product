@@ -1,0 +1,29 @@
+---
+layout: page
+title: xwMOOC 데이터 제품
+subtitle: 월드컵 축구
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    number_section: true
+    code_folding: show
+mainfont: NanumGothic
+editor_options: 
+  chunk_output_type: console
+---
+ 
+``` {r, include=FALSE}
+# source("tools/chunk-options.R")
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE,
+                    comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+# setwd("D:/docs/data-product")
+
+
+```
+
+# 
+
+
