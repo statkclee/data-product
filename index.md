@@ -70,6 +70,7 @@ title: 데이터 제품
     - [월드컵 축구](dp-worldcup.html)
     - [비디오 게임](dp-video-game.html)
     - [앱 게임 - 구글 플레이(Google Play)](dp-app-game.html)
+    - [시험공화국 - 수험생](dp-exam-republic.html)
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
 
