@@ -46,7 +46,6 @@ title: 데이터 제품
         - [도커파일(Dockerfiles)](http://statkclee.github.io/r-docker/05-dockerfiles.html)
         - [분석결과 공유](http://statkclee.github.io/r-docker/06-Sharing-all-your-analysis.html)
     - [**AWS**: 자체 Shiny 웹서버](shiny-aws-ami.html)  
-- [**자체 서버**: 재현가능한 제품개발](http://statkclee.github.io/r-docker/) 
 - **사례**
     - [데이터 저널리즘 - Andrew Flowers](data-journalism-flowers.html)
         - [서울대학교 경제학과 - 국내박사배출](data-journalism-snu.html)
