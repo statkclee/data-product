@@ -30,7 +30,7 @@ use_condaenv("anaconda3")
 
 [#tidytuesday 프로젝트](https://github.com/rfordatascience/tidytuesday)에서 2019-07-02 [Media Franchise Revenues](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-07-02)를 주제로 위키백과사전에 올라온 [List of highest-grossing media franchises](https://en.wikipedia.org/wiki/List_of_highest-grossing_media_franchises) 데이터에 기반하여 대표적인 미디어 기업을 대상으로 분석을 해본다. 이미지 원본에 대한 출처는 [Highest Grossing Media Franchises ](https://www.reddit.com/r/dataisbeautiful/comments/c53540/highest_grossing_media_franchises_oc/)를 참조한다.
 
-<img src="fig/reddit_media.png" alt="미디어 프랜차이즈" width="57%" />
+<img src="fig/reddit_media.png" alt="미디어 프랜차이즈" width="100%" />
 
 # 데이터 전처리 {#media-franchise-dataset}
 
@@ -113,7 +113,7 @@ final_df <- left_join(sum_df, metadata_df,
   ungroup()
 
 final_df %>% 
-  write_csv("media_franchises.csv")
+  write_csv("data/media_franchises.csv")
 
 final_df %>% 
   DT::datatable()
