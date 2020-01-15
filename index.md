@@ -71,6 +71,7 @@ title: 데이터 제품
     - [앱 게임 - 구글 플레이(Google Play)](dp-app-game.html)
     - [시험공화국 - 수험생](dp-exam-republic.html)
     - [참여연대 - 그 사건 그 검사](dp-prosecutor.html)
+    - [일본 캐릭터 - 미디어 프랜차이즈](dp-media-franchise.html)
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
 
