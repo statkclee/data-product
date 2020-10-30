@@ -72,6 +72,9 @@ title: 데이터 제품
     - [시험공화국 - 수험생](dp-exam-republic.html)
     - [참여연대 - 그 사건 그 검사](dp-prosecutor.html)
     - [일본 캐릭터 - 미디어 프랜차이즈](dp-media-franchise.html)
+- **그린 뉴딜**
+    - [국가별 이산화탄소($CO_2$) 배출현황](dp-co2-emission.html)    
+    
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
 

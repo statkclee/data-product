@@ -15,16 +15,16 @@
     <!--[if lt IE 9]>
       <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    
+
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    
+
       ga('create', 'UA-59802572-17', 'auto');
       ga('send', 'pageview');
-    
+
     </script>
   </head>
   <body class="lesson">
@@ -39,35 +39,35 @@
         <div class="col-md-10 col-md-offset-1">
                     <a href="index.html"><h1 class="title">데이터 제품</h1></a>
           <h2 class="subtitle">공공 데이터 제품 개발</h2>
-          <h1 id="오픈데이터-계층구조-data-journalism">오픈데이터 계층구조 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h1>
+          <h1 id="오픈데이터-계층구조-data-journalism">오픈데이터 계층구조 <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h1>
 <p>월드와이드웹을 만든 팀 버너스 리(Tim Berners-Lee)는 오픈 데이터를 5단계 별로 등급화했다.</p>
 <table>
 <thead>
 <tr class="header">
-<th align="left">등급</th>
-<th align="left">오픈 데이터 유형</th>
+<th>등급</th>
+<th>오픈 데이터 유형</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">★</td>
-<td align="left">조회, 인쇄, 저장 가능: <code>.pdf</code>, <code>.hwp</code></td>
+<td>★</td>
+<td>조회, 인쇄, 저장 가능: <code>.pdf</code>, <code>.hwp</code></td>
 </tr>
 <tr class="even">
-<td align="left">★ ★</td>
-<td align="left">구조화된 데이터, 상용도구 데이터: <code>.xlsx</code></td>
+<td>★ ★</td>
+<td>구조화된 데이터, 상용도구 데이터: <code>.xlsx</code></td>
 </tr>
 <tr class="odd">
-<td align="left">★ ★ ★</td>
-<td align="left">자유 형식 오픈 데이터: <code>.csv</code></td>
+<td>★ ★ ★</td>
+<td>자유 형식 오픈 데이터: <code>.csv</code></td>
 </tr>
 <tr class="even">
-<td align="left">★ ★ ★ ★</td>
-<td align="left">URI 부여된 데이터: 오픈 API</td>
+<td>★ ★ ★ ★</td>
+<td>URI 부여된 데이터: 오픈 API</td>
 </tr>
 <tr class="odd">
-<td align="left">★ ★ ★ ★ ★</td>
-<td align="left">다른 데이터와 연결: 링크드 오픈 데이터(LOD)</td>
+<td>★ ★ ★ ★ ★</td>
+<td>다른 데이터와 연결: 링크드 오픈 데이터(LOD)</td>
 </tr>
 </tbody>
 </table>
@@ -100,16 +100,16 @@
 <li><a href="http://wordmeter.net">댓글 -워드미터</a></li>
 </ul></li>
 </ul>
-<p>국가 및 정부부처내 통계정보를 공유하고 교환하는데 사용되는 표준은 SDMX <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>를 활용한다.</p>
+<p>국가 및 정부부처내 통계정보를 공유하고 교환하는데 사용되는 표준은 SDMX <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>를 활용한다.</p>
 <h2 id="restful-architecture-open-data">전달 아키텍쳐</h2>
-<p>정보를 전달하기 위해서 국제표준화기구(OSI)에서 제시한 OSI 모형 (Open Systems Interconnection Reference Model)<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>을 사용하고 이를 기반으로 응용 프로그램을 웹서비스와 데이터 형식에 과거 <strong>SOAP와 XML</strong> 조합을 많이 사용했다면, 최근에는 <strong>RESTful API와 JSON</strong> 조합을 주로 사용한다.</p>
+<p>정보를 전달하기 위해서 국제표준화기구(OSI)에서 제시한 OSI 모형 (Open Systems Interconnection Reference Model)<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>을 사용하고 이를 기반으로 응용 프로그램을 웹서비스와 데이터 형식에 과거 <strong>SOAP와 XML</strong> 조합을 많이 사용했다면, 최근에는 <strong>RESTful API와 JSON</strong> 조합을 주로 사용한다.</p>
 <p><img src="fig/data-product-api.png" width="70%" /></p>
 <h2 id="extract-open-data">공공데이터 추출</h2>
 <p>공공데이터는 다양한 제공방식으로 제공되지만 크게 파일 형식으로 다운로드 받는 방식과 웹서비스 형식으로 전달되는 두가지 방식이 존재한다.</p>
 <aside class="callout panel panel-info">
-<div class="panel-heading">
-<h4 id="공공데이터-제공-방식"><span class="glyphicon glyphicon-pushpin"></span>공공데이터 제공 방식</h4>
-</div>
+<section id="공공데이터-제공-방식" class="panel-heading">
+<h4><span class="glyphicon glyphicon-pushpin"></span>공공데이터 제공 방식</h4>
+</section>
 <div class="panel-body">
 <ul>
 <li>파일: 엑셀, CSV</li>
@@ -117,14 +117,14 @@
 </ul>
 </div>
 </aside>
-<div class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&amp;ejkGb=KOR&amp;barcode=9788992475716">함형건, “데이터 분석과 저널리즘 빅데이터 시대, 저널리스트를 위한 데이터 분석 기법”, 컴원미디어, 2015년 01월 30일 출간</a><a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p><a href="https://sdmx.org/">Statistical Data and Metadata eXchange</a><a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p><a href="https://ko.wikipedia.org/wiki/OSI_모형">OSI 모형</a><a href="#fnref3">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p><a href="http://www.kyobobook.co.kr/product/detailViewKor.laf?mallGb=KOR&amp;ejkGb=KOR&amp;barcode=9788992475716">함형건, “데이터 분석과 저널리즘 빅데이터 시대, 저널리스트를 위한 데이터 분석 기법”, 컴원미디어, 2015년 01월 30일 출간</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><a href="https://sdmx.org/">Statistical Data and Metadata eXchange</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p><a href="https://ko.wikipedia.org/wiki/OSI_모형">OSI 모형</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</div>
+</section>
         </div>
       </div>
       </article>
