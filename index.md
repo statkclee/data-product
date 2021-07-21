@@ -18,6 +18,7 @@ title: 데이터 제품
     - [보고서 작성 자동화(30분)](ds-report-automation.html)
     - [**전자우편 보고서 발송 자동화**](cron-automation.html)
         + [윈도우 작업 스케쥴러 - 네이버 연관검색어](windows-task-scheduler.html)
+        + [한국 R 컨퍼런스 - `blastula`](dp-blastula.html)
     - [공공 데이터 제품](data-product-civic-hacking.html)
     - [야구 MLB](ds-baseball-mlb.html)    
 - [Shiny 웹앱](shiny-overview.html)
