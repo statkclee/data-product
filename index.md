@@ -22,6 +22,7 @@ title: 데이터 제품
     - [공공 데이터 제품](data-product-civic-hacking.html)
     - [야구 MLB](ds-baseball-mlb.html)    
 - [Shiny 웹앱](shiny-overview.html)
+    - [로렘 입숨(lorem ipsum) - `shinyipsum`](dp-shiny-ipsum.html)
     - **`shiny` 101**
         - [Shiny 웹앱 개발](shiny-app.html)    
         - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
