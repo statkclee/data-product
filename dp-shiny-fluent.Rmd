@@ -40,7 +40,7 @@ library(tidyverse)
 
 React를 근간으로 마이크로소프트에서 Fluent UI를 제작하였다. 이를 R Shiny 환경에서 사용할 수 있도록 가져온 것이  shiny.react, shiny.fluent 팩키지다.
 
-# 오픈 통계 팩키지 {#fluent-mvp}
+# 오픈 통계 팩키지 {.tabset}
 
 오픈 통계 팩키지에 필요한 기본 기능을 shiny.fluent를 통해 구축해보자.
 
