@@ -76,6 +76,7 @@ title: 데이터 제품
     - [참여연대 - 그 사건 그 검사](dp-prosecutor.html)
     - [일본 캐릭터 - 미디어 프랜차이즈](dp-media-franchise.html)
     - [2021년 달력 만들기](dp-calendar-gif.html)
+    - [유튜브 MP3 변환](youtube-mp3.html)
 - **그린 뉴딜**
     - [국가별 이산화탄소($CO_2$) 배출현황](dp-co2-emission.html)    
     
