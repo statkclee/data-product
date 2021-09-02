@@ -4,35 +4,35 @@
     <meta charset="utf-8">
     <meta name="generator" content="pandoc">
     <title>Software Carpentry: 데이터 과학</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="css/swc.css" />
-    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
-    <meta charset="UTF-8" />
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-59802572-17', 'auto');
-      ga('send', 'pageview');
-    
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/swc.css" />
+    <link rel="alternate" type="application/rss+xml" title="Software Carpentry Blog" href="http://software-carpentry.org/feed.xml"/>
+    <meta charset="UTF-8" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-59802572-17', 'auto');
+      ga('send', 'pageview');
+    
     </script>
   </head>
   <body class="lesson">
     <div class="container card">
-      <div class="banner">
-        <a href="http://software-carpentry.org" title="Software Carpentry">
-          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
-        </a>
+      <div class="banner">
+        <a href="http://software-carpentry.org" title="Software Carpentry">
+          <img alt="Software Carpentry banner" src="img/software-carpentry-banner.png" />
+        </a>
       </div>
       <article>
       <div class="row">
@@ -40,9 +40,9 @@
                     <a href="index.html"><h1 class="title">데이터 과학</h1></a>
           <h2 class="subtitle">보고서 작성 자동화(30분)</h2>
           <section class="objectives panel panel-warning">
-<div class="panel-heading">
-<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
-</div>
+<section id="학습-목표" class="panel-heading">
+<h2><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</section>
 <div class="panel-body">
 <ul>
 <li>20년전 보고서 작성 작업흐름과 R기반 보고서 작성 자동화 과정을 비교한다.</li>
@@ -57,7 +57,7 @@
 <p>보고서를 작성할 때, 메모장, 엑셀, 통계 팩키지, 워드프로세서 혹은 슬라이드쇼 같은 여러 소프트웨어를 독립적으로 각기 이용하는 것과 R을 활용하여 보고서를 작성하는 과정은 R을 기반으로 깔고, 보고서 작성에 필요한 여러 팩키지를 조합하여 사용하고 마지막으로 니트질(knitting)하여 워드, HTML, PDF 등 최종 보고서를 뽑아내는 과정을 갖는다.</p>
 <p><img src="fig/ds-new-report-workflow.png" alt="보고서 작성 자동화 작업흐름" width="57%" /></p>
 <p>한 걸음 더 들어가면 세부적으로 다음과 같은 보고서 작성 파이프라인을 갖추게 된다.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><code>readr</code>: 데이터 불러오기</li>
 <li><code>tidyr</code>: 깔끔한 데이터 만들기</li>
 <li><code>dplyr</code>: 데이터 변환과 정제</li>
@@ -76,87 +76,87 @@
 </code></pre>
 <h3 id="데이터-불러오기">2.2. 데이터 불러오기</h3>
 <p><code>readr</code> 팩키지에 포함된 기능을 활용하여 자료형을 식별하고 데이터를 불러온다. R을 설치하게 되면 자동차 연비예측을 위한 회귀분석 및 시각화 예제로 많이 사용되는 <code>mtcars</code> 데이터가 포함되어 있다. <code>read_csv</code> 함수를 사용하게 되면 자동으로 로컬 파일이든, 인터넷에 위치한 파일이든 <code>.csv</code> 파일이면 알아서 불러와서 코딩이 훨씬 간결해진다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 2. 데이터 불러오기---------------------</span>
-<span class="kw">data</span>(mtcars)
-
-<span class="kw">spec_csv</span>(<span class="st">&quot;https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co"># 2. 데이터 불러오기---------------------</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">data</span>(mtcars)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">spec_csv</span>(<span class="st">&quot;https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv&quot;</span>)</span></code></pre></div>
 <pre class="output"><code>cols(
   model = col_character(),
   mpg = col_double(),
-  cyl = col_integer(),
+  cyl = col_double(),
   disp = col_double(),
-  hp = col_integer(),
+  hp = col_double(),
   drat = col_double(),
   wt = col_double(),
   qsec = col_double(),
-  vs = col_integer(),
-  am = col_integer(),
-  gear = col_integer(),
-  carb = col_integer()
+  vs = col_double(),
+  am = col_double(),
+  gear = col_double(),
+  carb = col_double()
 )
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv&quot;</span>, 
-               <span class="dt">col_names =</span> <span class="ot">TRUE</span>, 
-               <span class="kw">cols</span>(
-                 <span class="dt">model =</span> <span class="kw">col_character</span>(),
-                 <span class="dt">mpg =</span> <span class="kw">col_double</span>(),
-                 <span class="dt">cyl =</span> <span class="kw">col_integer</span>(),
-                 <span class="dt">disp =</span> <span class="kw">col_double</span>(),
-                 <span class="dt">hp =</span> <span class="kw">col_integer</span>(),
-                 <span class="dt">drat =</span> <span class="kw">col_double</span>(),
-                 <span class="dt">wt =</span> <span class="kw">col_double</span>(),
-                 <span class="dt">qsec =</span> <span class="kw">col_double</span>(),
-                 <span class="dt">vs =</span> <span class="kw">col_integer</span>(),
-                 <span class="dt">am =</span> <span class="kw">col_integer</span>(),
-                 <span class="dt">gear =</span> <span class="kw">col_integer</span>(),
-                 <span class="dt">carb =</span> <span class="kw">col_integer</span>()))
-<span class="kw">glimpse</span>(df)</code></pre></div>
-<pre class="output"><code>Observations: 32
-Variables: 12
-$ model &lt;chr&gt; &quot;Mazda RX4&quot;, &quot;Mazda RX4 Wag&quot;, &quot;Datsun 710&quot;, &quot;Hornet 4 Dr...
-$ mpg   &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19...
-$ cyl   &lt;int&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4,...
-$ disp  &lt;dbl&gt; 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, ...
-$ hp    &lt;int&gt; 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180,...
-$ drat  &lt;dbl&gt; 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3....
-$ wt    &lt;dbl&gt; 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, ...
-$ qsec  &lt;dbl&gt; 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, ...
-$ vs    &lt;int&gt; 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,...
-$ am    &lt;int&gt; 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,...
-$ gear  &lt;int&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4,...
-$ carb  &lt;int&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2,...
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv&quot;</span>, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>               <span class="dt">col_names =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>               <span class="kw">cols</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>                 <span class="dt">model =</span> <span class="kw">col_character</span>(),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>                 <span class="dt">mpg =</span> <span class="kw">col_double</span>(),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>                 <span class="dt">cyl =</span> <span class="kw">col_integer</span>(),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>                 <span class="dt">disp =</span> <span class="kw">col_double</span>(),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>                 <span class="dt">hp =</span> <span class="kw">col_integer</span>(),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>                 <span class="dt">drat =</span> <span class="kw">col_double</span>(),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>                 <span class="dt">wt =</span> <span class="kw">col_double</span>(),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>                 <span class="dt">qsec =</span> <span class="kw">col_double</span>(),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>                 <span class="dt">vs =</span> <span class="kw">col_integer</span>(),</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>                 <span class="dt">am =</span> <span class="kw">col_integer</span>(),</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a>                 <span class="dt">gear =</span> <span class="kw">col_integer</span>(),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a>                 <span class="dt">carb =</span> <span class="kw">col_integer</span>()))</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a><span class="kw">glimpse</span>(df)</span></code></pre></div>
+<pre class="output"><code>Rows: 32
+Columns: 12
+$ model &lt;chr&gt; &quot;Mazda RX4&quot;, &quot;Mazda RX4 Wag&quot;, &quot;Datsun 710&quot;, &quot;Hornet 4 Drive&quot;, &quot;H~
+$ mpg   &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19.2, 17.8~
+$ cyl   &lt;int&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 8~
+$ disp  &lt;dbl&gt; 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, 140.8, 1~
+$ hp    &lt;int&gt; 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180, 180, 18~
+$ drat  &lt;dbl&gt; 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3.92, 3.92~
+$ wt    &lt;dbl&gt; 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, 3.150, 3~
+$ qsec  &lt;dbl&gt; 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, 22.90, 1~
+$ vs    &lt;int&gt; 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0~
+$ am    &lt;int&gt; 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0~
+$ gear  &lt;int&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3~
+$ carb  &lt;int&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1, 2~
 </code></pre>
 <h3 id="탐색적-자료분석">2.3. 탐색적 자료분석</h3>
 <p>본격적인 모형개발을 추진하기 전에 탐색적 데이터 분석을 통해 변수들간의 관계를 일별하여 친숙해지는 과정이 꼭 필요하다.</p>
 <p><code>library(GGally)</code> 팩키지에 내장된 <code>ggpairs</code> 함수를 통해 <code>mtcars</code> 데이터셋에 포함된 변수 관계를 짝지어 시각화한다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">line_fn &lt;-<span class="st"> </span>function(data, mapping, ...){
-  p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> data, <span class="dt">mapping =</span> mapping) +<span class="st"> </span>
-<span class="st">    </span><span class="kw">geom_point</span>() +<span class="st"> </span>
-<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span>loess, <span class="dt">fill=</span><span class="st">&quot;red&quot;</span>, <span class="dt">color=</span><span class="st">&quot;red&quot;</span>, ...) +
-<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span>lm, <span class="dt">fill=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>, ...)
-  p
-}
-
-df_g  &lt;-<span class="st">  </span><span class="kw">ggpairs</span>(df, <span class="dt">columns =</span> <span class="dv">2</span>:<span class="dv">12</span>, <span class="dt">lower =</span> <span class="kw">list</span>(<span class="dt">continuous =</span> line_fn), <span class="dt">warning=</span><span class="ot">FALSE</span>, <span class="dt">message=</span><span class="ot">FALSE</span>)</code></pre></div>
-<pre class="output"><code>Error in ggpairs(df, columns = 2:12, lower = list(continuous = line_fn), : 함수 &quot;ggpairs&quot;를 찾을 수 없습니다
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>line_fn &lt;-<span class="st"> </span><span class="cf">function</span>(data, mapping, ...){</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>  p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> data, <span class="dt">mapping =</span> mapping) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span>loess, <span class="dt">fill=</span><span class="st">&quot;red&quot;</span>, <span class="dt">color=</span><span class="st">&quot;red&quot;</span>, ...) <span class="op">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span>lm, <span class="dt">fill=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>, ...)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>  p</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>}</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>df_g  &lt;-<span class="st">  </span><span class="kw">ggpairs</span>(df, <span class="dt">columns =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">lower =</span> <span class="kw">list</span>(<span class="dt">continuous =</span> line_fn), <span class="dt">warning=</span><span class="ot">FALSE</span>, <span class="dt">message=</span><span class="ot">FALSE</span>)</span></code></pre></div>
+<pre class="output"><code>Error in ggpairs(df, columns = 2:12, lower = list(continuous = line_fn), : could not find function &quot;ggpairs&quot;
 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_g</code></pre></div>
-<pre class="output"><code>Error in eval(expr, envir, enclos): 객체 &#39;df_g&#39;를 찾을 수 없습니다
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>df_g</span></code></pre></div>
+<pre class="output"><code>Error in eval(expr, envir, enclos): object &#39;df_g&#39; not found
 </code></pre>
 <p>기술통계량도 <a href="https://cran.r-project.org/web/packages/stargazer/"><code>stargazer</code></a> 팩키지를 활용하면 기술통계량도 출판품질로 변환이 가능하다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stargazer</span>(mtcars, <span class="dt">type=</span><span class="st">&quot;html&quot;</span>, <span class="dt">notes.align =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
-<pre class="output"><code>Error in stargazer(mtcars, type = &quot;html&quot;, notes.align = &quot;l&quot;): 함수 &quot;stargazer&quot;를 찾을 수 없습니다
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">stargazer</span>(mtcars, <span class="dt">type=</span><span class="st">&quot;html&quot;</span>, <span class="dt">notes.align =</span> <span class="st">&quot;l&quot;</span>)</span></code></pre></div>
+<pre class="output"><code>Error in stargazer(mtcars, type = &quot;html&quot;, notes.align = &quot;l&quot;): could not find function &quot;stargazer&quot;
 </code></pre>
-<h3 id="최적모형-회귀모형-선정-best-subset-reg">2.3. 최적모형 회귀모형 선정 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></h3>
+<h3 id="최적모형-회귀모형-선정-best-subset-reg">2.3. 최적모형 회귀모형 선정 <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></h3>
 <p>탐색적 데이터분석을 통해 예측하려는 종속변수(<code>mtcars</code>)와 설명변수에 대한 탐색이 완료되면 회귀분석을 본격적으로 실시한다. 회귀분석을 통해 최종 예측모형을 만들어낼 때, 적절한 변수 선택이 중요한데 이유는 다음과 같다. 모형의 설명력을 높이려면 변수를 많이 사용하면 <span class="math inline">\(R^2\)</span> 값이 올라가서 극단적으로는 <strong>1</strong> 에 수렴하게 된다. 하지만, 이런 경우 회귀모형의 일반성이 훼손되어 예측하려는 새로운 표본이 들어왔을 경우 간결한, 극단적으로 간단한 모형보다 예측력이 떨어지는 경우가 쉽게 관찰된다. 따라서, 모형의 복잡성이 높아지면 이에 대한 패널티를 부여하든지, <span class="math inline">\(R^2\)</span> 은 다소 희생하더라도 변수를 최소화하는 <strong>변수 제거법</strong> 등 다양한 방법이 개발되어 활용되고 있다.</p>
 <p>전진변수 선택법(forward selection)을 통해 회귀모형을 구축하는 경우, 먼저 상수항으로 적합시킨 회귀모형을 만들어 내고 <code>df_null</code>, 이를 바탕으로 변수를 하나씩 집어 넣어 순차적으로 최적 모형을 찾아나간다. 후방변수 제거법(backward elimination)은 꽉찬 모형, <code>df_full</code>에서 변수를 순차적으로 하나씩 제거하면 최적 모형을 찾아내는 것이고, 양방향 <code>direction=both</code>인 경우 상황에 따라 변수를 추가 제거하는 과정을 반복하면서 최적 모형을 찾아낸다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 4. 회귀분석---------------------</span>
-<span class="co"># 단계별 회귀분석: 전진선택법, 양방향 선택/제거법</span>
-df_null &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~<span class="dv">1</span>, <span class="dt">data=</span>df[,-<span class="dv">1</span>])
-df_full &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg ~., <span class="dt">data=</span>df[,-<span class="dv">1</span>])
-
-df_forward &lt;-<span class="st"> </span><span class="kw">step</span>(df_null, <span class="dt">scope=</span><span class="kw">list</span>(<span class="dt">lower=</span>df_null, <span class="dt">upper=</span>df_full), <span class="dt">direction=</span><span class="st">&quot;forward&quot;</span>, <span class="dt">trace=</span><span class="ot">FALSE</span>)
-df_backward &lt;-<span class="st"> </span><span class="kw">step</span>(df_null, <span class="dt">scope=</span><span class="kw">list</span>(<span class="dt">lower=</span>df_null, <span class="dt">upper=</span>df_full), <span class="dt">direction=</span><span class="st">&quot;both&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="co"># 4. 회귀분석---------------------</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a><span class="co"># 단계별 회귀분석: 전진선택법, 양방향 선택/제거법</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>df_null &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="dv">1</span>, <span class="dt">data=</span>df[,<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>df_full &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span>., <span class="dt">data=</span>df[,<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>df_forward &lt;-<span class="st"> </span><span class="kw">step</span>(df_null, <span class="dt">scope=</span><span class="kw">list</span>(<span class="dt">lower=</span>df_null, <span class="dt">upper=</span>df_full), <span class="dt">direction=</span><span class="st">&quot;forward&quot;</span>, <span class="dt">trace=</span><span class="ot">FALSE</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>df_backward &lt;-<span class="st"> </span><span class="kw">step</span>(df_null, <span class="dt">scope=</span><span class="kw">list</span>(<span class="dt">lower=</span>df_null, <span class="dt">upper=</span>df_full), <span class="dt">direction=</span><span class="st">&quot;both&quot;</span>)</span></code></pre></div>
 <pre class="output"><code>Start:  AIC=115.94
 mpg ~ 1
 
@@ -223,100 +223,100 @@ mpg ~ wt + cyl + hp
 </code></pre>
 <p>최상부분집합선택법(Best Subset) 회귀모형 구축방법은 <code>leaps</code> 팩키지 <code>regsubsets</code> 함수를 사용하면 최대 10개까지 변수를 조합하여 최상부분집합을 선택한다. 전진변수 선택 혹은 후방변수 제거법과 달리 회귀모형의 복잡성에 대해 패널티를 가하는 방법으로 AIC/BIC 등이 사용되는데 AIC가 다소 변수를 과대선택하는 경향이 알려져있어 BIC 기준으로 최소가 되는 모형을 최적모형으로 선정한다.</p>
 <p>이를 위해서 <code>regsubsets</code> 함수로 최상부분집합 적합을 시킨 결과에서 BIC 값을 뽑아내고 그중 <code>min_bic</code>에 최소값을 저장시킨다. 그리고 변수가 몇개일 때 최소가 되는지</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 최상부분집합선택법</span>
-<span class="co"># noquote(paste0(names(mtcars), &quot;+&quot;))</span>
-subset_mod &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(mpg ~<span class="st"> </span>., <span class="dt">data =</span> mtcars, <span class="dt">nvmax=</span><span class="ot">NULL</span>, 
-                         <span class="dt">force.in =</span> <span class="ot">NULL</span>, <span class="dt">force.out =</span> <span class="ot">NULL</span>, 
-                         <span class="dt">method=</span><span class="st">&quot;exhaustive&quot;</span>)
-
-subset_mod_out &lt;-<span class="st"> </span><span class="kw">summary</span>(subset_mod)
-
-min_bic &lt;-<span class="st"> </span><span class="kw">which.min</span>(subset_mod_out$bic)
-
-<span class="kw">plot</span>(subset_mod_out$bic, <span class="dt">ylab =</span> <span class="st">&quot;BIC&quot;</span>, <span class="dt">type=</span><span class="st">&quot;b&quot;</span>)
-<span class="kw">points</span>(min_bic, subset_mod_out$bic[min_bic], <span class="dt">cex=</span><span class="dv">2</span>, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">pch=</span><span class="dv">20</span>)
-ibest &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">along =</span> subset_mod_out$bic)[subset_mod_out$bic ==<span class="st"> </span>min_bic]
-
-foo &lt;-<span class="st"> </span>subset_mod_out$which[ibest, ]
-form &lt;-<span class="st"> </span><span class="kw">names</span>(foo)[foo][-<span class="dv">1</span>]
-form &lt;-<span class="st"> </span><span class="kw">paste</span>(form, <span class="dt">collapse =</span> <span class="st">&quot; + &quot;</span>)
-form &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;mpg ~&quot;</span>, form)
-
-## 최적 모형
-mtcars_best &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">as.formula</span>(form), <span class="dt">data=</span>df)
-
-<span class="kw">summary</span>(mtcars_best)</code></pre></div>
-<h3 id="회귀식-표현-convert-lm-objects">2.4. 회귀식 표현 <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="co"># 최상부분집합선택법</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="co"># noquote(paste0(names(mtcars), &quot;+&quot;))</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>subset_mod &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(mpg <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> mtcars, <span class="dt">nvmax=</span><span class="ot">NULL</span>, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>                         <span class="dt">force.in =</span> <span class="ot">NULL</span>, <span class="dt">force.out =</span> <span class="ot">NULL</span>, </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>                         <span class="dt">method=</span><span class="st">&quot;exhaustive&quot;</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a>subset_mod_out &lt;-<span class="st"> </span><span class="kw">summary</span>(subset_mod)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true"></a>min_bic &lt;-<span class="st"> </span><span class="kw">which.min</span>(subset_mod_out<span class="op">$</span>bic)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true"></a><span class="kw">plot</span>(subset_mod_out<span class="op">$</span>bic, <span class="dt">ylab =</span> <span class="st">&quot;BIC&quot;</span>, <span class="dt">type=</span><span class="st">&quot;b&quot;</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true"></a><span class="kw">points</span>(min_bic, subset_mod_out<span class="op">$</span>bic[min_bic], <span class="dt">cex=</span><span class="dv">2</span>, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">pch=</span><span class="dv">20</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true"></a>ibest &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dt">along =</span> subset_mod_out<span class="op">$</span>bic)[subset_mod_out<span class="op">$</span>bic <span class="op">==</span><span class="st"> </span>min_bic]</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true"></a>foo &lt;-<span class="st"> </span>subset_mod_out<span class="op">$</span>which[ibest, ]</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true"></a>form &lt;-<span class="st"> </span><span class="kw">names</span>(foo)[foo][<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true"></a>form &lt;-<span class="st"> </span><span class="kw">paste</span>(form, <span class="dt">collapse =</span> <span class="st">&quot; + &quot;</span>)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true"></a>form &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;mpg ~&quot;</span>, form)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true"></a><span class="co">## 최적 모형</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true"></a>mtcars_best &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">as.formula</span>(form), <span class="dt">data=</span>df)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true"></a><span class="kw">summary</span>(mtcars_best)</span></code></pre></div>
+<h3 id="회귀식-표현-convert-lm-objects">2.4. 회귀식 표현 <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></h3>
 <p>최적의 회귀식을 구축했으면 이제 남은 단계는 이를 문서화하는 것이다.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 5. 회귀식 표현---------------------</span>
-latex_lm &lt;-<span class="st"> </span>function(object, <span class="dt">file=</span><span class="st">&quot;&quot;</span>, <span class="dt">math.env=</span><span class="kw">c</span>(<span class="st">&quot;$&quot;</span>,<span class="st">&quot;$&quot;</span>),
-                     <span class="dt">estimates=</span><span class="st">&quot;none&quot;</span>, <span class="dt">abbreviate =</span> <span class="ot">TRUE</span>, <span class="dt">abbrev.length=</span><span class="dv">8</span>, <span class="dt">digits=</span><span class="dv">3</span>) {
-  <span class="co"># Get and format IV names</span>
-  co &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Int&quot;</span>, <span class="kw">names</span>(object$coefficients)[-<span class="dv">1</span>])
-  co.n &lt;-<span class="st">  </span><span class="kw">gsub</span>(<span class="st">&quot;p.*)&quot;</span>, <span class="st">&quot;&quot;</span>, co)
-  if(abbreviate ==<span class="st"> </span><span class="ot">TRUE</span>) {
-    co.n &lt;-<span class="st"> </span><span class="kw">abbreviate</span>(<span class="kw">gsub</span>(<span class="st">&quot;p.*)&quot;</span>, <span class="st">&quot;&quot;</span>, co), <span class="dt">minlength=</span>abbrev.length)
-  }
-  <span class="co"># Get and format DV</span>
-  m.y &lt;-<span class="st"> </span><span class="kw">strsplit</span>((<span class="kw">as.character</span>(object$call[<span class="dv">2</span>])), <span class="st">&quot; ~ &quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]
-  <span class="co"># Write coefficent labels</span>
-  b.x &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">beta_{&quot;</span>, co.n ,<span class="st">&quot;}&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)
-  <span class="co"># Write error term</span>
-  e &lt;-<span class="st"> &quot;</span><span class="ch">\\</span><span class="st">epsilon_i&quot;</span>
-  <span class="co"># Format coefficint x variable terms</span>
-  m.x &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;}Int&quot;</span>,<span class="st">&quot;}&quot;</span>, <span class="kw">paste</span>(b.x, co.n, <span class="st">&quot; + &quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>, <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>))
-  <span class="co"># If inline estimates convert coefficient labels to values</span>
-  if(estimates ==<span class="st"> &quot;inline&quot;</span>) {
-    m.x &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;Int&quot;</span>, <span class="st">&quot;&quot;</span>,
-               <span class="kw">paste</span>(<span class="kw">round</span>(object$coefficients,<span class="dt">digits=</span>digits), co.n, <span class="st">&quot; + &quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>,
-                     <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>))
-    m.x &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">+ </span><span class="ch">\\</span><span class="st">-&quot;</span>, <span class="st">&quot;-&quot;</span>, m.x)
-  }
-  <span class="co"># Format regression equation</span>
-  eqn &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;:&quot;</span>, <span class="st">&quot; </span><span class="ch">\\\\\\</span><span class="st">times &quot;</span>, <span class="kw">paste</span>(math.env[<span class="dv">1</span>], m.y, <span class="st">&quot; = &quot;</span>,
-                                          m.x, e, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>))
-  <span class="co"># Write the opening math mode tag and the model</span>
-  <span class="kw">cat</span>(eqn, <span class="dt">file=</span>file)
-  <span class="co"># If separae estimates format estimates and write them below the model</span>
-  if(estimates ==<span class="st"> &quot;separate&quot;</span>) {
-    est &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;:&quot;</span>, <span class="st">&quot; </span><span class="ch">\\\\\\</span><span class="st">times &quot;</span>, <span class="kw">paste</span>(b.x, <span class="st">&quot; = &quot;</span>,
-                                            <span class="kw">round</span>(object$coefficients, <span class="dt">digits=</span>digits), <span class="st">&quot;, &quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>, <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>))
-    <span class="kw">cat</span>(<span class="st">&quot;, </span><span class="ch">\\\\</span><span class="st"> </span><span class="ch">\n</span><span class="st"> </span><span class="ch">\\</span><span class="st">text{where }&quot;</span>, <span class="kw">substr</span>(est, <span class="dv">1</span>, (<span class="kw">nchar</span>(est)-<span class="dv">2</span>)), <span class="dt">file=</span>file)
-  }
-  <span class="co"># Write the closing math mode tag</span>
-  <span class="kw">cat</span>(math.env[<span class="dv">2</span>], <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="dt">file=</span>file)
-}
-
-<span class="co"># 회귀식</span>
-mtcars_best &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg~wt+qsec+am, <span class="dt">data=</span>df[,-<span class="dv">1</span>])
-
-<span class="kw">latex_lm</span>(mtcars_best)</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="co"># 5. 회귀식 표현---------------------</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>latex_lm &lt;-<span class="st"> </span><span class="cf">function</span>(object, <span class="dt">file=</span><span class="st">&quot;&quot;</span>, <span class="dt">math.env=</span><span class="kw">c</span>(<span class="st">&quot;$&quot;</span>,<span class="st">&quot;$&quot;</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>                     <span class="dt">estimates=</span><span class="st">&quot;none&quot;</span>, <span class="dt">abbreviate =</span> <span class="ot">TRUE</span>, <span class="dt">abbrev.length=</span><span class="dv">8</span>, <span class="dt">digits=</span><span class="dv">3</span>) {</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>  <span class="co"># Get and format IV names</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a>  co &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Int&quot;</span>, <span class="kw">names</span>(object<span class="op">$</span>coefficients)[<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a>  co.n &lt;-<span class="st">  </span><span class="kw">gsub</span>(<span class="st">&quot;p.*)&quot;</span>, <span class="st">&quot;&quot;</span>, co)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>  <span class="cf">if</span>(abbreviate <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) {</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a>    co.n &lt;-<span class="st"> </span><span class="kw">abbreviate</span>(<span class="kw">gsub</span>(<span class="st">&quot;p.*)&quot;</span>, <span class="st">&quot;&quot;</span>, co), <span class="dt">minlength=</span>abbrev.length)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true"></a>  }</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true"></a>  <span class="co"># Get and format DV</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true"></a>  m.y &lt;-<span class="st"> </span><span class="kw">strsplit</span>((<span class="kw">as.character</span>(object<span class="op">$</span>call[<span class="dv">2</span>])), <span class="st">&quot; ~ &quot;</span>)[[<span class="dv">1</span>]][<span class="dv">1</span>]</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true"></a>  <span class="co"># Write coefficent labels</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true"></a>  b.x &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">beta_{&quot;</span>, co.n ,<span class="st">&quot;}&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true"></a>  <span class="co"># Write error term</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true"></a>  e &lt;-<span class="st"> &quot;</span><span class="ch">\\</span><span class="st">epsilon_i&quot;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true"></a>  <span class="co"># Format coefficint x variable terms</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true"></a>  m.x &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;}Int&quot;</span>,<span class="st">&quot;}&quot;</span>, <span class="kw">paste</span>(b.x, co.n, <span class="st">&quot; + &quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>, <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true"></a>  <span class="co"># If inline estimates convert coefficient labels to values</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true"></a>  <span class="cf">if</span>(estimates <span class="op">==</span><span class="st"> &quot;inline&quot;</span>) {</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true"></a>    m.x &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;Int&quot;</span>, <span class="st">&quot;&quot;</span>,</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true"></a>               <span class="kw">paste</span>(<span class="kw">round</span>(object<span class="op">$</span>coefficients,<span class="dt">digits=</span>digits), co.n, <span class="st">&quot; + &quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>,</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true"></a>                     <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true"></a>    m.x &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">+ </span><span class="ch">\\</span><span class="st">-&quot;</span>, <span class="st">&quot;-&quot;</span>, m.x)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true"></a>  }</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true"></a>  <span class="co"># Format regression equation</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true"></a>  eqn &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;:&quot;</span>, <span class="st">&quot; </span><span class="ch">\\\\\\</span><span class="st">times &quot;</span>, <span class="kw">paste</span>(math.env[<span class="dv">1</span>], m.y, <span class="st">&quot; = &quot;</span>,</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true"></a>                                          m.x, e, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true"></a>  <span class="co"># Write the opening math mode tag and the model</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true"></a>  <span class="kw">cat</span>(eqn, <span class="dt">file=</span>file)</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true"></a>  <span class="co"># If separae estimates format estimates and write them below the model</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true"></a>  <span class="cf">if</span>(estimates <span class="op">==</span><span class="st"> &quot;separate&quot;</span>) {</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true"></a>    est &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;:&quot;</span>, <span class="st">&quot; </span><span class="ch">\\\\\\</span><span class="st">times &quot;</span>, <span class="kw">paste</span>(b.x, <span class="st">&quot; = &quot;</span>,</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true"></a>                                            <span class="kw">round</span>(object<span class="op">$</span>coefficients, <span class="dt">digits=</span>digits), <span class="st">&quot;, &quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>, <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true"></a>    <span class="kw">cat</span>(<span class="st">&quot;, </span><span class="ch">\\\\</span><span class="st"> </span><span class="ch">\n</span><span class="st"> </span><span class="ch">\\</span><span class="st">text{where }&quot;</span>, <span class="kw">substr</span>(est, <span class="dv">1</span>, (<span class="kw">nchar</span>(est)<span class="op">-</span><span class="dv">2</span>)), <span class="dt">file=</span>file)</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true"></a>  }</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true"></a>  <span class="co"># Write the closing math mode tag</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true"></a>  <span class="kw">cat</span>(math.env[<span class="dv">2</span>], <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>, <span class="dt">file=</span>file)</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true"></a>}</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true"></a></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true"></a><span class="co"># 회귀식</span></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true"></a>mtcars_best &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg<span class="op">~</span>wt<span class="op">+</span>qsec<span class="op">+</span>am, <span class="dt">data=</span>df[,<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true"></a></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true"></a><span class="kw">latex_lm</span>(mtcars_best)</span></code></pre></div>
 <p><span class="math inline">\(mpg = \beta_{Int} + \beta_{wt}wt + \beta_{qsec}qsec + \beta_{am}am + \epsilon_i\)</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 최종회귀모형 상세</span>
-<span class="kw">stargazer</span>(mtcars_best, df_forward, df_backward, <span class="dt">type=</span><span class="st">&quot;html&quot;</span>, <span class="dt">notes.align =</span> <span class="st">&quot;l&quot;</span>)</code></pre></div>
-<pre class="output"><code>Error in stargazer(mtcars_best, df_forward, df_backward, type = &quot;html&quot;, : 함수 &quot;stargazer&quot;를 찾을 수 없습니다
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="co"># 최종회귀모형 상세</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a><span class="kw">stargazer</span>(mtcars_best, df_forward, df_backward, <span class="dt">type=</span><span class="st">&quot;html&quot;</span>, <span class="dt">notes.align =</span> <span class="st">&quot;l&quot;</span>)</span></code></pre></div>
+<pre class="output"><code>Error in stargazer(mtcars_best, df_forward, df_backward, type = &quot;html&quot;, : could not find function &quot;stargazer&quot;
 </code></pre>
 <p>이를 위해 다음과 같이 데이터에서 최상부분집합선택법에서 바로 최적 회귀모형을 생성시키도록 <code>latex_lm</code> 함수를 작성하고 이를 문서와 함께 자동화한다. 그리고 나서 <code>stargazer</code> 함수를 통해 최적 모형에 대한 회귀식 문서를 완성시키고 모형에 대한 간략한 설명을 붙여 회귀분석 보고서를 마무리한다.</p>
-<div class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="https://rstudio-pubs-static.s3.amazonaws.com/2897_9220b21cfc0c43a396ff9abf122bb351.html">All subset regression with leaps, bestglm, glmulti, and meifly</a><a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p><a href="https://stat.ethz.ch/pipermail/r-help/2009-October/408317.html">function to convert lm model to LaTeX equation</a><a href="#fnref2">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p><a href="https://rstudio-pubs-static.s3.amazonaws.com/2897_9220b21cfc0c43a396ff9abf122bb351.html">All subset regression with leaps, bestglm, glmulti, and meifly</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><a href="https://stat.ethz.ch/pipermail/r-help/2009-October/408317.html">function to convert lm model to LaTeX equation</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</div>
+</section>
         </div>
       </div>
       </article>
-      <div class="footer">
-        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
-        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
-        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
-        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
+      <div class="footer">
+        <a class="label swc-blue-bg" href="http://software-carpentry.org">Software Carpentry</a>
+        <a class="label swc-blue-bg" href="https://github.com/swcarpentry/lesson-template">Source</a>
+        <a class="label swc-blue-bg" href="mailto:admin@software-carpentry.org">Contact</a>
+        <a class="label swc-blue-bg" href="LICENSE.html">License</a>
       </div>
     </div>
-    <!-- Javascript placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
+    <!-- Javascript placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="css/bootstrap/bootstrap-js/bootstrap.js"></script>
     <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
   </body>
 </html>

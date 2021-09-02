@@ -40,9 +40,9 @@
                     <a href="index.html"><h1 class="title">데이터 제품</h1></a>
           <h2 class="subtitle">야구 MLB</h2>
           <section class="objectives panel panel-warning">
-<div class="panel-heading">
-<h2 id="학습-목표"><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
-</div>
+<section id="학습-목표" class="panel-heading">
+<h2><span class="glyphicon glyphicon-certificate"></span>학습 목표</h2>
+</section>
 <div class="panel-body">
 <ul>
 <li>메이저리그 야구 데이터 저장소를 파악한다.</li>
@@ -50,15 +50,15 @@
 </ul>
 </div>
 </section>
-<h3 id="메이저리그-야구-데이터-저장소-short-bb-r-book-baseball-data-r-lahman-r">1. 메이저리그 야구 데이터 저장소 <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> <a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></h3>
+<h3 id="메이저리그-야구-데이터-저장소-short-bb-r-book-baseball-data-r-lahman-r">1. 메이저리그 야구 데이터 저장소 <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></h3>
 <p>미국 메이저리그 야구에 대한 데이터는 야구 선진국으로 오래전부터 미국인의 사랑을 받아온 스포츠라 유구한 역사와 전통을 자랑하고 있으며 야구 데이터도 참 다양하고 깊이도 있다.</p>
 <p><img src="fig/ds-baseball-data.png" alt="야구 데이터 수준별 정리" width="77%" /></p>
 <h4 id="시즌별-데이터-lahman">1.1. 시즌별 데이터 – Lahman</h4>
 <p><a href="http://www.seanlahman.com/">Lahman 데이터베이스</a>는 야구시즌에 대한 거시적인 데이터를 제공하고 있다.</p>
-<p><a href="http://www.seanlahman.com/baseball-archive/statistics/" class="uri">http://www.seanlahman.com/baseball-archive/statistics/</a> 사이트에서 다운로드 받아 사용하면 된다.</p>
+<p><a href="http://www.seanlahman.com/baseball-archive/statistics/">http://www.seanlahman.com/baseball-archive/statistics/</a> 사이트에서 다운로드 받아 사용하면 된다.</p>
 <h4 id="경기별-데이터-retrosheet">1.2. 경기별 데이터 – Retrosheet</h4>
 <p><a href="http://www.retrosheet.org/">Retrosheet</a>는 1989년 델라웨어 대학 David Smith 교수가 시작한 자발적 조직으로 경기별(Game-by-Game) 데이터 수집을 목표로 하고 있다. <a href="www.retrosheet.org/gamelogs/glfields.txt">Guide to Retrosheet Game Logs</a> 문서에 자세한 수집항목정보가 담겨있다.</p>
-<p><a href="http://www.retrosheet.org/gamelogs/index.html" class="uri">http://www.retrosheet.org/gamelogs/index.html</a> 사이트에서 파일을 다운로드 받아 사용하면 된다.</p>
+<p><a href="http://www.retrosheet.org/gamelogs/index.html">http://www.retrosheet.org/gamelogs/index.html</a> 사이트에서 파일을 다운로드 받아 사용하면 된다.</p>
 <h4 id="경기실황-데이터-retrosheet">1.3. 경기실황 데이터 – Retrosheet</h4>
 <p>경기실황 데이터도 [Retrosheet](http://www.retrosheet.org/에서 제공하는데 야구경기 실황을 중계하는 개념으로 경기 이벤트가 발생될 때마다 기록된다. 시즌별(Season-by-Season), 경기별(Play-by-Play), 경기실황별(Play-by-Play)로 상세히 넘어가고, 결국 이는 투수가 투구를 해야 야구경기를 해야 하기 때문에, 투구별(Pitch-by-Pitch) 데이터로 모아지게 된다.</p>
 <h4 id="투구별-데이터-pitchfx">1.4. 투구별 데이터 – PITCHf/x</h4>
@@ -70,14 +70,14 @@
 <li><a href="https://github.com/rmscriven/retrosheet">retrosheet</a></li>
 <li><a href="https://github.com/beanumber/openWAR">OpenWAR</a></li>
 </ul>
-<div class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="http://www.hardballtimes.com/a-short-ish-introduction-to-using-r-for-baseball-research/">A Short(-ish) Introduction to Using R Packages for Baseball Research</a><a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p><a href="https://www.amazon.com/Analyzing-Baseball-Data-Chapman-Series/dp/1466570229">Marchi, Max, and Jim Albert. Analyzing baseball data with r. CRC Press, 2013.</a><a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p><a href="http://lahman.r-forge.r-project.org/">Lahman Baseball Database project!</a><a href="#fnref3">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p><a href="http://www.hardballtimes.com/a-short-ish-introduction-to-using-r-for-baseball-research/">A Short(-ish) Introduction to Using R Packages for Baseball Research</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><a href="https://www.amazon.com/Analyzing-Baseball-Data-Chapman-Series/dp/1466570229">Marchi, Max, and Jim Albert. Analyzing baseball data with r. CRC Press, 2013.</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p><a href="http://lahman.r-forge.r-project.org/">Lahman Baseball Database project!</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</div>
+</section>
         </div>
       </div>
       </article>

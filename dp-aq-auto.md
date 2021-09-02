@@ -1,0 +1,306 @@
+---
+layout: page
+title: xwMOOC 데이터 제품
+subtitle: 등록된 자동차 현황 - 성남시
+output:
+  html_document: 
+    toc: yes
+    toc_float: true
+    highlight: tango
+    code_folding: hide
+mainfont: NanumGothic
+---
+ 
+
+
+# 1. 디젤차? [^aq-diesel] {#diesel-aq}
+
+[^aq-diesel]: [CAR GUY - 디젤차 금지 베이징, 미세먼지 서울보다 좋아져 이변](http://www.carguy.kr/china/28732/) 
+
+자동차 배기가스 통제를 강화하면 공기질이 좋아질 것인가? 전세계 대도시의 공기품질 향상을 위해서 다양한 실험을 진행중에 있고,
+베이징도 자동차 배기가스 통제를 비롯한 도심 공기청정기술을 도입하는 등 다양한 시도를 취하고 있다. 
+
+공기품질을 높일 수 있는 여러방안이 있지만 가장 먼저 자동차 등록대수 현상파악부터 시작을 해 보자.
+
+# 2. 자동차 등록현황 데이터 {#auto-registration-data}
+
+국토교통 통계누리 [자동차등록현황보고 (Total Registered Moter Vehicles)](http://stat.molit.go.kr/portal/cate/statMetaView.do?hRsId=58&hFormId=2040&hSelectId=2040&sStyleNum=413&sStart=201801&sEnd=201801&hPoint=00&hAppr=1&oFileName=2018%EB%85%84+01%EC%9B%94+%EC%9E%90%EB%8F%99%EC%B0%A8+%EB%93%B1%EB%A1%9D%EC%9E%90%EB%A3%8C+%ED%86%B5%EA%B3%84.xlsx&rFileName=2018%EB%85%84+01%EC%9B%94+%EC%9E%90%EB%8F%99%EC%B0%A8+%EB%93%B1%EB%A1%9D%EC%9E%90%EB%A3%8C+%ED%86%B5%EA%B3%84.xlsx&midpath=%2Fstat_file%2F)
+웹사이트를 통해 자동차 등록현황 데이터를 다운로드 받아볼 수 있다.
+
+웹사이트에서 다운로드 받은 데이터가 깔끔한 형태가 아니라서, 데이터를 깔끔하게 정제작업을 수행한다.
+
+
+~~~{.r}
+library(tidyverse)
+library(readxl)
+library(xts)
+library(extrafont)
+loadfonts()
+library(ggthemes)
+library(DT)
+library(treemap)
+library(highcharter)
+~~~
+
+
+
+~~~{.output}
+Error in library(highcharter): there is no package called 'highcharter'
+
+~~~
+
+
+
+~~~{.r}
+library(d3treeR)
+~~~
+
+
+
+~~~{.output}
+Error in library(d3treeR): there is no package called 'd3treeR'
+
+~~~
+
+
+
+~~~{.r}
+# 1. 데이터 가져오기 -----
+auto_dat <- read_excel("data/자동차대수/2018년_01월_자동차_등록자료_통계.xlsx", sheet="02.통계표_시군구", skip=3)
+
+# 2. 데이터 정제 -----
+
+auto_dat <- auto_dat %>% 
+    select("X__1", "X__2", "관용", "자가용", "영업용", "관용__1", 
+             "자가용__1", "영업용__1", "관용__2", "자가용__2", "영업용__2", 
+             "관용__3", "자가용__3", "영업용__3") %>% 
+    rename(시도=X__1, 시군구=X__2) %>% 
+    mutate(시도 = na.locf(시도)) %>% 
+    filter(시군구 != "계") %>% 
+    rename(승용_관용 = "관용", 
+           승용_자가용 = "자가용",
+           승용_영업용 = "영업용",
+           승합_관용 = "관용__1", 
+           승합_자가용 = "자가용__1",
+           승합_영업용 = "영업용__1",
+           화물_관용   = "관용__2", 
+           화물_자가용 = "자가용__2",
+           화물_영업용 = "영업용__2",
+           특수_관용   = "관용__3", 
+           특수_자가용 = "자가용__3",
+           특수_영업용 = "영업용__3")
+~~~
+
+
+
+~~~{.output}
+Error: Can't subset columns that don't exist.
+x Column `X__1` doesn't exist.
+
+~~~
+
+
+
+~~~{.r}
+승용_df <- auto_dat %>% select(시도, 시군구, contains("승용")) %>% 
+    gather(용도, 대수, -시도, -시군구)
+~~~
+
+
+
+~~~{.output}
+Error: Can't subset columns that don't exist.
+x Column `시도` doesn't exist.
+
+~~~
+
+
+
+~~~{.r}
+화물_df <- auto_dat %>% select(시도, 시군구, contains("화물")) %>% 
+    gather(용도, 대수, -시도, -시군구)
+~~~
+
+
+
+~~~{.output}
+Error: Can't subset columns that don't exist.
+x Column `시도` doesn't exist.
+
+~~~
+
+
+
+~~~{.r}
+특수_df <- auto_dat %>% select(시도, 시군구, contains("특수")) %>% 
+    gather(용도, 대수, -시도, -시군구)
+~~~
+
+
+
+~~~{.output}
+Error: Can't subset columns that don't exist.
+x Column `시도` doesn't exist.
+
+~~~
+
+
+
+~~~{.r}
+auto_df <- bind_rows(승용_df, 화물_df, 특수_df)
+~~~
+
+
+
+~~~{.output}
+Error in list2(...): object '승용_df' not found
+
+~~~
+
+# 3. 시군구별 자동차 등록현황 통계 {#auto-registration-stat}
+
+정제가 완료된 데이터를 차량유형별, 차량용도별로 표로 만들어 살펴보자.
+
+## 3.1. 차량유형별 {#auto-registration-stat-type}
+
+승용, 특수, 화물 차량 유형별로 살펴보자.
+
+
+~~~{.r}
+# 2. 데이터 정제하기 -----
+auto_df <- auto_df %>% 
+    separate(용도, into=c("차량", "용도")) %>% 
+    separate(시군구, into=c("시군", "시군구"), sep=" ", fill="right") %>% 
+    mutate(시군구 = ifelse(is.na(시군구), 시군, 시군구))
+~~~
+
+
+
+~~~{.output}
+Error in separate(., 용도, into = c("차량", "용도")): object 'auto_df' not found
+
+~~~
+
+
+
+~~~{.r}
+## 2.1. 시도별 차량유형별 차량 등록대수표
+
+auto_df %>% group_by(차량, 시도) %>% 
+    summarize(대수 = sum(대수)) %>% 
+    arrange(desc(대수)) %>% 
+    spread(차량, 대수) %>% 
+    datatable(options = list(pageLength = 10),
+              autoHideNavigation = getOption("DT.autoHideNavigation", NULL)) %>% 
+    formatCurrency(c("승용", "특수", "화물"), currency="", interval=3, digits=0)
+~~~
+
+
+
+~~~{.output}
+Error in group_by(., 차량, 시도): object 'auto_df' not found
+
+~~~
+
+## 3.2. 차량용도별 {#auto-registration-stat-usage}
+
+관용, 영업용, 자가용 차량용도별로 살펴보자.
+
+
+~~~{.r}
+auto_df %>% group_by(용도, 시도) %>% 
+    summarize(대수 = sum(대수)) %>% 
+    arrange(desc(대수)) %>% 
+    spread(용도, 대수) %>% 
+    datatable(options = list(pageLength = 10),
+              autoHideNavigation = getOption("DT.autoHideNavigation", NULL)) %>% 
+    formatCurrency(c("관용", "영업용", "자가용"), currency="", interval=3, digits=0)
+~~~
+
+
+
+~~~{.output}
+Error in group_by(., 용도, 시도): object 'auto_df' not found
+
+~~~
+
+# 4. 자동차 등록현황 시각화 {#auto-registration-viz}
+
+## 4.1. 시도별 자동차 등록대수 {#auto-registration-viz-ggplot}
+
+시도별 자동차 등록대수를 정적 그래프를 통해 시각화해보자.
+
+
+~~~{.r}
+# 3. 시각화 -----
+## 3.1. 시도별 차량 등록대수
+auto_df %>% group_by(시도) %>% 
+    summarize(대수 = sum(대수)) %>% 
+    arrange(desc(대수)) %>% 
+    ggplot(aes(x=fct_reorder(시도, 대수), y=대수)) +
+      geom_col() +
+      coord_flip() +
+      labs(y="등록대수", x="") +
+      scale_y_continuous(labels = scales::comma) +
+      theme_bw(base_family="NanumGothic")
+~~~
+
+
+
+~~~{.output}
+Error in group_by(., 시도): object 'auto_df' not found
+
+~~~
+
+## 4.2. 시군구별 자동차 등록현황 {#auto-registration-viz-treemap}
+
+시도별, 시군구별 자동차 등력현황을 `treemap`을 통해 시각화해 보자.
+
+
+~~~{.r}
+## 3.2. treemap: 시도, 시군, 시군구, 차량
+auto_treemap_df <- auto_df %>% group_by(시도, 시군, 시군구, 차량) %>% 
+    summarize(대수 = sum(대수))
+~~~
+
+
+
+~~~{.output}
+Error in group_by(., 시도, 시군, 시군구, 차량): object 'auto_df' not found
+
+~~~
+
+
+
+~~~{.r}
+auto_treemap <- treemap(auto_treemap_df, 
+                            index = c("시도", "시군", "시군구", "차량"),  
+                            vSize = "대수", 
+                            vColor = "대수",
+                            title = "차량등록대수", 
+                            fontsize.labels=c(12, 8), 
+                            draw = FALSE,
+                            type = "value", 
+                            format.legend = list(scientific = FALSE, big.mark = ","),
+                            title.legend="")
+~~~
+
+
+
+~~~{.output}
+Error in treemap(auto_treemap_df, index = c("시도", "시군", "시군구", : object 'auto_treemap_df' not found
+
+~~~
+
+
+
+~~~{.r}
+d3tree2(auto_treemap, rootname = "대한민국")
+~~~
+
+
+
+~~~{.output}
+Error in d3tree2(auto_treemap, rootname = "대한민국"): could not find function "d3tree2"
+
+~~~

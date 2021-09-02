@@ -1,0 +1,87 @@
+---
+layout: page
+title: "데이터 제품"
+subtitle: "`shiny.fluent` - 헬로월드"
+author:
+- name: "이광춘"
+  affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+tags: ["데이터 과학", "Data Science", "데이터 사이언스", "shiny.fluent", "appsilon", "헬로월드"]
+output:
+  html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
+    theme: default
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+bibliography: bibliography_dp.bib
+csl: biomed-central.csl
+urlcolor: blue
+linkcolor: blue
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(rhandsontable)
+
+```
+
+# `shiny.fluent` 튜토리얼 [^shiny-tutorial] {#shiny-tutorial}
+
+
+[^shiny-tutorial]: [Appsilon, `shiny.fluent` 튜토리얼](https://appsilon.github.io/shiny.fluent/)
+
+- [Tutorial #01](https://github.com/tidyverse-korea/open_stat_ui/tree/tutorial_00)
+- [Tutorial #02](https://github.com/tidyverse-korea/open_stat_ui/tree/tutorial_01)
+- [Tutorial #03](https://github.com/tidyverse-korea/open_stat_ui/tree/tutorial_02)
+
+# 헬로월드 {.tabset}
+
+`app.R` 샤이니 파일에 `ui`, `server`를 한통에 담아 결과를 살펴본다.
+
+## 코드
+
+```{r shiny-helloworld, eval = FALSE}
+library(shiny)
+library(shiny.fluent)
+
+ui <- fluentPage(
+    Text(variant = "xxLarge", "오픈 통계 팩키지")
+)
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+
+
+
+## 실행결과
+
+![](fig/shiny-fluent-helloworld.png)
+
+# 데이터셋 {#dataset-fluent}
+
+`fluent.shiny` 팩키지에는 `iris`, `penguins` 데이터처럼 샤이니 웹앱 개발을 위한 데이터셋이 내장되어 있다.
+
+```{r fluent-dataset}
+library(shiny.fluent)
+library(tidyverse)
+
+fluentSalesDeals  %>% 
+  as_tibble() %>% 
+  select("rep_name", "date", "deal_amount", "client_name", "city", "is_closed")
+```
+
+![](fig/fluent-dataset.png)
+

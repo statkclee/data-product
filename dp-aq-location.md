@@ -1,0 +1,242 @@
+---
+layout: page
+title: xwMOOC 데이터 저널리즘
+subtitle: 측정소 위치 - 대한민국
+output:
+  html_document: 
+    toc: yes
+    highlight: tango
+    code_folding: hide
+    css: css/swc.css
+  pdf_document:
+    latex_engine: xelatex
+mainfont: NanumGothic
+---
+ 
+
+
+## 1. 공기 불평등 민주화 {#air-quality-inequality}
+
+공기질이 삶의 질에 영향을 지대하게 미친다. 깨끗한 공기는 건강과 직결된다.
+공기 불평등과 투쟁을 선언한 [OpenAQ(Open Air Quality)](https://openaq.org/) "2018-01-29" 기준 64개국에 설치된 8,254개 측정솔ㄹ 통해
+155,673,930 공기품질 측정값을 수집하여 제공하고 있다.
+
+## 2. 전세계 측정소 현황 {#air-quality-inequality-count}
+
+가장 먼저 OpenAQ에서 수집하는 공기질 측정소 위치를 살펴보자.
+`ropenaq` 팩키지를 설치하면 `aq_locations()` 함수를 통해 공기질 측정소 위치에 대한 국가별 정보를 얻을 수 있다.
+
+
+~~~{.r}
+# 0. 환경설정 -----
+library(tidyverse)
+library(ropenaq)
+~~~
+
+
+
+~~~{.output}
+Error in library(ropenaq): there is no package called 'ropenaq'
+
+~~~
+
+
+
+~~~{.r}
+library(leaflet)
+library(crosstalk)
+library(DT)
+
+# 1. 데이터 가져오기 -----
+## 1.1. 전세계 측정소 
+data_station_df <- aq_locations()
+~~~
+
+
+
+~~~{.output}
+Error in aq_locations(): could not find function "aq_locations"
+
+~~~
+
+
+
+~~~{.r}
+data_station_df %>% 
+    count(country, sort =TRUE) %>% 
+    mutate(비율 = n / sum(n),
+             누적비율 = cumsum(비율)) %>% 
+    select(국가 = country, 측정소 = n, 비율, 누적비율) %>% 
+    datatable() %>% 
+      formatCurrency("측정소", currency="", digits=0) %>% 
+      formatPercentage(c("비율", "누적비율"), digits=1)
+~~~
+
+
+
+~~~{.output}
+Error in count(., country, sort = TRUE): object 'data_station_df' not found
+
+~~~
+
+## 3. 측정소 위치 및 측정 데이터 {#air-quality-inequality-viz}
+
+공기질 측정소별로 측정할 수 있는 측정값이 다르다. **미세먼지(微細-, Particulate Matter, PM)**또는 분진(粉塵)이란 아황산가스, 질소 산화물, 납, 오존, 일산화 탄소 등과 함께 수많은 대기오염물질을 포함하는 대기오염 물질로 자동차, 공장 등에서 발생하여 대기중 장기간 떠다니는 입경 10㎛ 이하의 미세한 먼지이며, PM10이라 하고, 입자가 2.5㎛ 이하인 경우는 PM 2.5라고 쓰며 '초미세먼지' 또는 '극미세먼지' 라고 부른다. 학술적으로는 에어로졸(aerosol)이라고 부른다. [^wiki-pm]
+
+[^wiki-pm]: [위키백과 - 미세먼지](https://ko.wikipedia.org/wiki/%EB%AF%B8%EC%84%B8%EB%A8%BC%EC%A7%80)
+
+- pm25: 초미세먼지(PM 2.5)
+- pm10: 미세먼지(PM 10)
+- so2 :  이산화황(SO2)
+- o3  :  오존(O3)
+- co  :  일산화타소(CO)
+- bc  :  BC
+
+전세계 위치는 [OpenAQ Map](https://openaq.org/#/map?_k=j1gabo)을 참조하고, 우리나라와 관계있는 아시아 지역 공기품질 측정소 위치만 시각화한다.
+
+
+~~~{.r}
+# 2. 공간정보 시각화 -----
+## 2.1. 공유 데이터
+iso2_continent_lookup <- read_csv("https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.csv")
+
+names(iso2_continent_lookup) <- c("name", "country", "alpha-3", "country-code", "iso_3166-2", 
+                                  "region", "sub-region", "region-code", "sub-region-code")
+
+data_station_asia_df <- left_join(data_station_df, iso2_continent_lookup) %>% 
+    filter(region == "Asia")
+~~~
+
+
+
+~~~{.output}
+Error in left_join(data_station_df, iso2_continent_lookup): object 'data_station_df' not found
+
+~~~
+
+
+
+~~~{.r}
+aq_sd <- SharedData$new(data_station_asia_df)
+~~~
+
+
+
+~~~{.output}
+Error in .subset2(public_bind_env, "initialize")(...): object 'data_station_asia_df' not found
+
+~~~
+
+
+
+~~~{.r}
+## 3.2. 제어
+filter_checkbox("pm25", "PM 2.5", aq_sd, ~pm25, inline = TRUE, allLevels = FALSE, TRUE)
+~~~
+
+
+
+~~~{.output}
+Error in makeGroupOptions(sharedData, group, allLevels): object 'aq_sd' not found
+
+~~~
+
+
+
+~~~{.r}
+filter_checkbox("pm10", "PM 10",  aq_sd, ~pm10, inline = TRUE)
+~~~
+
+
+
+~~~{.output}
+Error in makeGroupOptions(sharedData, group, allLevels): object 'aq_sd' not found
+
+~~~
+
+
+
+~~~{.r}
+filter_checkbox("so2",  "이산화황(SO2)",  aq_sd, ~so2, inline = TRUE)
+~~~
+
+
+
+~~~{.output}
+Error in makeGroupOptions(sharedData, group, allLevels): object 'aq_sd' not found
+
+~~~
+
+
+
+~~~{.r}
+filter_checkbox("o3",  "오존(O3)",  aq_sd, ~o3, inline = TRUE)
+~~~
+
+
+
+~~~{.output}
+Error in makeGroupOptions(sharedData, group, allLevels): object 'aq_sd' not found
+
+~~~
+
+
+
+~~~{.r}
+filter_checkbox("co",  "일산화타소(CO)",  aq_sd, ~co, inline = TRUE)
+~~~
+
+
+
+~~~{.output}
+Error in makeGroupOptions(sharedData, group, allLevels): object 'aq_sd' not found
+
+~~~
+
+
+
+~~~{.r}
+filter_checkbox("bc",  "BC",  aq_sd, ~bc, inline = TRUE)
+~~~
+
+
+
+~~~{.output}
+Error in makeGroupOptions(sharedData, group, allLevels): object 'aq_sd' not found
+
+~~~
+
+
+
+~~~{.r}
+## 3.3. 공간 정보 시각화
+world_pm_leaflet <- leaflet(aq_sd) %>% 
+    addProviderTiles(providers$OpenStreetMap) %>% 
+    addMarkers(popup = ~ as.character(paste0("<strong> 측정소 위치 </strong><br><br>",
+                                             "&middot; 명칭: ", sourceNames, "<br>",
+                                             "&middot; 국가: ", country, "<br>",
+                                             "&middot; 도시: ", city, "<br>",
+                                             "&middot; 위치: ", location, "<br>")))
+~~~
+
+
+
+~~~{.output}
+Error in structure(list(options = options), leafletData = data): object 'aq_sd' not found
+
+~~~
+
+
+
+~~~{.r}
+## 3.4. 인터랙티브 시각화
+bscols(world_pm_leaflet)
+~~~
+
+
+
+~~~{.output}
+Error in bscols(world_pm_leaflet): object 'world_pm_leaflet' not found
+
+~~~
+
