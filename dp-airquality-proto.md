@@ -1,16 +1,33 @@
 ---
 layout: page
-title: xwMOOC 데이터 제품
-subtitle: 공기 품질 예측서비스 - Prototype
+title: 데이터 제품
+subtitle: "공기 품질 예측서비스 - Prototype"
+author:
+- name: "이광춘"
+  affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "2021-09-02"
+tags: ["데이터 과학", "Data Science", "데이터 사이언스"]
 output:
   html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
+    theme: default
     toc: yes
+    toc_depth: 2
     toc_float: true
     highlight: tango
-    code_folding: hide
-mainfont: NanumGothic
+    code_folding: show
+    number_section: true
+    self_contained: true
+bibliography: bibliography_dp.bib
+csl: biomed-central.csl
+urlcolor: blue
+linkcolor: blue
+editor_options: 
+  chunk_output_type: console
 ---
- 
+
 
 
 # 1. 공기품질 예측 시스템 {#airquality-product}
@@ -65,7 +82,7 @@ DIY 방식으로 공기품질 예측 서비스를 시작해보자. 이를 위해
 자세한 설명은 원문에서 확인하면 됩니다.
 
 
-~~~{.r}
+```r
 # 0. 환경설정 -----
 library(tidyverse)
 library(httr)
@@ -101,45 +118,23 @@ req_url <- glue('{service_url}', "/",
 
 ## 1.2. RESTful 서비스 테스트 -----
 resp <- GET(req_url)
-~~~
+```
 
+```
+Error in curl::curl_fetch_memory(url, handle = handle): Timeout was reached: [openapi.airkorea.or.kr] Connection timed out after 10004 milliseconds
+```
 
-
-~~~{.output}
-Backtrace:
-  1. knitr::knit("dp-airquality-proto.Rmd", output = "dp-airquality-proto.md")
- 24. httr::GET(req_url)
- 25. httr:::request_perform(req, hu$handle$handle)
- 27. httr:::request_fetch.write_memory(req$output, req$url, handle)
- 28. curl::curl_fetch_memory(url, handle = handle)
-
-~~~
-
-
-
-~~~{.output}
-Error in curl::curl_fetch_memory(url, handle = handle): Operation was aborted by an application callback
-
-~~~
-
-
-
-~~~{.r}
+```r
 ## 1.3. 데이터프레임 변환 -----
 # 반복되는 부분을 items 객체에 할당합니다. 
 items <- resp %>% read_xml() %>% xml_nodes('item')
-~~~
+```
 
-
-
-~~~{.output}
+```
 Error in read_xml(.): could not find function "read_xml"
+```
 
-~~~
-
-
-
-~~~{.r}
+```r
 # 필요 항목만 추출하는 사용자 정의 함수를 생성합니다. 
 getXmlText <- function(x, var) {
   result <- x %>% xml_node(var) %>% xml_text()
@@ -169,37 +164,29 @@ aq_df <- tibble(
   제주 = getXmlText(items, 'jeju'),
   세종 = getXmlText(items, 'sejong')
 )
-~~~
+```
 
-
-
-~~~{.output}
+```
 Error in xml_text(.): could not find function "xml_text"
+```
 
-~~~
-
-
-
-~~~{.r}
+```r
 ## 1.4. 데이터프레임 저장 -----
 # aq_df %>% write_rds("data/aq_df.rds")
-~~~
+```
 
 ## 2.4. 데이터 확인 {#airquality-product-crawl-request-check}
 
 API를 통해 전달받은 데이터를 `aq_df` 데이터프레임으로 변환해서 살펴보자.
 
 
-~~~{.r}
+```r
 DT::datatable(aq_df)
-~~~
+```
 
-
-
-~~~{.output}
+```
 Error in crosstalk::is.SharedData(data): object 'aq_df' not found
-
-~~~
+```
 
 # 3. 다양한 오염데이터 가져오기 {#airquality-product-crawl-request-many}
 
@@ -209,7 +196,7 @@ Error in crosstalk::is.SharedData(data): object 'aq_df' not found
 `glue()` 함수가 요긴한데 이를 통해 요청한 데이터에 대한 상태를 즉각 확인할 수 있다.
 
 
-~~~{.r}
+```r
 download_aq_data <- function(aq_metric="PM10") {
   service_url <- "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc"
   service_name <- "getCtprvnMesureLIst"
@@ -279,27 +266,19 @@ download_aq_data <- function(aq_metric="PM10") {
 }
 
 download_aq_data("PM10")
-~~~
+```
 
+```
+Error in curl::curl_fetch_memory(url, handle = handle): Timeout was reached: [openapi.airkorea.or.kr] Connection timed out after 10011 milliseconds
+```
 
-
-~~~{.output}
-Error in curl::curl_fetch_memory(url, handle = handle): Timeout was reached: [openapi.airkorea.or.kr] Connection timed out after 10007 milliseconds
-
-~~~
-
-
-
-~~~{.r}
+```r
 download_aq_data("PM25")
-~~~
+```
 
-
-
-~~~{.output}
+```
 Error in curl::curl_fetch_memory(url, handle = handle): Timeout was reached: [openapi.airkorea.or.kr] Connection timed out after 10007 milliseconds
-
-~~~
+```
 
 # 4. 탐색적 데이터 분석 {#airquality-product-crawl-request-EDA}
 
@@ -307,7 +286,7 @@ PM10에 대한 오염지표 데이터를 받아와서 `data/aq_PM10_df.rds`로 �
 이를 `read_rds()`로 불러와서 `ggplot`으로 시각화하고 각 시도별로 PM10 오염도를 표로 나타낸다.
 
 
-~~~{.r}
+```r
 # 1. 데이터 가져오기 -----
 aq_pm10_df <- read_rds("data/aq_PM10_df.rds")
 
@@ -325,17 +304,17 @@ aq_pm10_df %>%
     scale_x_date(date_labels = "%m-%d") +
     labs(x="") +
     theme_minimal()
-~~~
+```
 
-<img src="fig/airquality-EDA-1.png" title="plot of chunk airquality-EDA" alt="plot of chunk airquality-EDA" style="display: block; margin: auto;" />
+<img src="figure/airquality-EDA-1.png" title="plot of chunk airquality-EDA" alt="plot of chunk airquality-EDA" style="display: block; margin: auto;" />
 
-~~~{.r}
+```r
 ## 2.2. 표 -----
 aq_pm10_df %>% 
   datatable()
-~~~
+```
 
-<img src="fig/airquality-EDA-2.png" title="plot of chunk airquality-EDA" alt="plot of chunk airquality-EDA" style="display: block; margin: auto;" />
+<img src="figure/airquality-EDA-2.png" title="plot of chunk airquality-EDA" alt="plot of chunk airquality-EDA" style="display: block; margin: auto;" />
 
 
 # 5. Shiny 웹앱 개발 {#airquality-product-crawl-request-EDA-shiny}
@@ -353,7 +332,7 @@ aq_pm10_df %>%
 
 
 
-~~~{.r}
+```r
 # 0. 환경설정 -----
 library(tidyverse)
 library(httr)
@@ -368,7 +347,7 @@ library(shiny)
 
 aq_pm10_df <- read_rds("data/aq_PM10_df.rds")
 aq_pm25_df <- read_rds("data/aq_PM25_df.rds")
-~~~
+```
   
 ## 5.2. `ui.R`, `server.R` {#airquality-product-crawl-request-EDA-shiny-ui-server}
 
@@ -381,7 +360,7 @@ aq_pm25_df <- read_rds("data/aq_PM25_df.rds")
 **ur.R**
 
 
-~~~{.r}
+```r
 library(shiny)
 
 shinyUI(fluidPage(
@@ -412,14 +391,14 @@ shinyUI(fluidPage(
       )
   )
 )))
-~~~
+```
 
   </div>
   <div class = "col-md-6">
 **server.R**
 
 
-~~~{.r}
+```r
 shinyServer(function(input, output) {
 # PM10 -----   
   output$pm10_plot <- renderPlot({
@@ -463,7 +442,7 @@ shinyServer(function(input, output) {
   })
   
 })
-~~~
+```
   </div>
 </div>
 
