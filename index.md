@@ -43,6 +43,8 @@ title: 데이터 제품
         - [`shiny.fluent`](dp-shiny-fluent.html)
         - [`shiny.fluent` - 헬로월드](dp-shiny-helloworld.html)
         - [`shiny.fluent` - Step by Step](dp-shiny-step-by-step.html)
+    - **오픈 통계 팩키지**
+        -  [성별 데이터 - 모듈](open-stat-module-gender.html)
 - **제품 배포(Product Deployment)** 
     - [**도커**: 재현가능한 제품개발](http://statkclee.github.io/r-docker/) 
         - [도커는 무엇이고 왜 사용하나](http://statkclee.github.io/r-docker/01-what-and-why.html)
