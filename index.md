@@ -40,6 +40,8 @@ title: 데이터 제품
     - **딥러닝(Deep Learning)**
         - [이미지 분류 - 케라스(딥러닝)](shiny-image-classification.html)
     - [Shiny Gadget](shiny-gadgets.html)
+    - **`shiny` 모듈**
+        - [Shiny 모듈 훈련](shiny-module-training.html)
     - [Shiny UI Framework](dp-shiny-UI.html)    
         - [`shiny.fluent`](dp-shiny-fluent.html)
         - [`shiny.fluent` - 헬로월드](dp-shiny-helloworld.html)
