@@ -42,7 +42,8 @@ title: 데이터 제품
     - [Shiny Gadget](shiny-gadgets.html)
     - **`shiny` 모듈**
         - [Shiny 모듈 훈련](shiny-module-training.html)
-        - [Shiny 모듈 사례 연구](shiny-module-case-studies.html)
+        - [Shiny 모듈 : 헬로월드](shiny-module-case-studies.html)
+        - [Shiny 모듈 : 커뮤니케이션](shiny-module-communication.html)
     - [Shiny UI Framework](dp-shiny-UI.html)    
         - [`shiny.fluent`](dp-shiny-fluent.html)
         - [`shiny.fluent` - 헬로월드](dp-shiny-helloworld.html)

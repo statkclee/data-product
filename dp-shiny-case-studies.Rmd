@@ -1,12 +1,12 @@
 ---
 layout: page
 title: "데이터 과학 제품"
-subtitle: "Shiny 모듈 사례 연구"
+subtitle: "Shiny 모듈 : 헬로월드"
 author:
   - name: "이광춘"
     affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
 date: "`r Sys.Date()`"
-tags: ["shiny", "프로토타이핑", "workflow", "작업흐름", "Case Study", "사례연구"]
+tags: ["shiny", "프로토타이핑", "workflow", "작업흐름", "Case Study", "사례연구", "헬로월드"]
 output:
   html_document: 
     include:
