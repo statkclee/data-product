@@ -44,6 +44,7 @@ title: 데이터 제품
         - [Shiny 모듈 훈련](shiny-module-training.html)
         - [Shiny 모듈 : 헬로월드](shiny-module-case-studies.html)
         - [Shiny 모듈 : 커뮤니케이션](shiny-module-communication.html)
+    - [팩키지 Shiny 앱](shiny-app-as-a-package.html)        
     - [Shiny UI Framework](dp-shiny-UI.html)    
         - [`shiny.fluent`](dp-shiny-fluent.html)
         - [`shiny.fluent` - 헬로월드](dp-shiny-helloworld.html)
