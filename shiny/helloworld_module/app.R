@@ -2,7 +2,7 @@ library(shiny)
 
 getwd()
 
-source("module/helloworld_module.R")
+source("module/helloworld_module.R", encoding = "UTF-8")
 
 ui <- fluidPage(
     
