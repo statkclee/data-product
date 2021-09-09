@@ -165,7 +165,7 @@ shinyApp(ui = ui, server = server)
 
 ### 실행결과 {#file-directory-app-run}
 
-...
+![](fig/shiny_module_helloworld.gif)
 
 ## 모듈 헬로 월드 {.tabset}
 
@@ -189,7 +189,7 @@ library(shiny)
 
 getwd()
 
-source("module/helloworld_module.R")
+source("module/helloworld_module.R", encoding = "UTF-8")
 
 ui <- fluidPage(
     
@@ -257,4 +257,4 @@ hello_world_server <- function(id) {
 
 ### 실행결과 {#helloworld-module-app-xxx-run}
 
-...
+![](fig/shiny_module_helloworld2.gif)
