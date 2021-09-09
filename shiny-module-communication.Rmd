@@ -1,0 +1,42 @@
+---
+layout: page
+title: "데이터 과학 제품"
+subtitle: "Shiny 모듈 : 커뮤니케이션"
+author:
+  - name: "이광춘"
+    affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+tags: ["shiny", "프로토타이핑", "workflow", "작업흐름", "Case Study", "사례연구", "모듈", "커뮤니케이션", "앱"]
+output:
+  html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+urlcolor: blue
+linkcolor: blue
+editor_options: 
+  chunk_output_type: console
+bibliography: bibliography-product.bib
+csl: biomed-central.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(tidyverse)
+```
+
+
+# `shiny` 앱과 모듈 [^module-communication] {#shiny-app-module}
+
+[^module-communication]: [Steph (April 19, 2016), "SHINY MODULE DESIGN PATTERNS: PASS MODULE INPUTS TO OTHER MODULES"](https://itsalocke.com/blog/shiny-module-design-patterns-pass-module-inputs-to-other-modules/)
+
+
