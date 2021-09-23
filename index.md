@@ -24,6 +24,7 @@ title: 데이터 제품
 - [Shiny 웹앱](shiny-overview.html)
     - [로렘 입숨(lorem ipsum) - `shinyipsum`](dp-shiny-ipsum.html)
     - [빠른 Shiny 웹앱 제작 작업흐름 (Workflow)](dp-shiny-workflow.html)
+    - [Rmd &rarr; Shiny App &rarr; 모듈(Module)](dp-rmd-shiny-module.html)
     - **`shiny` 101**
         - [Shiny 웹앱 개발](shiny-app.html)    
         - [Shiny 반응형 웹앱 개발](shiny-reactive.html)    
