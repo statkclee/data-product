@@ -12,3 +12,5 @@ _site
 twitterOAuth.R
 .httr-oauth
 .Rproj.user
+.Rhistory
+
