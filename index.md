@@ -38,6 +38,7 @@ title: 데이터 제품
     - **`shiny` 제품**
         - [데이터 제품 서버 - 디지털오션(Digital Ocean)](shiny-digital-ocean.html)
         - [보안기능을 탑재한 Shiny 웹앱 서버 - AWS](shiny-webweb-server.html)
+        - [비밀번호 보안 - `flexdashboard`](shiny-password.html)
     - **딥러닝(Deep Learning)**
         - [이미지 분류 - 케라스(딥러닝)](shiny-image-classification.html)
     - [Shiny Gadget](shiny-gadgets.html)
