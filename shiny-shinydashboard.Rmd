@@ -1,0 +1,76 @@
+---
+layout: page
+title: "데이터 과학 제품"
+subtitle: "대쉬보드 - `shinydashbaord`"
+author:
+  - name: "이광춘"
+    affiliation: "[Tidyverse Korea](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+tags: ["shiny", "프로토타이핑", "workflow", "작업흐름", "Case Study", "사례연구", "모듈", "커뮤니케이션", "앱", "Rmd", "비밀번호", "대쉬보드", "shinydashboard"]
+output:
+  html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+urlcolor: blue
+linkcolor: blue
+editor_options: 
+  chunk_output_type: console
+bibliography: bibliography-product.bib
+csl: biomed-central.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(tidyverse)
+```
+
+# `shinydashboard` 뼈대 [^shinydashboard-concept] {.tabset}
+
+[^shinydashboard-concept]: ["Data Science Tutorials", R Shiny Tutorial | R Shiny Dashboard | Creating Layout of Dashboard | R Programming](https://www.youtube.com/watch?v=1MHX1s5bb6w&list=PLH6mU1kedUy_Of03954Dr8Q3r2kFIB-KS&index=10)
+
+## 개념 {#shinydashboard-concept}
+
+![](fig/shindashboard_concept.jpg)
+
+## 코드 {#shinydashboard-skeleton}
+
+`app.R` 코드를 `shinydashboard`를 통해 기본 뼈대를 작성하고 이해한다.
+
+
+```{r dwonalod, eval = FALSE}
+## app.R ##
+library(shiny)
+library(shinydashboard)
+
+ui <- dashboardPage(
+    dashboardHeader(),
+    dashboardSidebar(),
+    dashboardBody()
+)
+
+server <- function(input, output) { }
+
+shinyApp(ui, server)
+```
+
+```{r download-skeleton, echo=FALSE}
+xfun::embed_file('shinydashboard/01_layout/app.R', text = "다운로드 app.R shiny 파일")
+```
+
+
+## 실행결과 {#shinydashboard-skeleton-output}
+
+![](fig/shinydashboard_01_skeleton.jpg)
+
+
+
