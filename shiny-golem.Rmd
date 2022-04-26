@@ -1,0 +1,65 @@
+---
+layout: page
+title: "데이터 과학 제품"
+subtitle: "골름(Golem)"
+author:
+  - name: "이광춘"
+    affiliation: "[한국 알 사용자회](https://www.facebook.com/groups/tidyverse/)"
+date: "`r Sys.Date()`"
+tags: ["shiny", "프로토타이핑", "workflow", "작업흐름", "Case Study", "사례연구", "모듈", "커뮤니케이션", "앱", "Rmd", "비밀번호", "대쉬보드", "shinydashboard"]
+output:
+  html_document: 
+    include:
+      after_body: footer.html
+      before_body: header.html
+    toc: yes
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+urlcolor: blue
+linkcolor: blue
+editor_options: 
+  chunk_output_type: console
+bibliography: bibliography-product.bib
+csl: biomed-central.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,
+                      comment="", digits = 3, tidy = FALSE, prompt = FALSE, fig.align = 'center')
+
+library(tidyverse)
+```
+
+# 골름 개요 {#about-golem}
+
+골름은 Shiny 앱 제품화를 염두에 두고 개발된 팩키지
+
+- R Shiny 앱은 R 패키지
+- Shiny 앱 메타데이터(Metadata), 의존성(Dependency)을 앱개발 초반부터 통합관리
+- 파일 시스템 위계를 중시하여 반영함
+- 테스트와 문서화를 중시함 
+
+# 앱개발 작업흐름 {#app-workflow}
+
+
+
+```{r diagram-workflow, echo = FALSE}
+library(DiagrammeR)
+
+mermaid("
+graph TB
+  요구사항수집-->디자인&와이어프레밍
+  디자인&와이어프레밍-->프로토타이핑
+  프로토타이핑--> 개발
+  개발-->의존성관리
+  의존성관리-->배포
+")
+
+```
+
+# 
+
