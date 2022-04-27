@@ -64,6 +64,7 @@ title: 데이터 제품
         - [분석결과 공유](http://statkclee.github.io/r-docker/06-Sharing-all-your-analysis.html)
     - [**AWS**: 자체 Shiny 웹서버](shiny-aws-ami.html)  
 - **[골름(Golem)](shiny-golem.html)**
+     - [모듈(Module) 추가, 개발 및 배포](shiny-golem-module.html)
 - **사례**
     - [데이터 저널리즘 - Andrew Flowers](data-journalism-flowers.html)
         - [서울대학교 경제학과 - 국내박사배출](data-journalism-snu.html)
