@@ -95,7 +95,8 @@ title: 데이터 제품
     - [2021년 달력 만들기](dp-calendar-gif.html)
     - [유튜브 MP3 변환](youtube-mp3.html)
 - **그린 뉴딜**
-    - [국가별 이산화탄소($CO_2$) 배출현황](dp-co2-emission.html)    
+    - [국가별 이산화탄소($CO_2$) 배출현황](dp-co2-emission.html)
+
     
 
 ### [xwMOOC 오픈 교재](https://statkclee.github.io/xwMOOC/)
