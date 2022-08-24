@@ -1,0 +1,37 @@
+---
+layout: page
+title: "오픈 통계"
+author:
+  name: "[한국 R 사용자회](https://r2bit.com/)"
+date: "2022-08-24"
+output:
+  html_document: 
+    toc: no
+    toc_depth: 2
+    toc_float: true
+    highlight: tango
+    code_folding: show
+    number_section: true
+    self_contained: true
+urlcolor: blue
+linkcolor: bluee
+---
+
+# 오픈 통계
+
+```{r openstat}
+#| echo: false
+#| message: false
+#| warning: false
+library(tidyverse)
+library(bs4cards)
+
+galleries %>% 
+  cards(
+    title = long_name,
+    text = blurb,
+    link = gallery_url,
+    image = image_url,
+    footer = date
+  )
+```
