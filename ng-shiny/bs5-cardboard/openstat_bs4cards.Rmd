@@ -6,6 +6,8 @@ author:
 date: "2022-08-24"
 output:
   html_document: 
+    theme:
+      version: 5
     toc: no
     toc_depth: 2
     toc_float: true
