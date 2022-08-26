@@ -2,6 +2,7 @@ library(gridlayout)
 library(shiny)
 
 grid_page(
+  theme = bitStat_theme,
   layout = c(
     "header header header",
     "hs_dataset teacher_dataset teacher_details",

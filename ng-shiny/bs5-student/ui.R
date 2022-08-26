@@ -1,8 +1,9 @@
-library(shiny)
-library(gridlayout)
 
 # App template from the shinyuieditor
 ui <- grid_page(
+  
+  theme = bitStat_theme,
+  
   layout = c(
     "student_title student_title student_title student_title",
     "student_select student_dataset student_info student_variable",
